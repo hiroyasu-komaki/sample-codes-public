@@ -1,0 +1,7 @@
+﻿anova_p_value,group1,group2,meandiff,p-adj,lower,upper,reject,pair,effect_size_d
+,A,B,,,,,False,A vs B,
+,A,C,,,,,False,A vs C,
+,A,D,,,,,False,A vs D,
+,B,C,,,,,False,B vs C,
+,B,D,,,,,False,B vs D,
+,C,D,,,,,False,C vs D,

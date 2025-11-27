@@ -1,0 +1,30 @@
+{
+  "attribute": "incident_experience",
+  "test": "Kruskal-Wallis",
+  "statistic": 0.6081932734186087,
+  "p_value": 0.43546888669275485,
+  "significant": false,
+  "alpha": 0.05,
+  "n_segments": 2,
+  "segments": [
+    true,
+    false
+  ],
+  "segment_stats": [
+    {
+      "segment": "True",
+      "n": 1960,
+      "mean": 3.0086734693877553,
+      "median": 3.0,
+      "std": 0.31701980606529373
+    },
+    {
+      "segment": "False",
+      "n": 2040,
+      "mean": 3.0028186274509805,
+      "median": 3.0,
+      "std": 0.3117891958431377
+    }
+  ],
+  "interpretation": "セグメント間に有意な差がありません (p=0.4355, α=0.05)"
+}

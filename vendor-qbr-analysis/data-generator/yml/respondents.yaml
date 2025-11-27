@@ -1,0 +1,113 @@
+table:
+  name: Respondents
+  description: 回答者マスターデータを管理するテーブル
+
+fields:
+  # 回答者識別情報
+  - name: respondent_id
+    type: integer
+    description: 回答者の一意識別子
+    example: 101
+    required: true
+    primary_key: true
+
+  # 回答者属性
+  - name: department
+    type: enum
+    enum_ref: department
+    description: 回答者の所属部門
+    example: "business"
+    required: true
+
+  - name: department_ja
+    type: string
+    description: 所属部門名（日本語）
+    example: "業務部門"
+    required: true
+
+  - name: role
+    type: enum
+    enum_ref: role
+    description: 回答者の役職
+    example: "manager"
+    required: true
+
+  - name: role_ja
+    type: string
+    description: 役職名（日本語）
+    example: "マネージャー"
+    required: true
+
+  - name: usage_frequency
+    type: enum
+    enum_ref: usageFrequency
+    description: サービス利用頻度
+    example: "high"
+    required: true
+
+  - name: usage_frequency_ja
+    type: string
+    description: 利用頻度（日本語）
+    example: "高頻度"
+    required: true
+
+  - name: incident_experience
+    type: boolean
+    description: 過去にインシデントを経験したか
+    example: true
+    required: true
+
+enums:
+  department:
+    description: 所属部門
+    values:
+      - id: business
+        ja: 業務部門
+      
+      - id: it
+        ja: IT部門
+      
+      - id: finance
+        ja: 経理財務部門
+      
+      - id: hr
+        ja: 人事部門
+      
+      - id: sales
+        ja: 営業部門
+      
+      - id: logistics
+        ja: 物流部門
+
+  role:
+    description: 役職
+    values:
+      - id: executive
+        ja: 役員
+      
+      - id: manager
+        ja: マネージャー
+      
+      - id: leader
+        ja: リーダー
+      
+      - id: staff
+        ja: 一般社員
+      
+      - id: specialist
+        ja: スペシャリスト
+
+  usageFrequency:
+    description: サービス利用頻度
+    values:
+      - id: high
+        ja: 高頻度
+        description: ほぼ毎日利用
+      
+      - id: medium
+        ja: 中頻度
+        description: 週に数回利用
+      
+      - id: low
+        ja: 低頻度
+        description: 月に数回程度

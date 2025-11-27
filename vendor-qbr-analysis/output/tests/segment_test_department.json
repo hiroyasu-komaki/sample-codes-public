@@ -1,0 +1,62 @@
+{
+  "attribute": "department",
+  "test": "Kruskal-Wallis",
+  "statistic": 1.3064586105196434,
+  "p_value": 0.9342656914558428,
+  "significant": false,
+  "alpha": 0.05,
+  "n_segments": 6,
+  "segments": [
+    "logistics",
+    "business",
+    "finance",
+    "it",
+    "sales",
+    "hr"
+  ],
+  "segment_stats": [
+    {
+      "segment": "logistics",
+      "n": 700,
+      "mean": 3.0016428571428566,
+      "median": 3.0,
+      "std": 0.3246669047177534
+    },
+    {
+      "segment": "business",
+      "n": 664,
+      "mean": 3.0071536144578315,
+      "median": 3.0,
+      "std": 0.30315963152937697
+    },
+    {
+      "segment": "finance",
+      "n": 648,
+      "mean": 3.0016203703703703,
+      "median": 3.0,
+      "std": 0.32396738489817245
+    },
+    {
+      "segment": "it",
+      "n": 688,
+      "mean": 3.0094476744186047,
+      "median": 3.0,
+      "std": 0.3115290508351259
+    },
+    {
+      "segment": "sales",
+      "n": 640,
+      "mean": 3.0020312500000004,
+      "median": 3.0,
+      "std": 0.312662751046585
+    },
+    {
+      "segment": "hr",
+      "n": 660,
+      "mean": 3.012121212121212,
+      "median": 3.0,
+      "std": 0.310178934855787
+    }
+  ],
+  "interpretation": "セグメント間に有意な差がありません (p=0.9343, α=0.05)"
+}
