@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト鳥瞰図 / Project Overview</title>
+
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link href="../assets/css/output.css" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+    <script src="../config/config.js"></script>
+    <script src="../config/i18n.js"></script>
+
+    <style>
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(251, 191, 36, 0.8);
+            }
+        }
+        
+        .highlight-pulse {
+            animation: highlight-pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 p-5">
+    <!-- 言語切り替え -->
+    <div
+        class="fixed top-5 right-5 z-50 bg-white px-4 py-2.5 rounded-full shadow-lg flex gap-2.5"
+    >
+        <button
+            onclick="setLanguage('ja', event)"
+            class="lang-btn active px-4 py-2 border-0 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-gradient-start to-gradient-end text-white"
+        >
+            日本語
+        </button>
+        <button
+            onclick="setLanguage('en', event)"
+            class="lang-btn px-4 py-2 border-0 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200"
+        >
+            English
+        </button>
+    </div>
+
+    <div class="max-w-[1600px] mx-auto">
+        <!-- Header -->
+        <header
+            class="bg-gradient-to-br from-gradient-start to-gradient-end text-white p-8 rounded-xl mb-8 shadow-md"
+        >            
+            <h1 class="text-3xl mb-1">
+                <span class="lang-ja" id="headerTitle">プロジェクト鳥瞰図</span>
+                <span class="lang-en" id="headerTitleEN">Project Overview</span>
+            </h1>
+            <p class="opacity-90 text-sm">
+                <span class="lang-ja" id="headerSubtitle">全社プロジェクトの概要と進捗状況</span>
+                <span class="lang-en" id="headerSubtitleEN">Overview and progress of company-wide projects</span>
+            </p>
+        </header>
+        
+        <!-- メインレイアウト -->
+        <div class="grid grid-cols-[300px_1fr] gap-5">
+            <!-- サイドバー -->
+            <aside class="bg-white p-6 rounded-xl shadow-sm h-fit sticky top-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200">
+                    <span class="lang-ja" id="sidebarTitle">部門一覧</span>
+                    <span class="lang-en" id="sidebarTitleEN">Departments</span>
+                </h2>
+                
+                <ul class="list-none">
+                    <!-- 部門リストはJavaScriptで動的に生成されます -->
+                    <li class="p-3 px-4 mb-2 text-center text-gray-500">
+                        <span class="lang-ja">読み込み中...</span>
+                        <span class="lang-en">Loading...</span>
+                    </li>
+                </ul>
+            </aside>
+            
+            <!-- コンテンツエリア -->
+            <main class="bg-white p-8 rounded-xl shadow-sm min-h-[600px]">
+                <!-- プロジェクトリストはJavaScriptで動的に生成されます -->
+                <div class="text-center text-gray-500 py-12">
+                    <span class="lang-ja">読み込み中...</span>
+                    <span class="lang-en">Loading...</span>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- External JavaScript -->
+    <script src="../js/project_view.js"></script>
+</body>
+</html>

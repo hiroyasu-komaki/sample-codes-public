@@ -1,0 +1,32 @@
+{
+  "metrics": {
+    "totalProjects": {
+      "value": 24,
+      "inProgress": 18,
+      "planned": 6
+    },
+    "totalInvestment": {
+      "value": "¥3.2億",
+      "budgetUtilization": "68%"
+    },
+    "averageROI": {
+      "value": "145%",
+      "target": "150%"
+    },
+    "highRiskProjects": {
+      "value": 3
+    }
+  },
+  "budgetAllocation": {
+    "run": { "percent": 45, "amount": "¥1.44億" },
+    "grow": { "percent": 35, "amount": "¥1.12億" },
+    "transform": { "percent": 20, "amount": "¥0.64億" }
+  },
+  "strategicInvestment": {
+    "customerExperience": 30,
+    "operationalEfficiency": 25,
+    "newBusiness": 20,
+    "security": 15,
+    "infrastructure": 10
+  }
+}

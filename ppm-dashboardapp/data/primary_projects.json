@@ -1,0 +1,148 @@
+{
+  "projects": [
+    {
+      "id": "pj001",
+      "nameJA": "ECサイトリニューアル",
+      "nameEN": "E-Commerce Site Renewal",
+      "status": "onTrack",
+      "statusJA": "順調",
+      "statusEN": "On Track",
+      "budget": "¥4,500万",
+      "progress": 75,
+      "goal": "CX Enhancement",
+      "roiForecast": "180%"
+    },
+    {
+      "id": "pj002",
+      "nameJA": "基幹システム更改",
+      "nameEN": "Core System Upgrade",
+      "status": "caution",
+      "statusJA": "注意",
+      "statusEN": "Caution",
+      "budget": "¥8,200万",
+      "progress": 45,
+      "goal": "Infrastructure Renewal",
+      "roiForecast": "120%"
+    },
+    {
+      "id": "pj003",
+      "nameJA": "AI活用RPA導入",
+      "nameEN": "AI-Powered RPA Implementation",
+      "status": "onTrack",
+      "statusJA": "順調",
+      "statusEN": "On Track",
+      "budget": "¥2,800万",
+      "progress": 90,
+      "goal": "Operational Efficiency",
+      "roiForecast": "220%"
+    },
+    {
+      "id": "pj004",
+      "nameJA": "クラウドマイグレーション",
+      "nameEN": "Cloud Migration",
+      "status": "delayed",
+      "statusJA": "遅延",
+      "statusEN": "Delayed",
+      "budget": "¥6,500万",
+      "progress": 30,
+      "goal": "Infrastructure Renewal",
+      "roiForecast": "95%"
+    },
+    {
+      "id": "pj005",
+      "nameJA": "サブスクサービス開発",
+      "nameEN": "Subscription Service Development",
+      "status": "onTrack",
+      "statusJA": "順調",
+      "statusEN": "On Track",
+      "budget": "¥5,100万",
+      "progress": 60,
+      "goal": "New Business Creation",
+      "roiForecast": "200%"
+    },
+    {
+      "id": "pj006",
+      "nameJA": "ゼロトラスト導入",
+      "nameEN": "Zero Trust Implementation",
+      "status": "caution",
+      "statusJA": "注意",
+      "statusEN": "Caution",
+      "budget": "¥3,900万",
+      "progress": 55,
+      "goal": "Security Enhancement",
+      "roiForecast": "110%"
+    }
+  ],
+  "risks": [
+    {
+      "level": "high",
+      "titleJA": "クラウドマイグレーション遅延",
+      "titleEN": "Cloud Migration Delay",
+      "descriptionJA": "技術的課題により3ヶ月の遅延見込み。追加予算が必要。",
+      "descriptionEN": "3-month delay expected due to technical challenges. Additional budget required."
+    },
+    {
+      "level": "high",
+      "titleJA": "基幹システム要件定義の遅れ",
+      "titleEN": "Core System Requirements Delay",
+      "descriptionJA": "ユーザー部門との調整難航。スケジュールへの影響懸念。",
+      "descriptionEN": "Coordination difficulties with user departments. Schedule impact concerns."
+    },
+    {
+      "level": "medium",
+      "titleJA": "ITリソース不足",
+      "titleEN": "IT Resource Shortage",
+      "descriptionJA": "複数プロジェクト同時進行により人員稼働率95%超え。",
+      "descriptionEN": "Staff utilization exceeds 95% due to multiple concurrent projects."
+    },
+    {
+      "level": "medium",
+      "titleJA": "ゼロトラスト導入の複雑性",
+      "titleEN": "Zero Trust Implementation Complexity",
+      "descriptionJA": "既存システムとの統合に想定以上の工数が発生。",
+      "descriptionEN": "Integration with existing systems requires more effort than anticipated."
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2025-11-15",
+      "titleJA": "ECサイトリニューアル本番移行",
+      "titleEN": "E-Commerce Site Production Release",
+      "descriptionJA": "繁忙期前の重要リリース。準備完了済み。",
+      "descriptionEN": "Critical release before busy season. Preparation complete.",
+      "level": "low"
+    },
+    {
+      "date": "2025-11-30",
+      "titleJA": "AI-RPA導入完了",
+      "titleEN": "AI-RPA Implementation Complete",
+      "descriptionJA": "経理部門への本格展開。効果測定開始。",
+      "descriptionEN": "Full deployment to accounting. Effect measurement starts.",
+      "level": "low"
+    },
+    {
+      "date": "2025-12-10",
+      "titleJA": "Q4ポートフォリオレビュー",
+      "titleEN": "Q4 Portfolio Review",
+      "descriptionJA": "経営会議での報告。継続・中止判断実施。",
+      "descriptionEN": "Management review. Go/No-go decisions.",
+      "level": "medium"
+    },
+    {
+      "date": "2026-01-20",
+      "titleJA": "基幹システム設計完了",
+      "titleEN": "Core System Design Complete",
+      "descriptionJA": "重要な意思決定ポイント。現在遅延リスクあり。",
+      "descriptionEN": "Critical decision point. Currently at risk of delay.",
+      "level": "medium"
+    },
+    {
+      "date": "2025-11-14",
+      "titleJA": "テストフライト完了",
+      "titleEN": "Test flight Design Complete",
+      "descriptionJA": "モックアップ用のアプリ開発",
+      "descriptionEN": "This is mockup-app for internal-use.",
+      "level": "low"
+    }
+  ]
+}
