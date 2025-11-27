@@ -27,4 +27,4 @@ Thumbs.db
 
 # Data filesData files
 audio/
-out/
+# out/
