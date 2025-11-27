@@ -1,0 +1,26 @@
+# General
+*.log
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+env/
+venv/
+
+# Node.js
+node_modules/
+
+# Java
+*.class
+target/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+.ipynb_checkpoints/
+
+# Sensitive information
+.env
+# config.yaml

@@ -1,0 +1,237 @@
+# IT部門の社内向けサービス満足度アンケート項目定義
+
+# A. 回答者属性
+respondent_attributes:
+  department:
+    question: "所属部署"
+    type: "single_choice"
+    options:
+      - "営業部"
+      - "製造部"
+      - "管理部"
+      - "人事部"
+      - "その他"
+  
+  position:
+    question: "職位"
+    type: "single_choice"
+    options:
+      - "一般職"
+      - "主任・係長"
+      - "課長・部長"
+      - "役員"
+  
+  years_of_service:
+    question: "勤続年数"
+    type: "single_choice"
+    options:
+      - "1年未満"
+      - "1-3年"
+      - "3-5年"
+      - "5-10年"
+      - "10年以上"
+  
+  it_skill_level:
+    question: "ITスキル自己評価"
+    type: "single_choice"
+    options:
+      - "初心者"
+      - "基本的"
+      - "中級"
+      - "上級"
+      - "専門的"
+
+# B. サービス利用状況
+service_usage:
+  usage_frequency:
+    question: "ITサービス利用頻度"
+    type: "single_choice"
+    options:
+      - "ほぼ毎日"
+      - "週2-3回"
+      - "週1回程度"
+      - "月1回程度"
+      - "年数回"
+  
+  main_services:
+    question: "主に利用するサービス（複数選択可）"
+    type: "multiple_choice"
+    options:
+      - "ヘルプデスク"
+      - "システム障害対応"
+      - "新システム導入支援"
+      - "PC・機器設定"
+      - "ネットワーク関連"
+      - "セキュリティ関連"
+  
+  inquiry_count:
+    question: "過去1年間のIT部門への問い合わせ回数"
+    type: "single_choice"
+    options:
+      - "0回"
+      - "1-2回"
+      - "3-5回"
+      - "6-10回"
+      - "11回以上"
+
+# C. 満足度評価（5段階評価）
+satisfaction_ratings:
+  overall_satisfaction:
+    question: "IT部門への総合満足度"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  response_speed:
+    question: "対応スピード"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  technical_competence:
+    question: "技術的解決力"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  explanation_clarity:
+    question: "説明のわかりやすさ"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  service_politeness:
+    question: "対応の丁寧さ"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  system_stability:
+    question: "システムの安定性"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  security_measures:
+    question: "セキュリティ対策"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+  
+  new_system_support:
+    question: "新システム導入時の支援"
+    type: "rating"
+    scale: 5
+    labels:
+      5: "非常に満足"
+      4: "満足"
+      3: "普通"
+      2: "不満"
+      1: "非常に不満"
+
+# D. 重要度評価
+importance_ratings:
+  response_speed_importance:
+    question: "対応スピードの重要度"
+    type: "rating"
+    scale: 4
+    labels:
+      4: "非常に重要"
+      3: "重要"
+      2: "普通"
+      1: "あまり重要でない"
+  
+  technical_competence_importance:
+    question: "技術的解決力の重要度"
+    type: "rating"
+    scale: 4
+    labels:
+      4: "非常に重要"
+      3: "重要"
+      2: "普通"
+      1: "あまり重要でない"
+  
+  explanation_clarity_importance:
+    question: "説明のわかりやすさの重要度"
+    type: "rating"
+    scale: 4
+    labels:
+      4: "非常に重要"
+      3: "重要"
+      2: "普通"
+      1: "あまり重要でない"
+  
+  service_politeness_importance:
+    question: "対応の丁寧さの重要度"
+    type: "rating"
+    scale: 4
+    labels:
+      4: "非常に重要"
+      3: "重要"
+      2: "普通"
+      1: "あまり重要でない"
+
+# E. 改善要望
+improvement_requests:
+  most_improvement_needed:
+    question: "最も改善を希望する点（1つ選択）"
+    type: "single_choice"
+    options:
+      - "対応スピード"
+      - "技術力向上"
+      - "説明方法"
+      - "システム安定性"
+      - "その他"
+  
+  additional_services:
+    question: "追加で欲しいサービス（複数選択可）"
+    type: "multiple_choice"
+    options:
+      - "セルフサービス機能"
+      - "FAQ充実"
+      - "リモート支援"
+      - "研修・講習会"
+  
+  future_relationship:
+    question: "今後のIT部門との関わり方の希望"
+    type: "single_choice"
+    options:
+      - "現状維持"
+      - "より密接な連携"
+      - "より自立的な利用"
+      - "その他"
