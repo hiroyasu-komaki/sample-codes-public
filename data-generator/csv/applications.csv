@@ -1,0 +1,101 @@
+﻿id,nameJA,nameEN,category,categoryJA,categoryEN,icon,eolStatus,eolDate,eolDateEN,tags,projects
+dashboard-system,不明,Unknown,data,データ基盤,Data,💼,warning,2028年3月,April 2027,"['Java', 'Angular', 'React', 'Python', 'MongoDB']","['erp', 'ecommerce', 'crm']"
+mobile-system,不明,Unknown,frontend,フロントエンド,Frontend,📦,critical,2026年7月,February 2028,"['Vue.js', 'PostgreSQL']","['ecommerce', 'crm']"
+web-platform,不明,Unknown,frontend,フロントエンド,Frontend,🌐,safe,2028年7月,January 2028,"['Vue.js', 'Azure', 'React', 'Angular', 'AWS']","['analytics', 'mobile', 'ecommerce']"
+dashboard-system,不明,Unknown,data,データ基盤,Data,💰,warning,2028年12月,April 2026,"['Vue.js', 'Node.js', 'Kubernetes', 'AWS']","['ecommerce', 'analytics', 'mobile']"
+dashboard-app,不明,Unknown,backend,バックエンド,Backend,📱,safe,2026年10月,January 2026,"['Azure', 'Kubernetes', 'Docker', 'Node.js', 'PostgreSQL']","['mobile', 'portal']"
+cms-site,不明,Unknown,frontend,フロントエンド,Frontend,🔐,critical,2028年5月,March 2028,"['MongoDB', 'Python', 'Azure', 'PostgreSQL', 'Docker']",['analytics']
+crm-tool,不明,Unknown,frontend,フロントエンド,Frontend,📊,unknown,2027年9月,March 2026,"['Azure', 'Vue.js']","['crm', 'mobile', 'ecommerce']"
+portal-service,不明,Unknown,frontend,フロントエンド,Frontend,📝,critical,2026年5月,November 2027,"['Docker', 'Node.js', 'Python']","['portal', 'mobile', 'erp']"
+portal-app,不明,Unknown,data,データ基盤,Data,📊,safe,2027年4月,October 2026,"['Angular', 'Node.js']","['portal', 'ecommerce']"
+dashboard-tool,不明,Unknown,frontend,フロントエンド,Frontend,📊,warning,2027年10月,August 2026,"['AWS', 'Vue.js', 'Angular']",['analytics']
+ec-tool,不明,Unknown,data,データ基盤,Data,💰,critical,2028年11月,May 2028,"['PostgreSQL', 'MongoDB']","['analytics', 'ecommerce']"
+crm-site,不明,Unknown,data,データ基盤,Data,🛒,warning,2027年8月,March 2027,"['Python', 'React', 'Node.js', 'Kubernetes', 'AWS']","['portal', 'analytics']"
+portal-tool,不明,Unknown,data,データ基盤,Data,📊,unknown,2027年8月,October 2028,"['Vue.js', 'Docker', 'Node.js', 'Python', 'Azure']",['ecommerce']
+admin-site,不明,Unknown,frontend,フロントエンド,Frontend,🔐,unknown,2028年4月,December 2028,"['Vue.js', 'AWS', 'Node.js', 'Angular', 'Python']","['mobile', 'crm']"
+cms-system,不明,Unknown,data,データ基盤,Data,📦,unknown,2028年8月,March 2026,"['Vue.js', 'React', 'Angular']",['crm']
+cms-platform,不明,Unknown,backend,バックエンド,Backend,💰,warning,2028年3月,February 2027,"['Azure', 'Kubernetes', 'Python', 'MongoDB']","['mobile', 'portal']"
+dashboard-system,不明,Unknown,frontend,フロントエンド,Frontend,⚙️,critical,2028年2月,January 2028,"['MongoDB', 'Python']","['portal', 'erp', 'analytics']"
+portal-system,不明,Unknown,frontend,フロントエンド,Frontend,🔐,warning,2027年9月,October 2027,"['Python', 'AWS', 'Docker', 'MongoDB', 'Azure']","['mobile', 'erp', 'analytics']"
+api-app,不明,Unknown,frontend,フロントエンド,Frontend,📝,warning,2028年11月,July 2028,"['Azure', 'React']","['mobile', 'analytics', 'ecommerce']"
+cms-site,不明,Unknown,frontend,フロントエンド,Frontend,👥,critical,2028年6月,December 2027,"['Kubernetes', 'Java', 'Azure', 'Python', 'React']","['ecommerce', 'mobile', 'crm']"
+dashboard-platform,不明,Unknown,frontend,フロントエンド,Frontend,📊,unknown,2026年4月,February 2026,"['Node.js', 'Docker']","['analytics', 'crm']"
+crm-site,不明,Unknown,data,データ基盤,Data,🔐,unknown,2028年5月,December 2028,"['Docker', 'Python']","['erp', 'analytics']"
+mobile-site,不明,Unknown,data,データ基盤,Data,💼,critical,2026年4月,April 2028,"['Angular', 'MongoDB']","['analytics', 'ecommerce']"
+crm-system,不明,Unknown,frontend,フロントエンド,Frontend,💰,warning,2026年1月,December 2026,"['Python', 'Angular', 'Azure', 'PostgreSQL', 'MongoDB']","['analytics', 'erp']"
+erp-app,不明,Unknown,data,データ基盤,Data,🛒,warning,2026年4月,November 2027,"['MongoDB', 'Java']","['erp', 'portal', 'crm']"
+dashboard-app,不明,Unknown,frontend,フロントエンド,Frontend,🔧,unknown,2027年10月,February 2028,"['Java', 'Kubernetes', 'Vue.js', 'Angular', 'Docker']","['analytics', 'ecommerce', 'mobile']"
+cms-app,不明,Unknown,data,データ基盤,Data,📝,safe,2026年8月,January 2028,"['Kubernetes', 'MongoDB', 'Python', 'PostgreSQL', 'React']",['ecommerce']
+ec-system,不明,Unknown,data,データ基盤,Data,📝,safe,2027年11月,September 2027,"['Vue.js', 'Java', 'Python', 'Docker', 'Kubernetes']","['ecommerce', 'erp']"
+portal-site,不明,Unknown,data,データ基盤,Data,🔧,safe,2028年4月,November 2027,"['AWS', 'React', 'Kubernetes', 'MongoDB', 'PostgreSQL']",['mobile']
+portal-service,不明,Unknown,data,データ基盤,Data,📦,warning,2028年12月,February 2027,"['Node.js', 'AWS']",['mobile']
+dashboard-service,不明,Unknown,backend,バックエンド,Backend,👥,warning,2027年8月,November 2028,"['Azure', 'MongoDB', 'Docker', 'React']","['mobile', 'erp', 'ecommerce']"
+portal-tool,不明,Unknown,frontend,フロントエンド,Frontend,📝,unknown,2027年4月,January 2027,"['Python', 'AWS', 'Angular']","['erp', 'analytics']"
+mobile-tool,不明,Unknown,backend,バックエンド,Backend,📝,safe,2026年11月,August 2027,"['MongoDB', 'Kubernetes', 'Vue.js', 'React']","['ecommerce', 'erp', 'mobile']"
+dashboard-system,不明,Unknown,data,データ基盤,Data,🛒,unknown,2028年1月,July 2026,"['Kubernetes', 'Angular', 'Python']","['ecommerce', 'mobile']"
+cms-service,不明,Unknown,backend,バックエンド,Backend,⚙️,unknown,2026年7月,November 2027,"['AWS', 'PostgreSQL']","['crm', 'portal', 'analytics']"
+cms-site,不明,Unknown,frontend,フロントエンド,Frontend,📝,unknown,2026年3月,December 2027,"['Node.js', 'Vue.js']",['ecommerce']
+web-tool,不明,Unknown,frontend,フロントエンド,Frontend,💰,critical,2028年9月,July 2026,"['Vue.js', 'Docker', 'Angular', 'MongoDB', 'Python']","['mobile', 'erp']"
+mobile-site,不明,Unknown,data,データ基盤,Data,📦,safe,2027年1月,December 2026,"['PostgreSQL', 'MongoDB', 'Docker', 'Node.js']",['erp']
+admin-site,不明,Unknown,backend,バックエンド,Backend,👥,safe,2028年4月,November 2028,"['AWS', 'Angular', 'PostgreSQL', 'Node.js', 'Docker']","['crm', 'analytics', 'ecommerce']"
+ec-platform,不明,Unknown,backend,バックエンド,Backend,💼,critical,2026年8月,October 2027,"['Python', 'PostgreSQL']","['portal', 'erp', 'ecommerce']"
+dashboard-platform,不明,Unknown,backend,バックエンド,Backend,👥,critical,2026年8月,August 2028,"['AWS', 'Python', 'React', 'Docker']",['erp']
+mobile-system,不明,Unknown,frontend,フロントエンド,Frontend,📦,safe,2028年9月,July 2027,"['Azure', 'Kubernetes', 'MongoDB', 'Angular']","['erp', 'portal', 'mobile']"
+ec-platform,不明,Unknown,frontend,フロントエンド,Frontend,⚙️,critical,2028年10月,October 2028,"['AWS', 'MongoDB', 'Java', 'Azure', 'PostgreSQL']",['crm']
+crm-system,不明,Unknown,backend,バックエンド,Backend,🌐,unknown,2027年8月,June 2027,"['Java', 'Node.js', 'Docker', 'PostgreSQL', 'Azure']",['mobile']
+crm-platform,不明,Unknown,frontend,フロントエンド,Frontend,💰,warning,2028年12月,February 2026,"['React', 'Java', 'MongoDB', 'PostgreSQL', 'AWS']","['analytics', 'ecommerce', 'crm']"
+crm-tool,不明,Unknown,frontend,フロントエンド,Frontend,⚙️,unknown,2028年7月,August 2027,"['MongoDB', 'React', 'Angular']","['portal', 'ecommerce', 'mobile']"
+cms-app,不明,Unknown,backend,バックエンド,Backend,🌐,safe,2028年8月,August 2026,"['Vue.js', 'MongoDB', 'Kubernetes', 'AWS']","['mobile', 'crm', 'analytics']"
+crm-platform,不明,Unknown,frontend,フロントエンド,Frontend,📦,critical,2026年12月,October 2028,"['React', 'Angular', 'PostgreSQL', 'Docker', 'Vue.js']","['analytics', 'erp']"
+cms-platform,不明,Unknown,backend,バックエンド,Backend,🛒,warning,2027年8月,July 2028,"['Python', 'Java', 'Azure', 'PostgreSQL', 'Vue.js']",['erp']
+web-site,不明,Unknown,backend,バックエンド,Backend,💼,safe,2027年4月,January 2027,"['Docker', 'AWS', 'PostgreSQL', 'Java']","['portal', 'erp']"
+web-site,不明,Unknown,data,データ基盤,Data,👥,critical,2028年5月,June 2027,"['AWS', 'React', 'Azure', 'Vue.js', 'Node.js']","['mobile', 'ecommerce', 'portal']"
+portal-tool,不明,Unknown,backend,バックエンド,Backend,📊,warning,2028年8月,August 2026,"['Node.js', 'Vue.js', 'PostgreSQL', 'Docker']",['crm']
+web-platform,不明,Unknown,frontend,フロントエンド,Frontend,📱,warning,2028年4月,June 2026,"['MongoDB', 'Angular']","['ecommerce', 'portal', 'erp']"
+mobile-service,不明,Unknown,data,データ基盤,Data,👥,critical,2027年8月,June 2027,"['React', 'Kubernetes', 'Java', 'Docker']","['portal', 'analytics']"
+api-system,不明,Unknown,backend,バックエンド,Backend,🛒,warning,2026年12月,October 2027,"['Java', 'Kubernetes', 'PostgreSQL', 'Angular']","['mobile', 'analytics']"
+admin-system,不明,Unknown,data,データ基盤,Data,💼,safe,2027年4月,May 2028,"['AWS', 'PostgreSQL', 'Azure']","['erp', 'crm']"
+api-app,不明,Unknown,frontend,フロントエンド,Frontend,📱,critical,2027年6月,January 2028,"['Angular', 'Kubernetes', 'Vue.js']","['ecommerce', 'erp', 'analytics']"
+erp-tool,不明,Unknown,backend,バックエンド,Backend,💰,unknown,2027年9月,April 2028,"['Azure', 'Docker', 'Node.js', 'MongoDB', 'Angular']",['erp']
+api-app,不明,Unknown,frontend,フロントエンド,Frontend,📦,safe,2026年3月,April 2026,"['MongoDB', 'Docker', 'Python']","['portal', 'mobile', 'analytics']"
+admin-site,不明,Unknown,data,データ基盤,Data,🔐,safe,2026年4月,July 2028,"['Python', 'Docker', 'React', 'MongoDB', 'Kubernetes']","['portal', 'erp', 'ecommerce']"
+ec-app,不明,Unknown,backend,バックエンド,Backend,📦,critical,2027年12月,September 2027,"['Vue.js', 'MongoDB', 'Java']",['analytics']
+web-platform,不明,Unknown,data,データ基盤,Data,💰,critical,2026年12月,December 2026,"['Docker', 'PostgreSQL', 'Python', 'MongoDB']","['ecommerce', 'portal', 'crm']"
+crm-site,不明,Unknown,data,データ基盤,Data,📱,warning,2026年2月,November 2027,"['Node.js', 'PostgreSQL', 'MongoDB', 'Vue.js']","['crm', 'portal']"
+mobile-system,不明,Unknown,backend,バックエンド,Backend,🌐,safe,2027年7月,August 2028,"['PostgreSQL', 'Azure', 'Java']","['erp', 'portal']"
+mobile-service,不明,Unknown,data,データ基盤,Data,💼,warning,2027年9月,January 2027,"['Kubernetes', 'Python', 'React', 'PostgreSQL']",['ecommerce']
+erp-service,不明,Unknown,frontend,フロントエンド,Frontend,💰,safe,2027年7月,May 2026,"['React', 'Azure', 'Kubernetes', 'MongoDB']","['portal', 'analytics']"
+crm-system,不明,Unknown,data,データ基盤,Data,📱,safe,2026年4月,July 2026,"['Node.js', 'Azure', 'Java', 'Kubernetes']",['crm']
+admin-service,不明,Unknown,frontend,フロントエンド,Frontend,📝,unknown,2027年7月,April 2028,"['Azure', 'Python', 'Angular']","['mobile', 'crm']"
+erp-app,不明,Unknown,frontend,フロントエンド,Frontend,👥,safe,2028年12月,November 2027,"['Docker', 'Kubernetes']","['mobile', 'erp', 'ecommerce']"
+mobile-tool,不明,Unknown,data,データ基盤,Data,🛒,warning,2026年10月,June 2028,"['Python', 'MongoDB']","['portal', 'ecommerce']"
+api-platform,不明,Unknown,frontend,フロントエンド,Frontend,🔐,warning,2027年8月,September 2027,"['Azure', 'Java']","['ecommerce', 'analytics']"
+mobile-site,不明,Unknown,backend,バックエンド,Backend,💰,unknown,2026年6月,June 2028,"['Vue.js', 'Python', 'Java']",['erp']
+mobile-service,不明,Unknown,frontend,フロントエンド,Frontend,🛒,warning,2027年7月,December 2027,"['Angular', 'Node.js', 'Kubernetes', 'AWS', 'Java']","['analytics', 'mobile', 'portal']"
+crm-system,不明,Unknown,frontend,フロントエンド,Frontend,🌐,critical,2027年9月,June 2028,"['Angular', 'Python', 'MongoDB', 'Docker']","['portal', 'analytics', 'erp']"
+api-site,不明,Unknown,frontend,フロントエンド,Frontend,🌐,unknown,2028年12月,December 2027,"['Vue.js', 'MongoDB', 'Kubernetes', 'Angular']",['analytics']
+crm-tool,不明,Unknown,backend,バックエンド,Backend,⚙️,warning,2028年10月,May 2027,"['Docker', 'Kubernetes', 'PostgreSQL']",['erp']
+mobile-system,不明,Unknown,backend,バックエンド,Backend,🔐,warning,2026年8月,May 2027,"['Vue.js', 'PostgreSQL', 'React', 'Python']",['mobile']
+api-service,不明,Unknown,backend,バックエンド,Backend,🔐,critical,2026年5月,February 2026,"['MongoDB', 'Java']","['portal', 'erp']"
+web-system,不明,Unknown,data,データ基盤,Data,🔐,unknown,2027年8月,April 2028,"['Azure', 'PostgreSQL', 'Java', 'Vue.js']",['analytics']
+admin-system,不明,Unknown,backend,バックエンド,Backend,⚙️,critical,2026年7月,February 2027,"['MongoDB', 'React', 'Azure']",['crm']
+api-platform,不明,Unknown,frontend,フロントエンド,Frontend,📝,unknown,2027年11月,September 2028,"['Azure', 'Node.js', 'Vue.js', 'MongoDB']","['mobile', 'analytics']"
+dashboard-service,不明,Unknown,backend,バックエンド,Backend,📦,unknown,2028年7月,March 2028,"['Docker', 'PostgreSQL', 'Vue.js', 'Angular']","['ecommerce', 'analytics', 'erp']"
+ec-site,不明,Unknown,backend,バックエンド,Backend,💰,safe,2028年3月,April 2026,"['React', 'Python']","['erp', 'crm', 'portal']"
+portal-service,不明,Unknown,frontend,フロントエンド,Frontend,💼,warning,2027年3月,August 2028,"['Vue.js', 'Kubernetes', 'Node.js', 'AWS', 'Angular']",['ecommerce']
+ec-site,不明,Unknown,data,データ基盤,Data,⚙️,warning,2028年9月,December 2027,"['MongoDB', 'Java', 'AWS', 'PostgreSQL', 'Angular']","['portal', 'ecommerce', 'crm']"
+admin-system,不明,Unknown,backend,バックエンド,Backend,📦,safe,2026年7月,September 2028,"['Docker', 'Vue.js', 'MongoDB', 'PostgreSQL', 'Python']","['erp', 'crm']"
+api-system,不明,Unknown,data,データ基盤,Data,📱,critical,2028年10月,May 2028,"['Kubernetes', 'Java']",['ecommerce']
+dashboard-platform,不明,Unknown,data,データ基盤,Data,📦,safe,2028年1月,April 2026,"['MongoDB', 'Kubernetes', 'Node.js']",['erp']
+portal-platform,不明,Unknown,data,データ基盤,Data,⚙️,warning,2026年11月,April 2027,"['Vue.js', 'Docker', 'Java', 'AWS']",['crm']
+ec-site,不明,Unknown,frontend,フロントエンド,Frontend,💼,warning,2027年3月,March 2027,"['React', 'PostgreSQL', 'Python', 'Node.js']","['crm', 'ecommerce', 'portal']"
+crm-tool,不明,Unknown,data,データ基盤,Data,🔐,safe,2027年3月,January 2027,"['MongoDB', 'Vue.js']","['analytics', 'portal', 'mobile']"
+erp-platform,不明,Unknown,data,データ基盤,Data,👥,safe,2026年5月,September 2028,"['Docker', 'Kubernetes', 'Azure']","['mobile', 'portal', 'erp']"
+ec-service,不明,Unknown,frontend,フロントエンド,Frontend,🌐,safe,2027年6月,May 2026,"['React', 'Java']","['erp', 'crm', 'analytics']"
+web-platform,不明,Unknown,data,データ基盤,Data,👥,warning,2026年8月,January 2026,"['Angular', 'Azure', 'Node.js']",['analytics']
+erp-app,不明,Unknown,data,データ基盤,Data,⚙️,safe,2027年6月,May 2028,"['AWS', 'Node.js']","['portal', 'erp']"
+erp-site,不明,Unknown,frontend,フロントエンド,Frontend,💰,safe,2027年5月,March 2028,"['Node.js', 'Java', 'Angular']","['mobile', 'ecommerce']"
+api-service,不明,Unknown,frontend,フロントエンド,Frontend,📦,critical,2027年5月,August 2028,"['Python', 'Angular']","['mobile', 'ecommerce']"
+ec-service,不明,Unknown,backend,バックエンド,Backend,💰,safe,2026年8月,January 2026,"['AWS', 'Python', 'Angular']","['analytics', 'portal']"
+cms-tool,不明,Unknown,backend,バックエンド,Backend,🔐,warning,2026年12月,May 2028,"['Docker', 'React']",['ecommerce']
+cms-tool,不明,Unknown,backend,バックエンド,Backend,👥,critical,2028年1月,August 2027,"['React', 'Java', 'Node.js']","['erp', 'ecommerce']"
