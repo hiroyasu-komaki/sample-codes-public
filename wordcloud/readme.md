@@ -1,6 +1,6 @@
 # WordCloud生成ツール
 
-日本語・英語テキストから美しいWordCloudを自動生成するPythonツールです。
+日本語・英語テキストからWordCloudを自動生成するPythonツールです。
 
 ## 🌟 特徴
 
@@ -17,19 +17,11 @@ wordcloud-generator/
 ├── main.py                    # メイン実行ファイル
 ├── WordCloudGenerator.py      # WordCloud生成クラス
 ├── requirements.txt           # 必要なライブラリ
-├── README.md                 # このファイル
-├── .gitignore               # Git除外設定
 ├── in/                      # 入力ファイル格納フォルダ
-│   ├── sample.txt
-│   ├── data.csv
-│   └── document.md
 └── out/                     # 出力ファイル格納フォルダ
-    ├── sample_wordcloud.png
-    ├── data_wordcloud.png
-    └── document_wordcloud.png
 ```
 
-## 🚀 クイックスタート
+## セットアップ
 
 ### 1. 環境準備
 
@@ -62,40 +54,6 @@ python main.py
 ls out/
 ```
 
-## 📖 使用方法
-
-### 基本的な使い方
-
-1. `in/`フォルダに処理したいテキストファイル（`.txt`, `.csv`, `.md`）を配置
-2. `python main.py`を実行
-3. `out/`フォルダに生成されたWordCloud（PNG形式）が保存されます
-
-### カスタマイズ
-
-`main.py`の`wordcloud_params`を編集することでWordCloudをカスタマイズできます：
-
-```python
-wordcloud_params = {
-    'width': 1200,              # 幅
-    'height': 600,              # 高さ
-    'background_color': 'white', # 背景色
-    'max_words': 150,           # 最大単語数
-    'colormap': 'viridis',      # カラーマップ
-    'relative_scaling': 0.5,    # 文字サイズの相対スケール
-    'min_font_size': 10         # 最小フォントサイズ
-}
-```
-
-## 🔧 依存ライブラリ
-
-- **wordcloud**: WordCloud生成
-- **matplotlib**: グラフ表示・画像保存
-- **numpy**: 数値計算
-- **pillow**: 画像処理
-- **mecab-python3**: 日本語形態素解析（オプション）
-- **nltk**: 英語テキスト処理（オプション）
-- **pandas**: データ処理
-
-## 📄 ライセンス
+## ライセンス
 
 MIT License
