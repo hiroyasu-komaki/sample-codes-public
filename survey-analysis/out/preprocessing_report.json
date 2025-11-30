@@ -1,0 +1,537 @@
+{
+  "data_types": {
+    "identifier": [],
+    "numeric_continuous": [
+      "overall_satisfaction",
+      "response_speed",
+      "technical_competence",
+      "explanation_clarity",
+      "service_politeness",
+      "system_stability",
+      "security_measures",
+      "new_system_support",
+      "response_speed_importance",
+      "technical_competence_importance",
+      "explanation_clarity_importance",
+      "service_politeness_importance"
+    ],
+    "categorical_ordinal": [
+      "position",
+      "years_of_service",
+      "it_skill_level",
+      "usage_frequency",
+      "inquiry_count"
+    ],
+    "categorical_nominal": [
+      "department",
+      "most_improvement_needed",
+      "future_relationship"
+    ],
+    "multiple_choice": [
+      "main_services",
+      "additional_services"
+    ]
+  },
+  "outliers": {
+    "overall_satisfaction": {
+      "count": 2,
+      "percentage": 2.127659574468085,
+      "values": [
+        5.0,
+        5.0
+      ]
+    },
+    "response_speed": {
+      "count": 2,
+      "percentage": 2.1505376344086025,
+      "values": [
+        5.0,
+        5.0
+      ]
+    },
+    "technical_competence": {
+      "count": 3,
+      "percentage": 3.1914893617021276,
+      "values": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "explanation_clarity": {
+      "count": 0,
+      "percentage": 0.0
+    },
+    "service_politeness": {
+      "count": 4,
+      "percentage": 4.2105263157894735,
+      "values": [
+        5.0,
+        5.0,
+        5.0,
+        5.0
+      ]
+    },
+    "system_stability": {
+      "count": 0,
+      "percentage": 0.0
+    },
+    "security_measures": {
+      "count": 0,
+      "percentage": 0.0
+    },
+    "new_system_support": {
+      "count": 3,
+      "percentage": 3.1578947368421053,
+      "values": [
+        5.0,
+        5.0,
+        5.0
+      ]
+    },
+    "response_speed_importance": {
+      "count": 0,
+      "percentage": 0.0
+    },
+    "technical_competence_importance": {
+      "count": 35,
+      "percentage": 35.0,
+      "values": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        3.0,
+        1.0,
+        3.0,
+        1.0,
+        1.0,
+        1.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        1.0,
+        1.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        1.0,
+        1.0,
+        1.0,
+        3.0,
+        3.0,
+        1.0,
+        1.0,
+        1.0,
+        3.0,
+        1.0,
+        3.0,
+        1.0,
+        3.0,
+        1.0
+      ]
+    },
+    "explanation_clarity_importance": {
+      "count": 1,
+      "percentage": 1.0,
+      "values": [
+        1.0
+      ]
+    },
+    "service_politeness_importance": {
+      "count": 3,
+      "percentage": 3.0,
+      "values": [
+        1.0,
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "encoding": {},
+  "standardization": {
+    "overall_satisfaction": {
+      "method": "z_score",
+      "mean": 2.773368395888119,
+      "std": 0.8027132392215385,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "overall_satisfaction_std",
+      "rescaled_column": "overall_satisfaction_rescaled"
+    },
+    "response_speed": {
+      "method": "z_score",
+      "mean": 2.529177238129757,
+      "std": 0.8572935358061116,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "response_speed_std",
+      "rescaled_column": "response_speed_rescaled"
+    },
+    "technical_competence": {
+      "method": "z_score",
+      "mean": 3.6467846043509438,
+      "std": 1.029721816342857,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "technical_competence_std",
+      "rescaled_column": "technical_competence_rescaled"
+    },
+    "explanation_clarity": {
+      "method": "z_score",
+      "mean": 2.932584269662921,
+      "std": 1.0954218034515368,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "explanation_clarity_std",
+      "rescaled_column": "explanation_clarity_rescaled"
+    },
+    "service_politeness": {
+      "method": "z_score",
+      "mean": 2.7586121743425114,
+      "std": 1.051267119090642,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "service_politeness_std",
+      "rescaled_column": "service_politeness_rescaled"
+    },
+    "system_stability": {
+      "method": "z_score",
+      "mean": 3.0,
+      "std": 0.917010954628728,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "system_stability_std",
+      "rescaled_column": "system_stability_rescaled"
+    },
+    "security_measures": {
+      "method": "z_score",
+      "mean": 3.7560752547687484,
+      "std": 1.0613132502741656,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "security_measures_std",
+      "rescaled_column": "security_measures_rescaled"
+    },
+    "new_system_support": {
+      "method": "z_score",
+      "mean": 2.595505617977528,
+      "std": 0.9258792028464264,
+      "original_range": [
+        1,
+        5
+      ],
+      "target_center": 3.0,
+      "target_std": 1.0,
+      "standardized_column": "new_system_support_std",
+      "rescaled_column": "new_system_support_rescaled"
+    },
+    "response_speed_importance": {
+      "method": "z_score",
+      "mean": 2.4157303370786516,
+      "std": 0.7040304223160219,
+      "original_range": [
+        1,
+        4
+      ],
+      "target_center": 2.5,
+      "target_std": 1.0,
+      "standardized_column": "response_speed_importance_std",
+      "rescaled_column": "response_speed_importance_rescaled"
+    },
+    "technical_competence_importance": {
+      "method": "z_score",
+      "mean": 1.9213483146067416,
+      "std": 0.5882315387730875,
+      "original_range": [
+        1,
+        4
+      ],
+      "target_center": 2.5,
+      "target_std": 1.0,
+      "standardized_column": "technical_competence_importance_std",
+      "rescaled_column": "technical_competence_importance_rescaled"
+    },
+    "explanation_clarity_importance": {
+      "method": "z_score",
+      "mean": 3.2808988764044944,
+      "std": 0.7975639621677519,
+      "original_range": [
+        1,
+        4
+      ],
+      "target_center": 2.5,
+      "target_std": 1.0,
+      "standardized_column": "explanation_clarity_importance_std",
+      "rescaled_column": "explanation_clarity_importance_rescaled"
+    },
+    "service_politeness_importance": {
+      "method": "z_score",
+      "mean": 3.191011235955056,
+      "std": 0.8511543564528601,
+      "original_range": [
+        1,
+        4
+      ],
+      "target_center": 2.5,
+      "target_std": 1.0,
+      "standardized_column": "service_politeness_importance_std",
+      "rescaled_column": "service_politeness_importance_rescaled"
+    }
+  },
+  "missing_values": {
+    "overall_satisfaction": {
+      "count": 6.0,
+      "rate": 6.0,
+      "action": "平均値補完 (2.77)"
+    },
+    "response_speed": {
+      "count": 7.0,
+      "rate": 7.000000000000001,
+      "action": "平均値補完 (2.52)"
+    },
+    "technical_competence": {
+      "count": 6.0,
+      "rate": 6.0,
+      "action": "平均値補完 (3.71)"
+    },
+    "explanation_clarity": {
+      "count": 4.0,
+      "rate": 4.0,
+      "action": "リストワイズ削除"
+    },
+    "service_politeness": {
+      "count": 5.0,
+      "rate": 5.208333333333334,
+      "action": "平均値補完 (2.70)"
+    },
+    "system_stability": {
+      "count": 3.0,
+      "rate": 3.125,
+      "action": "リストワイズ削除"
+    },
+    "security_measures": {
+      "count": 7.0,
+      "rate": 7.526881720430108,
+      "action": "平均値補完 (3.76)"
+    },
+    "new_system_support": {
+      "count": 4.0,
+      "rate": 4.301075268817205,
+      "action": "リストワイズ削除"
+    },
+    "response_speed_importance": {
+      "count": 0,
+      "rate": 0.0,
+      "action": "none"
+    },
+    "technical_competence_importance": {
+      "count": 0,
+      "rate": 0.0,
+      "action": "none"
+    },
+    "explanation_clarity_importance": {
+      "count": 0,
+      "rate": 0.0,
+      "action": "none"
+    },
+    "service_politeness_importance": {
+      "count": 0,
+      "rate": 0.0,
+      "action": "none"
+    }
+  },
+  "quality_metrics": {
+    "shape": {
+      "rows": 89,
+      "columns": 47
+    },
+    "missing": {
+      "total_count": 0,
+      "total_rate": 0.0
+    },
+    "dtypes": {
+      "float64": 36,
+      "object": 11
+    }
+  },
+  "representativeness": {
+    "department": {
+      "deviations": {
+        "営業部": {
+          "expected_pct": 30.0,
+          "actual_pct": 16.853932584269664,
+          "deviation_pct": -13.146067415730336,
+          "actual_count": 15
+        },
+        "製造部": {
+          "expected_pct": 40.0,
+          "actual_pct": 21.34831460674157,
+          "deviation_pct": -18.65168539325843,
+          "actual_count": 19
+        },
+        "管理部": {
+          "expected_pct": 20.0,
+          "actual_pct": 16.853932584269664,
+          "deviation_pct": -3.1460674157303385,
+          "actual_count": 15
+        },
+        "人事部": {
+          "expected_pct": 8.0,
+          "actual_pct": 23.595505617977526,
+          "deviation_pct": 15.595505617977528,
+          "actual_count": 21
+        },
+        "その他": {
+          "expected_pct": 2.0,
+          "actual_pct": 21.34831460674157,
+          "deviation_pct": 19.348314606741575,
+          "actual_count": 19
+        }
+      },
+      "max_deviation": 19.348314606741575,
+      "status": "要調整",
+      "status_en": "needs_adjustment",
+      "total_responses": 89
+    },
+    "position": {
+      "deviations": {
+        "一般職": {
+          "expected_pct": 85.0,
+          "actual_pct": 24.719101123595504,
+          "deviation_pct": -60.280898876404486,
+          "actual_count": 22
+        },
+        "主任・係長": {
+          "expected_pct": 10.0,
+          "actual_pct": 19.101123595505616,
+          "deviation_pct": 9.101123595505618,
+          "actual_count": 17
+        },
+        "課長・部長": {
+          "expected_pct": 4.0,
+          "actual_pct": 31.46067415730337,
+          "deviation_pct": 27.460674157303373,
+          "actual_count": 28
+        },
+        "役員": {
+          "expected_pct": 1.0,
+          "actual_pct": 24.719101123595504,
+          "deviation_pct": 23.719101123595504,
+          "actual_count": 22
+        }
+      },
+      "max_deviation": 60.280898876404486,
+      "status": "要調整",
+      "status_en": "needs_adjustment",
+      "total_responses": 89
+    },
+    "years_of_service": {
+      "deviations": {
+        "1年未満": {
+          "expected_pct": 15.0,
+          "actual_pct": 26.96629213483146,
+          "deviation_pct": 11.96629213483146,
+          "actual_count": 24
+        },
+        "1-3年": {
+          "expected_pct": 25.0,
+          "actual_pct": 17.97752808988764,
+          "deviation_pct": -7.02247191011236,
+          "actual_count": 16
+        },
+        "3-5年": {
+          "expected_pct": 20.0,
+          "actual_pct": 24.719101123595504,
+          "deviation_pct": 4.719101123595504,
+          "actual_count": 22
+        },
+        "5-10年": {
+          "expected_pct": 25.0,
+          "actual_pct": 22.47191011235955,
+          "deviation_pct": -2.52808988764045,
+          "actual_count": 20
+        },
+        "10年以上": {
+          "expected_pct": 15.0,
+          "actual_pct": 7.865168539325842,
+          "deviation_pct": -7.134831460674157,
+          "actual_count": 7
+        }
+      },
+      "max_deviation": 11.96629213483146,
+      "status": "要調整",
+      "status_en": "needs_adjustment",
+      "total_responses": 89
+    },
+    "it_skill_level": {
+      "deviations": {
+        "初心者": {
+          "expected_pct": 30.0,
+          "actual_pct": 22.47191011235955,
+          "deviation_pct": -7.528089887640449,
+          "actual_count": 20
+        },
+        "基本的": {
+          "expected_pct": 35.0,
+          "actual_pct": 19.101123595505616,
+          "deviation_pct": -15.89887640449438,
+          "actual_count": 17
+        },
+        "中級": {
+          "expected_pct": 25.0,
+          "actual_pct": 21.34831460674157,
+          "deviation_pct": -3.6516853932584277,
+          "actual_count": 19
+        },
+        "上級": {
+          "expected_pct": 8.0,
+          "actual_pct": 19.101123595505616,
+          "deviation_pct": 11.101123595505618,
+          "actual_count": 17
+        },
+        "専門的": {
+          "expected_pct": 2.0,
+          "actual_pct": 17.97752808988764,
+          "deviation_pct": 15.977528089887642,
+          "actual_count": 16
+        }
+      },
+      "max_deviation": 15.977528089887642,
+      "status": "要調整",
+      "status_en": "needs_adjustment",
+      "total_responses": 89
+    }
+  }
+}
