@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# 仮想環境
+venv/
+env/
+ENV/
+rag_env/
+
+# データフォルダ（ユーザーが追加したドキュメント）
+data/pdf/*
+data/txt/*
+data/md/*
+# フォルダ自体は残す
+!data/pdf/.gitkeep
+!data/txt/.gitkeep
+!data/md/.gitkeep
+
+# ベクトルデータベース
+vectordb/
+
+# 検索結果
+results/
+
+# IDE・エディタ
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ログ
+*.log
+
+# 環境変数
+.env
+.env.local
+
+# その他
+*.bak
+*.tmp
