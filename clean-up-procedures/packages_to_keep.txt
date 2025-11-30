@@ -1,0 +1,16 @@
+black
+flake8
+pycodestyle
+pyflakes
+mccabe
+mypy_extensions
+ipython
+ipykernel
+jupyter_core
+jupyter_client
+jupyter_server
+jupyterlab
+notebook
+build
+setuptools
+pytest
