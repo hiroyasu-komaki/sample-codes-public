@@ -1,0 +1,30 @@
+id,nameJA,nameEN,category,categoryJA,categoryEN,icon,tags,projects,eolStatus,eolDate,eolDateEN
+ec-site,ECサイト,E-Commerce Site,frontend,フロントエンド,Frontend,🛒,"['React', 'Next.js']",['ecommerce'],warning,2027年3月,March 2027
+mobile-app,モバイルアプリ,Mobile App,frontend,フロントエンド,Frontend,📱,['React Native'],['ecommerce'],safe,2028年6月,June 2028
+erp-dashboard,ERP管理画面,ERP Dashboard,frontend,フロントエンド,Frontend,💼,['Angular'],['coresystem'],unknown,不明,Unknown
+rpa-console,RPA管理画面,RPA Console,frontend,フロントエンド,Frontend,🤖,['Vue.js'],['rpa'],critical,2025年10月,October 2025
+subscription-portal,サブスク管理ポータル,Subscription Portal,frontend,フロントエンド,Frontend,🔄,['React'],['subscription'],warning,2026年8月,August 2026
+bi-dashboard,BIダッシュボード,BI Dashboard,frontend,フロントエンド,Frontend,📊,"['React', 'D3.js']",[],safe,2029年4月,April 2029
+admin-portal,管理者ポータル,Admin Portal,frontend,フロントエンド,Frontend,🔧,"['Vue.js', 'Vuetify']",[],safe,2028年12月,December 2028
+customer-portal,顧客ポータル,Customer Portal,frontend,フロントエンド,Frontend,👤,"['React', 'Material-UI']",[],warning,2026年11月,November 2026
+ec-api,EC API サーバー,E-Commerce API,backend,バックエンド,Backend,⚙️,"['Node.js', 'Express']",['ecommerce'],safe,2029年1月,January 2029
+payment-gateway,決済ゲートウェイ,Payment Gateway,backend,バックエンド,Backend,💳,"['Java', 'Spring Boot']",['ecommerce'],warning,2027年5月,May 2027
+erp-core,ERPコアシステム,ERP Core System,backend,バックエンド,Backend,🏢,"['Java', 'SAP']",['coresystem'],critical,2025年12月,December 2025
+inventory-system,在庫管理システム,Inventory System,backend,バックエンド,Backend,📦,"['Python', 'Django']",['coresystem'],safe,2028年8月,August 2028
+rpa-engine,RPAエンジン,RPA Engine,backend,バックエンド,Backend,⚡,"['Python', 'UiPath']",['rpa'],safe,2029年2月,February 2029
+ml-service,機械学習サービス,ML Service,backend,バックエンド,Backend,🧠,"['Python', 'TensorFlow']",['rpa'],unknown,不明,Unknown
+auth-service,認証サービス,Auth Service,backend,バックエンド,Backend,🔐,"['Node.js', 'OAuth2']",[],safe,2030年1月,January 2030
+notification-service,通知サービス,Notification Service,backend,バックエンド,Backend,📧,"['Go', 'RabbitMQ']",[],safe,2028年3月,March 2028
+search-service,検索サービス,Search Service,backend,バックエンド,Backend,🔍,['Elasticsearch'],['ecommerce'],warning,2027年9月,September 2027
+subscription-engine,サブスク管理エンジン,Subscription Engine,backend,バックエンド,Backend,🔄,"['Node.js', 'Stripe']",['subscription'],safe,2029年7月,July 2029
+analytics-engine,分析エンジン,Analytics Engine,backend,バックエンド,Backend,📈,"['Python', 'Spark']",[],safe,2028年10月,October 2028
+api-gateway,APIゲートウェイ,API Gateway,backend,バックエンド,Backend,🌐,"['Kong', 'Nginx']",['cloud'],safe,2030年5月,May 2030
+cache-service,キャッシュサービス,Cache Service,backend,バックエンド,Backend,⚡,['Redis'],[],warning,2026年6月,June 2026
+postgresql-db,PostgreSQL DB,PostgreSQL DB,data,データ基盤,Data Platform,🗄️,['PostgreSQL'],"['ecommerce', 'coresystem']",safe,2028年11月,November 2028
+mongodb,MongoDB,MongoDB,data,データ基盤,Data Platform,📊,['NoSQL'],"['rpa', 'subscription']",warning,2027年2月,February 2027
+s3-storage,S3ストレージ,S3 Storage,data,データ基盤,Data Platform,💾,['AWS S3'],['cloud'],safe,2032年,2032
+redis-cache,Redisキャッシュ,Redis Cache,data,データ基盤,Data Platform,⚡,['Redis'],['ecommerce'],unknown,不明,Unknown
+data-warehouse,データウェアハウス,Data Warehouse,data,データ基盤,Data Platform,📈,['Snowflake'],[],safe,2029年9月,September 2029
+etl-pipeline,ETLパイプライン,ETL Pipeline,data,データ基盤,Data Platform,🔀,['Airflow'],[],warning,2026年10月,October 2026
+ml-storage,MLストレージ,ML Storage,data,データ基盤,Data Platform,🤖,['MLflow'],['rpa'],unknown,不明,Unknown
+message-queue,メッセージキュー,Message Queue,data,データ基盤,Data Platform,📡,['Kafka'],[],safe,2030年3月,March 2030
