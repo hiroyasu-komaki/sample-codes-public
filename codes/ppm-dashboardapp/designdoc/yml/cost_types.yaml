@@ -1,0 +1,100 @@
+table:
+  name: CostTypes
+  description: コストタイプマスタテーブル
+  type: master
+
+fields:
+  - name: id
+    type: string
+    description: コストタイプの一意識別子
+    example: "internal-labor"
+    required: true
+    primary_key: true
+    enum:
+      - internal-labor
+      - external-labor
+      - external-services
+      - hardware
+      - software
+      - facilities-power
+      - telecom
+      - other
+      - internal-services
+
+  - name: nameJA
+    type: string
+    description: コストタイプ名（日本語）
+    example: "内部人件費"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: コストタイプ名（英語）
+    example: "Internal Labor"
+    required: true
+
+  - name: applicablePools
+    type: array
+    item_type: string
+    description: 適用可能なコストプール
+    example: ["opex", "capex"]
+    required: true
+
+  - name: sortOrder
+    type: number
+    description: 表示順序
+    example: 1
+    required: true
+    validation:
+      min: 1
+
+enums:
+  id:
+    description: コストタイプ値の種類
+    values:
+      internal-labor:
+        ja: 内部人件費
+        en: Internal Labor
+        applicable_pools: ["opex", "capex"]
+        sort_order: 1
+      external-labor:
+        ja: 外部人件費
+        en: External Labor
+        applicable_pools: ["opex", "capex"]
+        sort_order: 2
+      external-services:
+        ja: 外部サービス
+        en: External Services
+        applicable_pools: ["opex", "capex"]
+        sort_order: 3
+      hardware:
+        ja: ハードウェア
+        en: Hardware
+        applicable_pools: ["opex", "capex"]
+        sort_order: 4
+      software:
+        ja: ソフトウェア
+        en: Software
+        applicable_pools: ["opex", "capex"]
+        sort_order: 5
+      facilities-power:
+        ja: 設備/電力
+        en: Facilities/Power
+        applicable_pools: ["opex", "capex"]
+        sort_order: 6
+      telecom:
+        ja: 電気通信
+        en: Telecom
+        applicable_pools: ["opex", "capex"]
+        sort_order: 7
+      other:
+        ja: その他
+        en: Other
+        applicable_pools: ["opex", "capex"]
+        sort_order: 8
+      internal-services:
+        ja: 内部サービス
+        en: Internal Services
+        applicable_pools: ["opex"]
+        sort_order: 9
+        note: OpExのみ

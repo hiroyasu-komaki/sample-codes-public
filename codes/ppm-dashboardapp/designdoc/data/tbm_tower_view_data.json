@@ -1,0 +1,391 @@
+{
+  "projects": [
+    {
+      "id": "ecommerce",
+      "nameJA": "ECサイト刷新",
+      "nameEN": "E-Commerce Renewal",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    },
+    {
+      "id": "coresystem",
+      "nameJA": "基幹システムアップグレード",
+      "nameEN": "Core System Upgrade",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    },
+    {
+      "id": "rpa",
+      "nameJA": "AI活用RPA導入",
+      "nameEN": "AI-Powered RPA",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    },
+    {
+      "id": "cloud",
+      "nameJA": "クラウドマイグレーション",
+      "nameEN": "Cloud Migration",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    },
+    {
+      "id": "subscription",
+      "nameJA": "サブスクサービス開発",
+      "nameEN": "Subscription Service",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    },
+    {
+      "id": "zerotrust",
+      "nameJA": "ゼロトラスト導入",
+      "nameEN": "Zero Trust Implementation",
+      "status": "in-progress",
+      "statusJA": "進行中",
+      "statusEN": "In Progress"
+    }
+  ],
+  "layers": [
+    {
+      "id": "solution",
+      "nameJA": "ソリューション",
+      "nameEN": "Solution",
+      "sections": [
+        {
+          "titleJA": "アプリケーション",
+          "titleEN": "Applications",
+          "items": [
+            {
+              "nameJA": "ECサイト",
+              "nameEN": "E-Commerce Site",
+              "technology": "React + Next.js",
+              "cost": "¥2,400万",
+              "projects": ["ecommerce"]
+            },
+            {
+              "nameJA": "管理画面",
+              "nameEN": "Admin Dashboard",
+              "technology": "Vue.js",
+              "cost": "¥1,500万",
+              "projects": ["coresystem"]
+            },
+            {
+              "nameJA": "モバイルアプリ",
+              "nameEN": "Mobile App",
+              "technology": "React Native",
+              "cost": "¥3,200万",
+              "projects": ["ecommerce", "subscription"]
+            },
+            {
+              "nameJA": "顧客ポータル",
+              "nameEN": "Customer Portal",
+              "technology": "Angular",
+              "cost": "¥1,800万",
+              "projects": ["subscription"]
+            },
+            {
+              "nameJA": "API Gateway",
+              "nameEN": "API Gateway",
+              "technology": "Kong",
+              "cost": "¥900万",
+              "projects": ["ecommerce", "coresystem"]
+            },
+            {
+              "nameJA": "認証サービス",
+              "nameEN": "Auth Service",
+              "technology": "Keycloak",
+              "cost": "¥600万",
+              "projects": ["zerotrust"]
+            },
+            {
+              "nameJA": "決済システム",
+              "nameEN": "Payment System",
+              "technology": "Stripe API",
+              "cost": "¥1,200万",
+              "projects": ["ecommerce"]
+            },
+            {
+              "nameJA": "在庫管理システム",
+              "nameEN": "Inventory Mgmt",
+              "technology": "SAP",
+              "cost": "¥4,500万",
+              "projects": ["coresystem"]
+            },
+            {
+              "nameJA": "CRMシステム",
+              "nameEN": "CRM System",
+              "technology": "Salesforce",
+              "cost": "¥2,100万",
+              "projects": ["coresystem"]
+            },
+            {
+              "nameJA": "BIダッシュボード",
+              "nameEN": "BI Dashboard",
+              "technology": "Tableau",
+              "cost": "¥1,600万",
+              "projects": []
+            },
+            {
+              "nameJA": "RPA自動化",
+              "nameEN": "RPA Automation",
+              "technology": "UiPath",
+              "cost": "¥1,900万",
+              "projects": ["rpa"]
+            },
+            {
+              "nameJA": "AIチャットボット",
+              "nameEN": "AI Chatbot",
+              "technology": "ChatGPT API",
+              "cost": "¥800万",
+              "projects": ["rpa"]
+            }
+          ]
+        },
+        {
+          "titleJA": "サービス",
+          "titleEN": "Services",
+          "items": [
+            {
+              "name": "PostgreSQL DB",
+              "technology": "PostgreSQL 14",
+              "cost": "¥1,200万",
+              "projects": ["ecommerce", "coresystem"]
+            },
+            {
+              "name": "MongoDB",
+              "technology": "NoSQL",
+              "cost": "¥900万",
+              "projects": ["rpa", "subscription"]
+            },
+            {
+              "nameJA": "S3ストレージ",
+              "nameEN": "S3 Storage",
+              "technology": "AWS S3",
+              "cost": "¥2,800万",
+              "projects": ["cloud"]
+            },
+            {
+              "nameJA": "Redisキャッシュ",
+              "nameEN": "Redis Cache",
+              "technology": "Redis 7",
+              "cost": "¥600万",
+              "projects": ["ecommerce"]
+            },
+            {
+              "nameJA": "データウェアハウス",
+              "nameEN": "Data Warehouse",
+              "technology": "Snowflake",
+              "cost": "¥3,500万",
+              "projects": []
+            },
+            {
+              "nameJA": "ETLパイプライン",
+              "nameEN": "ETL Pipeline",
+              "technology": "Airflow",
+              "cost": "¥1,100万",
+              "projects": []
+            },
+            {
+              "nameJA": "検索エンジン",
+              "nameEN": "Search Engine",
+              "technology": "Elasticsearch",
+              "cost": "¥1,400万",
+              "projects": ["ecommerce"]
+            },
+            {
+              "nameJA": "メッセージキュー",
+              "nameEN": "Message Queue",
+              "technology": "Kafka",
+              "cost": "¥1,000万",
+              "projects": []
+            },
+            {
+              "nameJA": "監視・ログ",
+              "nameEN": "Monitoring & Logs",
+              "technology": "Datadog",
+              "cost": "¥1,300万",
+              "projects": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tower",
+      "nameJA": "タワー / サブタワー",
+      "nameEN": "Tower / Subtower",
+      "sections": [
+        {
+          "titleJA": "インフラタワー",
+          "titleEN": "Infrastructure Tower",
+          "items": [
+            {
+              "nameJA": "コンピュート",
+              "nameEN": "Compute",
+              "technology": "EC2, ECS, Lambda",
+              "cost": "¥12,500万"
+            },
+            {
+              "nameJA": "ストレージ",
+              "nameEN": "Storage",
+              "technology": "EBS, S3, Glacier",
+              "cost": "¥8,200万"
+            },
+            {
+              "nameJA": "ネットワーク",
+              "nameEN": "Network",
+              "technology": "VPC, CloudFront, Route53",
+              "cost": "¥6,300万"
+            },
+            {
+              "nameJA": "データベース",
+              "nameEN": "Database",
+              "technology": "RDS, DynamoDB",
+              "cost": "¥9,800万"
+            }
+          ]
+        },
+        {
+          "titleJA": "セキュリティタワー",
+          "titleEN": "Security Tower",
+          "items": [
+            {
+              "nameJA": "IAM・認証",
+              "nameEN": "IAM & Auth",
+              "technology": "Cognito, IAM",
+              "cost": "¥2,100万"
+            },
+            {
+              "nameJA": "ファイアウォール",
+              "nameEN": "Firewall",
+              "technology": "WAF, Shield",
+              "cost": "¥1,800万"
+            },
+            {
+              "nameJA": "暗号化・証明書",
+              "nameEN": "Encryption & Certs",
+              "technology": "KMS, ACM",
+              "cost": "¥1,200万"
+            },
+            {
+              "nameJA": "脆弱性管理",
+              "nameEN": "Vulnerability Mgmt",
+              "technology": "Inspector, GuardDuty",
+              "cost": "¥900万"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "costpool",
+      "nameJA": "コストプール / サブプール",
+      "nameEN": "Cost Pool / Subpool",
+      "sections": [
+        {
+          "titleJA": "OpEx (運用支出)",
+          "titleEN": "OpEx (Operating Expenses)",
+          "totalCost": "¥62,000万",
+          "items": [
+            {
+              "nameJA": "内部人件費",
+              "nameEN": "Internal Labor",
+              "cost": "¥12,800万"
+            },
+            {
+              "nameJA": "外部人件費",
+              "nameEN": "External Labor",
+              "cost": "¥9,400万"
+            },
+            {
+              "nameJA": "外部サービス",
+              "nameEN": "External Services",
+              "cost": "¥7,900万"
+            },
+            {
+              "nameJA": "ハードウェア",
+              "nameEN": "Hardware",
+              "cost": "¥3,600万"
+            },
+            {
+              "nameJA": "ソフトウェア",
+              "nameEN": "Software",
+              "cost": "¥15,600万"
+            },
+            {
+              "nameJA": "設備 / 電力",
+              "nameEN": "Facilities / Power",
+              "cost": "¥6,400万"
+            },
+            {
+              "nameJA": "電気通信",
+              "nameEN": "Telecom",
+              "cost": "¥4,700万"
+            },
+            {
+              "nameJA": "その他",
+              "nameEN": "Other",
+              "cost": "¥3,200万"
+            },
+            {
+              "nameJA": "内部サービス",
+              "nameEN": "Internal Services",
+              "cost": "¥5,800万"
+            }
+          ]
+        },
+        {
+          "titleJA": "CapEx (資本支出)",
+          "titleEN": "CapEx (Capital Expenditure)",
+          "totalCost": "¥81,700万",
+          "items": [
+            {
+              "nameJA": "内部人件費",
+              "nameEN": "Internal Labor",
+              "cost": "¥8,500万"
+            },
+            {
+              "nameJA": "外部人件費",
+              "nameEN": "External Labor",
+              "cost": "¥6,200万"
+            },
+            {
+              "nameJA": "外部サービス",
+              "nameEN": "External Services",
+              "cost": "¥4,900万"
+            },
+            {
+              "nameJA": "ハードウェア",
+              "nameEN": "Hardware",
+              "cost": "¥28,600万"
+            },
+            {
+              "nameJA": "ソフトウェア",
+              "nameEN": "Software",
+              "cost": "¥12,300万"
+            },
+            {
+              "nameJA": "設備 / 電力",
+              "nameEN": "Facilities / Power",
+              "cost": "¥15,800万"
+            },
+            {
+              "nameJA": "電気通信",
+              "nameEN": "Telecom",
+              "cost": "¥3,400万"
+            },
+            {
+              "nameJA": "その他",
+              "nameEN": "Other",
+              "cost": "¥2,100万"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

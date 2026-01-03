@@ -1,0 +1,217 @@
+{
+  "metrics": {
+    "totalProjects": {
+      "value": 24,
+      "inProgress": 18,
+      "planned": 6
+    },
+    "totalInvestment": {
+      "value": "¥3.2億",
+      "budgetUtilization": "68%"
+    },
+    "averageROI": {
+      "value": "145%",
+      "target": "150%"
+    },
+    "highRiskProjects": {
+      "value": 3
+    }
+  },
+  "budgetAllocation": {
+    "run": { "percent": 45, "amount": "¥1.44億" },
+    "grow": { "percent": 35, "amount": "¥1.12億" },
+    "transform": { "percent": 20, "amount": "¥0.64億" }
+  },
+  "strategicInvestment": {
+    "customerExperience": 30,
+    "operationalEfficiency": 25,
+    "newBusiness": 20,
+    "security": 15,
+    "infrastructure": 10
+  },
+  "projects": [
+    {
+      "nameJA": "ECサイトリニューアル",
+      "nameEN": "E-Commerce Site Renewal",
+      "status": "onTrack",
+      "budget": "¥4,500万",
+      "progress": 75,
+      "goal": "CX Enhancement",
+      "roiForecast": "180%"
+    },
+    {
+      "nameJA": "基幹システム更改",
+      "nameEN": "Core System Upgrade",
+      "status": "caution",
+      "budget": "¥8,200万",
+      "progress": 45,
+      "goal": "Infrastructure Renewal",
+      "roiForecast": "120%"
+    },
+    {
+      "nameJA": "AI活用RPA導入",
+      "nameEN": "AI-Powered RPA Implementation",
+      "status": "onTrack",
+      "budget": "¥2,800万",
+      "progress": 90,
+      "goal": "Operational Efficiency",
+      "roiForecast": "220%"
+    },
+    {
+      "nameJA": "クラウドマイグレーション",
+      "nameEN": "Cloud Migration",
+      "status": "delayed",
+      "budget": "¥6,500万",
+      "progress": 30,
+      "goal": "Infrastructure Renewal",
+      "roiForecast": "95%"
+    },
+    {
+      "nameJA": "サブスクサービス開発",
+      "nameEN": "Subscription Service Development",
+      "status": "onTrack",
+      "budget": "¥5,100万",
+      "progress": 60,
+      "goal": "New Business Creation",
+      "roiForecast": "200%"
+    },
+    {
+      "nameJA": "ゼロトラスト導入",
+      "nameEN": "Zero Trust Implementation",
+      "status": "caution",
+      "budget": "¥3,900万",
+      "progress": 55,
+      "goal": "Security Enhancement",
+      "roiForecast": "110%"
+    }
+  ],
+  "resourceAllocation": [
+    {
+      "roleJA": "プロジェクトマネージャー",
+      "roleEN": "Project Manager",
+      "available": 8,
+      "utilization": 95,
+      "current": "overload",
+      "threeMonths": "overload",
+      "endOfTerm": "high"
+    },
+    {
+      "roleJA": "アーキテクト",
+      "roleEN": "Architect",
+      "available": 5,
+      "utilization": 88,
+      "current": "high",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "フロントエンド開発",
+      "roleEN": "Frontend Dev",
+      "available": 12,
+      "utilization": 82,
+      "current": "optimal",
+      "threeMonths": "optimal",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "バックエンド開発",
+      "roleEN": "Backend Dev",
+      "available": 15,
+      "utilization": 91,
+      "current": "high",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "インフラエンジニア",
+      "roleEN": "Infrastructure Eng",
+      "available": 8,
+      "utilization": 93,
+      "current": "overload",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "QA/テスト",
+      "roleEN": "QA/Testing",
+      "available": 6,
+      "utilization": 75,
+      "current": "optimal",
+      "threeMonths": "optimal",
+      "endOfTerm": "available"
+    },
+    {
+      "roleJA": "データアナリスト",
+      "roleEN": "Data Analyst",
+      "available": 4,
+      "utilization": 68,
+      "current": "available",
+      "threeMonths": "optimal",
+      "endOfTerm": "optimal"
+    }
+  ],
+  "risks": [
+    {
+      "level": "high",
+      "titleJA": "クラウドマイグレーション遅延",
+      "titleEN": "Cloud Migration Delay",
+      "descriptionJA": "技術的課題により3ヶ月の遅延見込み。追加予算が必要。",
+      "descriptionEN": "3-month delay expected due to technical challenges. Additional budget required."
+    },
+    {
+      "level": "high",
+      "titleJA": "基幹システム要件定義の遅れ",
+      "titleEN": "Core System Requirements Delay",
+      "descriptionJA": "ユーザー部門との調整難航。スケジュールへの影響懸念。",
+      "descriptionEN": "Coordination difficulties with user departments. Schedule impact concerns."
+    },
+    {
+      "level": "medium",
+      "titleJA": "ITリソース不足",
+      "titleEN": "IT Resource Shortage",
+      "descriptionJA": "複数プロジェクト同時進行により人員稼働率95%超え。",
+      "descriptionEN": "Staff utilization exceeds 95% due to multiple concurrent projects."
+    },
+    {
+      "level": "medium",
+      "titleJA": "ゼロトラスト導入の複雑性",
+      "titleEN": "Zero Trust Implementation Complexity",
+      "descriptionJA": "既存システムとの統合に想定以上の工数が発生。",
+      "descriptionEN": "Integration with existing systems requires more effort than anticipated."
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2025-11-15",
+      "titleJA": "ECサイトリニューアル本番移行",
+      "titleEN": "E-Commerce Site Production Release",
+      "descriptionJA": "繁忙期前の重要リリース。準備完了済み。",
+      "descriptionEN": "Critical release before busy season. Preparation complete.",
+      "level": "low"
+    },
+    {
+      "date": "2025-11-30",
+      "titleJA": "AI-RPA導入完了",
+      "titleEN": "AI-RPA Implementation Complete",
+      "descriptionJA": "経理部門への本格展開。効果測定開始。",
+      "descriptionEN": "Full deployment to accounting. Effect measurement starts.",
+      "level": "low"
+    },
+    {
+      "date": "2025-12-10",
+      "titleJA": "Q4ポートフォリオレビュー",
+      "titleEN": "Q4 Portfolio Review",
+      "descriptionJA": "経営会議での報告。継続・中止判断実施。",
+      "descriptionEN": "Management review. Go/No-go decisions.",
+      "level": "medium"
+    },
+    {
+      "date": "2026-01-20",
+      "titleJA": "基幹システム設計完了",
+      "titleEN": "Core System Design Complete",
+      "descriptionJA": "重要な意思決定ポイント。現在遅延リスクあり。",
+      "descriptionEN": "Critical decision point. Currently at risk of delay.",
+      "level": "medium"
+    }
+  ]
+}

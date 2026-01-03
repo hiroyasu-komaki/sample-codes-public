@@ -1,0 +1,46 @@
+{
+  "departments": [
+    {
+      "id": "all",
+      "nameJA": "全部門",
+      "nameEN": "All Departments",
+      "projectCount": 12
+    },
+    {
+      "id": "it",
+      "nameJA": "IT部門",
+      "nameEN": "IT Department",
+      "projectCount": 3
+    },
+    {
+      "id": "sales",
+      "nameJA": "営業部門",
+      "nameEN": "Sales Department",
+      "projectCount": 2
+    },
+    {
+      "id": "hr",
+      "nameJA": "人事部門",
+      "nameEN": "HR Department",
+      "projectCount": 2
+    },
+    {
+      "id": "finance",
+      "nameJA": "財務部門",
+      "nameEN": "Finance Department",
+      "projectCount": 1
+    },
+    {
+      "id": "manufacturing",
+      "nameJA": "製造部門",
+      "nameEN": "Manufacturing Department",
+      "projectCount": 2
+    },
+    {
+      "id": "customer-service",
+      "nameJA": "カスタマーサービス部門",
+      "nameEN": "Customer Service Department",
+      "projectCount": 2
+    }
+  ]
+}

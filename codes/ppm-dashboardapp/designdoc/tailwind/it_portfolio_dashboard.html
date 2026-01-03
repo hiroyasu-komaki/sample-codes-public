@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITポートフォリオ管理ダッシュボード / IT Portfolio Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: inline;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 p-5" data-lang="ja">
+    <div class="fixed top-5 right-5 z-[1000] bg-white py-2.5 px-4 rounded-full shadow-md flex gap-2.5">
+        <button class="lang-btn active px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:opacity-90" onclick="setLanguage('ja')">
+            日本語
+        </button>
+        <button class="lang-btn px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200" onclick="setLanguage('en')">
+            English
+        </button>
+    </div>
+    
+    <div class="max-w-[1400px] mx-auto">
+        <header class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-2xl mb-8 shadow-md">
+            <h1 class="text-3xl font-bold mb-2 lang-ja">ITポートフォリオ管理ダッシュボード</h1>
+            <h1 class="text-3xl font-bold mb-2 lang-en">IT Portfolio Management Dashboard</h1>
+            <p class="opacity-90 text-sm lang-ja">最終更新: 2025年11月2日 | 第4四半期</p>
+            <p class="opacity-90 text-sm lang-en">Last Updated: November 2, 2025 | Q4</p>
+        </header>
+        
+        <div class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-5 mb-8">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-ja">総プロジェクト数</div>
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-en">Total Projects</div>
+                <div class="text-4xl font-bold text-gray-800 mb-1">24</div>
+                <div class="text-xs text-gray-400 lang-ja">進行中: 18 | 計画中: 6</div>
+                <div class="text-xs text-gray-400 lang-en">In Progress: 18 | Planned: 6</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-green-500">
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-ja">総投資額</div>
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-en">Total Investment</div>
+                <div class="text-4xl font-bold text-gray-800 mb-1">¥3.2億</div>
+                <div class="text-xs text-gray-400 lang-ja">予算執行率: 68%</div>
+                <div class="text-xs text-gray-400 lang-en">Budget Utilization: 68%</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-amber-500">
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-ja">平均ROI</div>
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-en">Average ROI</div>
+                <div class="text-4xl font-bold text-gray-800 mb-1">145%</div>
+                <div class="text-xs text-gray-400 lang-ja">目標: 150%</div>
+                <div class="text-xs text-gray-400 lang-en">Target: 150%</div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm border-l-4 border-red-500">
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-ja">高リスクPJ</div>
+                <div class="text-gray-500 text-xs mb-2 uppercase tracking-wide lang-en">High Risk Projects</div>
+                <div class="text-4xl font-bold text-gray-800 mb-1">3</div>
+                <div class="text-xs text-gray-400 lang-ja">要注意プロジェクト</div>
+                <div class="text-xs text-gray-400 lang-en">Requires Attention</div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-5 mb-5">
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">予算配分 (Run/Grow/Transform)</h2>
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Budget Allocation (Run/Grow/Transform)</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">Run (維持・運用)</div>
+                            <div class="text-sm text-gray-700 lang-en">Run (Maintenance & Operations)</div>
+                            <div class="text-sm font-semibold text-gray-800">45% (¥1.44億)</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 rounded-full" style="width: 45%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">Grow (改善・拡大)</div>
+                            <div class="text-sm text-gray-700 lang-en">Grow (Improvement & Expansion)</div>
+                            <div class="text-sm font-semibold text-gray-800">35% (¥1.12億)</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-green-500 rounded-full" style="width: 35%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">Transform (変革)</div>
+                            <div class="text-sm text-gray-700 lang-en">Transform (Transformation)</div>
+                            <div class="text-sm font-semibold text-gray-800">20% (¥0.64億)</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-amber-500 rounded-full" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">戦略目標別投資</h2>
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Investment by Strategic Goal</h2>
+                
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">顧客体験向上</div>
+                            <div class="text-sm text-gray-700 lang-en">Customer Experience Enhancement</div>
+                            <div class="text-sm font-semibold text-gray-800">30%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-green-500 rounded-full" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">業務効率化</div>
+                            <div class="text-sm text-gray-700 lang-en">Operational Efficiency</div>
+                            <div class="text-sm font-semibold text-gray-800">25%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 rounded-full" style="width: 25%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">新規事業創出</div>
+                            <div class="text-sm text-gray-700 lang-en">New Business Development</div>
+                            <div class="text-sm font-semibold text-gray-800">20%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-amber-500 rounded-full" style="width: 20%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">セキュリティ強化</div>
+                            <div class="text-sm text-gray-700 lang-en">Security Enhancement</div>
+                            <div class="text-sm font-semibold text-gray-800">15%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 rounded-full" style="width: 15%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="text-sm text-gray-700 lang-ja">基盤刷新</div>
+                            <div class="text-sm text-gray-700 lang-en">Infrastructure Renewal</div>
+                            <div class="text-sm font-semibold text-gray-800">10%</div>
+                        </div>
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-red-500 rounded-full" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-2xl shadow-sm mb-5">
+            <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">主要プロジェクト一覧</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Major Projects List</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">プロジェクト名</span>
+                                <span class="lang-en">Project Name</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">ステータス</span>
+                                <span class="lang-en">Status</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">予算</span>
+                                <span class="lang-en">Budget</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">進捗率</span>
+                                <span class="lang-en">Progress</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">戦略目標</span>
+                                <span class="lang-en">Strategic Goal</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">ROI予測</span>
+                                <span class="lang-en">ROI Forecast</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">ECサイトリニューアル</span>
+                                <span class="lang-en">E-Commerce Renewal</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-ja">順調</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-en">On Track</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥4,500万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">75%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 75%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">顧客体験向上</span>
+                                <span class="lang-en">Customer Experience</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">180%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">基幹システム更改</span>
+                                <span class="lang-en">Core System Renewal</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 lang-ja">注意</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 lang-en">Caution</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥8,200万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">45%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-amber-500 rounded-full" style="width: 45%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">基盤刷新</span>
+                                <span class="lang-en">Infrastructure</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">120%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">AI活用RPA導入</span>
+                                <span class="lang-en">AI-RPA Implementation</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-ja">順調</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-en">On Track</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥2,800万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">90%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 90%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">業務効率化</span>
+                                <span class="lang-en">Efficiency</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">220%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">クラウドマイグレーション</span>
+                                <span class="lang-en">Cloud Migration</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-red-100 text-red-800 lang-ja">遅延</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-red-100 text-red-800 lang-en">Delayed</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥6,500万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">30%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-red-500 rounded-full" style="width: 30%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">基盤刷新</span>
+                                <span class="lang-en">Infrastructure</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">95%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">サブスクサービス開発</span>
+                                <span class="lang-en">Subscription Service</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-ja">順調</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-green-100 text-green-800 lang-en">On Track</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥5,100万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">60%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 60%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">新規事業創出</span>
+                                <span class="lang-en">New Business</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">200%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">ゼロトラスト導入</span>
+                                <span class="lang-en">Zero Trust Implementation</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 lang-ja">注意</span>
+                                <span class="inline-block py-1 px-3 rounded-xl text-xs font-semibold bg-amber-100 text-amber-800 lang-en">Caution</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">¥3,900万</td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">55%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-amber-500 rounded-full" style="width: 55%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">セキュリティ強化</span>
+                                <span class="lang-en">Security</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">110%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-2xl shadow-sm mb-5">
+            <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">人的リソース配置状況と稼働率</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Human Resource Allocation and Utilization</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">チーム/役割</span>
+                                <span class="lang-en">Team/Role</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">配置可能人数</span>
+                                <span class="lang-en">Available</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">稼働率</span>
+                                <span class="lang-en">Utilization</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">当月</span>
+                                <span class="lang-en">Current</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">3ヶ月</span>
+                                <span class="lang-en">3 Months</span>
+                            </th>
+                            <th class="text-left py-3 px-2 bg-gray-50 text-gray-500 text-xs font-semibold border-b-2 border-gray-200 whitespace-nowrap">
+                                <span class="lang-ja">今期末</span>
+                                <span class="lang-en">Term End</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">プロジェクトマネージャー</span>
+                                <span class="lang-en">Project Manager</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">8名</span>
+                                <span class="lang-en">8</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">95%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-red-500 rounded-full" style="width: 95%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-red-100 text-red-800 lang-ja">過負荷</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-red-100 text-red-800 lang-en">Overloaded</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-red-100 text-red-800 lang-ja">過負荷</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-red-100 text-red-800 lang-en">Overloaded</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-ja">高稼働</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-en">High Load</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">アーキテクト</span>
+                                <span class="lang-en">Architect</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">5名</span>
+                                <span class="lang-en">5</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">88%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-amber-500 rounded-full" style="width: 88%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-ja">高稼働</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-en">High Load</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-ja">高稼働</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-amber-100 text-amber-800 lang-en">High Load</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">フロントエンド開発</span>
+                                <span class="lang-en">Frontend Dev</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">12名</span>
+                                <span class="lang-en">12</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">82%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 82%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 transition-colors duration-200">
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">データアナリスト</span>
+                                <span class="lang-en">Data Analyst</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="lang-ja">4名</span>
+                                <span class="lang-en">4</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs">68%</span>
+                                    <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[100px]">
+                                        <div class="h-full bg-green-500 rounded-full" style="width: 68%;"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">余裕あり</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Available</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                            <td class="py-3 px-2 border-b border-gray-100">
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-ja">適正</span>
+                                <span class="inline-block py-1 px-2.5 rounded-lg text-xs font-semibold bg-green-100 text-green-800 lang-en">Optimal</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4 p-2.5 bg-gray-50 rounded-lg text-xs text-gray-500">
+                <span class="lang-ja">※ステータス:「当月」は当月の状況、「3ヶ月」は当月を含む3ヶ月間の見込み、「今期末」は今期末までの見込みを示します。</span>
+                <span class="lang-en">※Status: "Current" shows current month status, "3 Months" shows forecast including current month, "Term End" shows forecast until end of term.</span>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-5">
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">主要リスク・課題</h2>
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Major Risks & Issues</h2>
+                <ul class="space-y-3">
+                    <li class="p-4 rounded-lg border-l-4 border-red-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">【高】クラウドマイグレーション遅延</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">[High] Cloud Migration Delay</div>
+                        <div class="text-xs text-gray-600 lang-ja">技術的課題により3ヶ月の遅延見込み。追加予算が必要。</div>
+                        <div class="text-xs text-gray-600 lang-en">3-month delay expected due to technical challenges. Additional budget required.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-red-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">【高】基幹システム要件定義の遅れ</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">[High] Core System Requirements Delay</div>
+                        <div class="text-xs text-gray-600 lang-ja">ユーザー部門との調整難航。スケジュールへの影響懸念。</div>
+                        <div class="text-xs text-gray-600 lang-en">Coordination difficulties with user departments. Schedule impact concerns.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-amber-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">【中】ITリソース不足</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">[Medium] IT Resource Shortage</div>
+                        <div class="text-xs text-gray-600 lang-ja">複数プロジェクト同時進行により人員稼働率95%超え。</div>
+                        <div class="text-xs text-gray-600 lang-en">Staff utilization exceeds 95% due to multiple concurrent projects.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-amber-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">【中】ゼロトラスト導入の複雑性</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">[Medium] Zero Trust Implementation Complexity</div>
+                        <div class="text-xs text-gray-600 lang-ja">既存システムとの統合に想定以上の工数が発生。</div>
+                        <div class="text-xs text-gray-600 lang-en">Integration with existing systems requires more effort than anticipated.</div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl shadow-sm">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">今後の重要マイルストーン</h2>
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Upcoming Key Milestones</h2>
+                <ul class="space-y-3">
+                    <li class="p-4 rounded-lg border-l-4 border-green-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">11月15日: ECサイトリニューアル本番移行</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">Nov 15: E-Commerce Site Production Release</div>
+                        <div class="text-xs text-gray-600 lang-ja">繁忙期前の重要リリース。準備完了済み。</div>
+                        <div class="text-xs text-gray-600 lang-en">Critical release before busy season. Preparation complete.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-green-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">11月30日: AI-RPA導入完了</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">Nov 30: AI-RPA Implementation Complete</div>
+                        <div class="text-xs text-gray-600 lang-ja">経理部門への本格展開。効果測定開始。</div>
+                        <div class="text-xs text-gray-600 lang-en">Full deployment to accounting. Effect measurement starts.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-amber-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">12月10日: Q4ポートフォリオレビュー</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">Dec 10: Q4 Portfolio Review</div>
+                        <div class="text-xs text-gray-600 lang-ja">経営会議での報告。継続・中止判断実施。</div>
+                        <div class="text-xs text-gray-600 lang-en">Management review. Go/No-go decisions.</div>
+                    </li>
+                    <li class="p-4 rounded-lg border-l-4 border-amber-500 bg-gray-50">
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-ja">2026年1月20日: 基幹システム設計完了</div>
+                        <div class="font-semibold text-sm text-gray-800 mb-1 lang-en">Jan 20, 2026: Core System Design Complete</div>
+                        <div class="text-xs text-gray-600 lang-ja">重要な意思決定ポイント。現在遅延リスクあり。</div>
+                        <div class="text-xs text-gray-600 lang-en">Critical decision point. Currently at risk of delay.</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+    <script>
+        function setLanguage(lang) {
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-500');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-500');
+            event.target.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-500');
+                    if (btn.textContent.trim() === 'English') {
+                        btn.classList.remove('bg-gray-100', 'text-gray-500');
+                        btn.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

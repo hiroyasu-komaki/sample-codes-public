@@ -1,0 +1,76 @@
+# アプリケーション設定ファイル
+# Application Configuration File
+
+# データソース設定
+data_sources:
+  it_portfolio: "../data/it_portfolio.json"
+  primary_projects: "../data/primary_projects.json"
+  resource_allocation: "../data/resource_allocation.json"
+  application_list: "../data/application_list.json"
+  departments: "../data/departments.json"
+  project_list: "../data/project_list.json"
+
+  # 将来的に追加される可能性のあるデータソース
+  # users: "../data/users.json"
+
+# アプリケーション設定
+app:
+  # デフォルト言語
+  default_language: "ja"
+  
+  # サポート言語
+  supported_languages:
+    - "ja"
+    - "en"
+  
+  # ページタイトル
+  page_title:
+    ja: "アプリケーション鳥瞰図"
+    en: "Application Layer Overview"
+
+# EOL設定
+eol:
+  # 閾値（日数）
+  thresholds:
+    critical: 365   # 1年以内
+    warning: 730    # 2年以内
+    safe: 99999     # それ以上
+  
+  # ステータス色
+  colors:
+    critical: "#ef4444"  # red-500
+    warning: "#f59e0b"   # amber-500
+    safe: "#10b981"      # green-500
+    unknown: "#9ca3af"   # gray-400
+
+# レイアウト設定
+layout:
+  max_width: "1600px"
+  sidebar_width: "300px"
+  card_min_width: "200px"
+  grid_gap: "20px"
+
+# アニメーション設定
+animations:
+  transition_duration: "300ms"
+  hover_translate_y: "-4px"
+  hover_translate_x: "4px"
+  pulse_duration: "2s"
+
+# APIエンドポイント（将来的に使用する可能性）
+# api:
+#   base_url: "https://api.example.com"
+#   endpoints:
+#     projects: "/api/v1/projects"
+#     applications: "/api/v1/applications"
+#   timeout: 30000
+
+# キャッシュ設定（将来的に使用する可能性）
+# cache:
+#   enabled: true
+#   ttl: 3600  # 秒
+
+# ログ設定（将来的に使用する可能性）
+# logging:
+#   level: "info"  # debug, info, warn, error
+#   console: true

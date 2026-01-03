@@ -1,0 +1,129 @@
+table:
+  name: DataSources
+  description: データソース情報を管理するテーブル
+
+fields:
+  - name: id
+    type: string
+    description: データソースの一意識別子
+    example: "ec-order-transaction"
+    required: true
+    primary_key: true
+
+  - name: section
+    type: string
+    description: セクション識別子
+    example: "ecommerce"
+    required: true
+
+  - name: nameJA
+    type: string
+    description: データソース名（日本語）
+    example: "EC注文トランザクションDB"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: データソース名（英語）
+    example: "EC Order Transaction DB"
+    required: true
+
+  - name: type
+    type: string
+    description: データソースタイプ識別子
+    example: "transaction"
+    required: true
+    enum:
+      - transaction
+      - master
+      - log
+      - cache
+      - dwh
+      - other
+
+  - name: typeJA
+    type: string
+    description: データソースタイプ名（日本語）
+    example: "トランザクションDB"
+    required: true
+
+  - name: typeEN
+    type: string
+    description: データソースタイプ名（英語）
+    example: "Transaction DB"
+    required: true
+
+  - name: icon
+    type: string
+    description: アイコン（絵文字）
+    example: "💳"
+    required: true
+
+  - name: size
+    type: string
+    nullable: true
+    description: ストレージサイズ
+    example: "1.2 TB"
+    required: false
+
+  - name: records
+    type: string
+    nullable: true
+    description: レコード件数
+    example: "850万件"
+    required: false
+
+  - name: memory
+    type: string
+    nullable: true
+    description: メモリサイズ
+    example: "128 GB"
+    required: false
+
+  - name: pipelines
+    type: string
+    nullable: true
+    description: パイプライン数
+    example: "280件"
+    required: false
+
+  - name: tags
+    type: array
+    item_type: string
+    description: 技術スタックのタグ配列
+    example: ["PostgreSQL 15", "AWS RDS"]
+    required: true
+
+  - name: projects
+    type: array
+    item_type: string
+    description: 関連プロジェクトID配列
+    example: ["ecommerce"]
+    required: true
+    reference:
+      table: Projects
+      field: id
+
+enums:
+  type:
+    description: データソースタイプ値の種類
+    values:
+      transaction:
+        ja: トランザクションDB
+        en: Transaction DB
+      master:
+        ja: マスタDB
+        en: Master DB
+      log:
+        ja: ログDB
+        en: Log DB
+      cache:
+        ja: キャッシュ
+        en: Cache
+      dwh:
+        ja: データウェアハウス/データマート
+        en: Data Warehouse / Data Mart
+      other:
+        ja: その他
+        en: Other
+        note: モデルストレージ、オブジェクトストレージ、メタデータDB、バックアップ等

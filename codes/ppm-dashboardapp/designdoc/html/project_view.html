@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト鳥瞰図 / Project Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .lang-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .department-list {
+            list-style: none;
+        }
+        
+        .department-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            background-color: #f9fafb;
+        }
+        
+        .department-item:hover {
+            background-color: #f3f4f6;
+            border-left-color: #667eea;
+            transform: translateX(3px);
+        }
+        
+        .department-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .department-name {
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .department-count {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .content-area {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            min-height: 600px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .content-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-box.default {
+            background-color: #e5e7eb;
+            border: 1px solid #d1d5db;
+        }
+        
+        .legend-box.highlighted {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .project-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e5e7eb;
+            transition: all 0.3s;
+        }
+        
+        .project-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .project-card.highlighted {
+            border-color: #fbbf24;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        
+        .project-card.highlighted::before {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+        
+        .project-card.highlight-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+            }
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .project-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        
+        .status-green {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-yellow {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-red {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-gray {
+            background-color: #f3f4f6;
+            color: #4b5563;
+        }
+        
+        .project-info {
+            margin-bottom: 12px;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .info-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .info-value {
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .phase-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            background-color: #ede9fe;
+            color: #5b21b6;
+        }
+        
+        .phase-badge.unapproved {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .phase-badge.approved {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .phase-badge.inprogress {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .phase-badge.pending {
+            background-color: #fce7f3;
+            color: #9f1239;
+        }
+        
+        .phase-badge.completed {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .project-details {
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .detail-row {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 6px;
+        }
+        
+        .detail-row strong {
+            color: #1f2937;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body data-lang="ja">
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>
+                <span class="lang-ja">プロジェクト鳥瞰図</span>
+                <span class="lang-en">Project Overview</span>
+            </h1>
+            <p>
+                <span class="lang-ja">主幹部門別のプロジェクト一覧 - 部門をクリックして該当プロジェクトをハイライト表示</span>
+                <span class="lang-en">Project List by Department - Click a department to highlight related projects</span>
+            </p>
+        </header>
+        
+        <div class="main-layout">
+            <aside class="sidebar">
+                <h2>
+                    <span class="lang-ja">主幹部門</span>
+                    <span class="lang-en">Departments</span>
+                </h2>
+                <ul class="department-list">
+                    <li class="department-item" data-department="sales" onclick="selectDepartment('sales')">
+                        <div class="department-name">
+                            <span class="lang-ja">営業部門</span>
+                            <span class="lang-en">Sales</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">2プロジェクト</span>
+                            <span class="lang-en">2 Projects</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="manufacturing" onclick="selectDepartment('manufacturing')">
+                        <div class="department-name">
+                            <span class="lang-ja">製造部門</span>
+                            <span class="lang-en">Manufacturing</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="finance" onclick="selectDepartment('finance')">
+                        <div class="department-name">
+                            <span class="lang-ja">財務部門</span>
+                            <span class="lang-en">Finance</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="hr" onclick="selectDepartment('hr')">
+                        <div class="department-name">
+                            <span class="lang-ja">人事部門</span>
+                            <span class="lang-en">HR</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="it" onclick="selectDepartment('it')">
+                        <div class="department-name">
+                            <span class="lang-ja">IT部門</span>
+                            <span class="lang-en">IT</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">3プロジェクト</span>
+                            <span class="lang-en">3 Projects</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="marketing" onclick="selectDepartment('marketing')">
+                        <div class="department-name">
+                            <span class="lang-ja">マーケティング部門</span>
+                            <span class="lang-en">Marketing</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    <li class="department-item" data-department="customer-service" onclick="selectDepartment('customer-service')">
+                        <div class="department-name">
+                            <span class="lang-ja">カスタマーサービス部門</span>
+                            <span class="lang-en">Customer Service</span>
+                        </div>
+                        <div class="department-count">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                </ul>
+                <button style="width: 100%; margin-top: 15px; padding: 10px; background-color: #f3f4f6; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; color: #6b7280; font-weight: 600; transition: all 0.3s;" 
+                        onmouseover="this.style.backgroundColor='#e5e7eb'" 
+                        onmouseout="this.style.backgroundColor='#f3f4f6'" 
+                        onclick="clearSelection()">
+                    <span class="lang-ja">選択解除</span>
+                    <span class="lang-en">Clear Selection</span>
+                </button>
+            </aside>
+            
+            <div class="content-area">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title">
+                            <span class="lang-ja">全プロジェクト一覧</span>
+                            <span class="lang-en">All Projects</span>
+                            <span id="selectedDepartment"></span>
+                        </h2>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-box default"></div>
+                            <span class="lang-ja">通常表示</span>
+                            <span class="lang-en">Normal</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box highlighted"></div>
+                            <span class="lang-ja">ハイライト</span>
+                            <span class="lang-en">Highlighted</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="projects-grid">
+                    <!-- ECサイトリニューアル -->
+                    <div class="project-card" data-department="sales">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">ECサイトリニューアル</span>
+                                    <span class="lang-en">E-Commerce Renewal</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-green">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge pending">
+                                    <span class="lang-ja">完了待ち</span>
+                                    <span class="lang-en">Pending</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">営業部門</span>
+                                    <span class="lang-en">Sales</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥800M</span>
+                                    <span class="lang-en">$5.3M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">95%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 95%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年2月 - 2025年11月</span>
+                                <span class="lang-en">Feb 2025 - Nov 2025</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">モバイルUX改善により売上30%向上、年間運用コスト20%削減</span>
+                                <span class="lang-en">Increase sales by 30% through mobile UX improvement, reduce annual operating costs by 20%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 基幹システム刷新 -->
+                    <div class="project-card" data-department="it">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">基幹システム刷新</span>
+                                    <span class="lang-en">Core System Renewal</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-yellow">
+                                <span class="lang-ja">要注意</span>
+                                <span class="lang-en">Caution</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge approved">
+                                    <span class="lang-ja">計画承認</span>
+                                    <span class="lang-en">Approved</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥3.5B</span>
+                                    <span class="lang-en">$23.3M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">15%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 15%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年10月 - 2027年9月</span>
+                                <span class="lang-en">Oct 2025 - Sep 2027</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">全社業務プロセスの標準化とデータ統合基盤の確立</span>
+                                <span class="lang-en">Standardize company-wide business processes and establish integrated data platform</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- クラウドマイグレーション -->
+                    <div class="project-card" data-department="it">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">クラウドマイグレーション</span>
+                                    <span class="lang-en">Cloud Migration</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-red">
+                                <span class="lang-ja">遅延</span>
+                                <span class="lang-en">Delayed</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥1.2B</span>
+                                    <span class="lang-en">$8.0M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">42%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 42%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年4月 - 2026年6月</span>
+                                <span class="lang-en">Apr 2025 - Jun 2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">オンプレミスシステムのクラウド移行、インフラコスト40%削減</span>
+                                <span class="lang-en">Migrate on-premise systems to cloud, reduce infrastructure costs by 40%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AI-RPA導入 -->
+                    <div class="project-card" data-department="finance">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">AI-RPA導入</span>
+                                    <span class="lang-en">AI-RPA Implementation</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-green">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">財務部門</span>
+                                    <span class="lang-en">Finance</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥450M</span>
+                                    <span class="lang-en">$3.0M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">88%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 88%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年3月 - 2025年11月</span>
+                                <span class="lang-en">Mar 2025 - Nov 2025</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">経理業務の自動化により年間3,000時間削減、精度99%以上達成</span>
+                                <span class="lang-en">Automate accounting tasks to save 3,000 hours annually, achieve 99%+ accuracy</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- サブスクリプション管理システム -->
+                    <div class="project-card" data-department="sales">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">サブスクリプション管理システム</span>
+                                    <span class="lang-en">Subscription Management</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-green">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">営業部門</span>
+                                    <span class="lang-en">Sales</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥320M</span>
+                                    <span class="lang-en">$2.1M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">65%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年6月 - 2026年3月</span>
+                                <span class="lang-en">Jun 2025 - Mar 2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">継続課金の自動化とチャーン率5%削減</span>
+                                <span class="lang-en">Automate recurring billing and reduce churn rate by 5%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ゼロトラストセキュリティ -->
+                    <div class="project-card" data-department="it">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">ゼロトラストセキュリティ</span>
+                                    <span class="lang-en">Zero Trust Security</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-yellow">
+                                <span class="lang-ja">要注意</span>
+                                <span class="lang-en">Caution</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥680M</span>
+                                    <span class="lang-en">$4.5M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">55%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 55%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年5月 - 2026年5月</span>
+                                <span class="lang-en">May 2025 - May 2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">多層防御による侵入リスク80%低減、セキュリティ監査対応の完全自動化</span>
+                                <span class="lang-en">Reduce intrusion risk by 80% with multi-layer defense, fully automate security audits</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 人事システム統合 -->
+                    <div class="project-card" data-department="hr">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">人事システム統合</span>
+                                    <span class="lang-en">HR System Integration</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-gray">
+                                <span class="lang-ja">未開始</span>
+                                <span class="lang-en">Not Started</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge unapproved">
+                                    <span class="lang-ja">未承認</span>
+                                    <span class="lang-en">Unapproved</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">人事部門</span>
+                                    <span class="lang-en">HR</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥540M</span>
+                                    <span class="lang-en">$3.6M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">0%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 0%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2026年1月 - 2026年12月</span>
+                                <span class="lang-en">Jan 2026 - Dec 2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">給与・勤怠・評価システムの統合で人事業務効率50%向上</span>
+                                <span class="lang-en">Integrate payroll, attendance, and evaluation systems to improve HR efficiency by 50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CRM高度化 -->
+                    <div class="project-card" data-department="marketing">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">CRM高度化</span>
+                                    <span class="lang-en">CRM Enhancement</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-green">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">マーケティング部門</span>
+                                    <span class="lang-en">Marketing</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥290M</span>
+                                    <span class="lang-en">$1.9M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">72%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 72%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年4月 - 2026年2月</span>
+                                <span class="lang-en">Apr 2025 - Feb 2026</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">AI予測分析によるコンバージョン率25%向上、顧客LTV20%増加</span>
+                                <span class="lang-en">Improve conversion rate by 25% with AI predictive analytics, increase customer LTV by 20%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- スマート工場システム -->
+                    <div class="project-card" data-department="manufacturing">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">スマート工場システム</span>
+                                    <span class="lang-en">Smart Factory System</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-yellow">
+                                <span class="lang-ja">要注意</span>
+                                <span class="lang-en">Caution</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge inprogress">
+                                    <span class="lang-ja">実行中</span>
+                                    <span class="lang-en">In Progress</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">製造部門</span>
+                                    <span class="lang-en">Manufacturing</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥2.1B</span>
+                                    <span class="lang-en">$14.0M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">38%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 38%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年7月 - 2027年3月</span>
+                                <span class="lang-en">Jul 2025 - Mar 2027</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">IoT/AI活用による生産効率30%向上、不良品率50%削減</span>
+                                <span class="lang-en">Improve production efficiency by 30% with IoT/AI, reduce defect rate by 50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- カスタマーポータル -->
+                    <div class="project-card" data-department="customer-service">
+                        <div class="project-header">
+                            <div>
+                                <div class="project-name">
+                                    <span class="lang-ja">カスタマーポータル</span>
+                                    <span class="lang-en">Customer Portal</span>
+                                </div>
+                            </div>
+                            <span class="status-badge status-green">
+                                <span class="lang-ja">完了</span>
+                                <span class="lang-en">Completed</span>
+                            </span>
+                        </div>
+                        <div class="project-info">
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="phase-badge completed">
+                                    <span class="lang-ja">完了</span>
+                                    <span class="lang-en">Completed</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">カスタマーサービス部門</span>
+                                    <span class="lang-en">Customer Service</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="info-value">
+                                    <span class="lang-ja">¥380M</span>
+                                    <span class="lang-en">$2.5M</span>
+                                </span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="info-value">100%</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 100%;"></div>
+                        </div>
+                        <div class="project-details">
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年10月 - 2025年9月</span>
+                                <span class="lang-en">Oct 2024 - Sep 2025</span>
+                            </div>
+                            <div class="detail-row">
+                                <strong>
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">セルフサービス化で問い合わせ対応60%削減、顧客満足度15%向上</span>
+                                <span class="lang-en">Reduce inquiry handling by 60% through self-service, improve satisfaction by 15%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectDepartment(departmentId) {
+            // Clear all highlights
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all department selections
+            document.querySelectorAll('.department-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (departmentId) {
+                // Highlight selected department
+                const selectedDeptItem = document.querySelector(`[data-department="${departmentId}"]`);
+                if (selectedDeptItem && selectedDeptItem.classList.contains('department-item')) {
+                    selectedDeptItem.classList.add('active');
+                }
+                
+                // Highlight related projects
+                document.querySelectorAll('.project-card').forEach(card => {
+                    const dept = card.getAttribute('data-department');
+                    if (dept === departmentId) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const deptName = selectedDeptItem ? selectedDeptItem.querySelector('.department-name') : null;
+                const selectedDeptSpan = document.getElementById('selectedDepartment');
+                if (deptName && selectedDeptSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedDeptSpan.textContent = ' - ' + deptName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedDeptSpan.textContent = ' - ' + deptName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedDepartment').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectDepartment(null);
+        }
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'English') {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

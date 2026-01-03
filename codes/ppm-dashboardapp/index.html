@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Portfolio Management System</title>
+
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <link href="./assets/css/output.css" rel="stylesheet">
+
+    <script src="config/config.js"></script>
+
+    <style>
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+        .stagger-5 { animation-delay: 0.5s; }
+    </style>
+</head>
+<body class="font-sans bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen" data-lang="ja">
+    
+    <!-- Language Toggle -->
+    <div class="fixed top-5 right-5 z-[1000] bg-white py-2.5 px-4 rounded-full shadow-lg flex gap-2.5">
+        <button class="lang-btn active px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-kkc-orange to-kkc-orange-dark text-white hover:opacity-90" onclick="setLanguage('ja')">
+            日本語
+        </button>
+        <button class="lang-btn px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200" onclick="setLanguage('en')">
+            English
+        </button>
+    </div>
+    
+    <!-- Hero Section -->
+    <header class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-kkc-orange-dark via-kkc-orange-light to-kkc-orange-dark opacity-95"></div>
+        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1vcGFjaXR5PSIwLjA1IiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
+        
+        <div class="relative max-w-7xl mx-auto px-6 py-24 md:py-32">
+            <div class="text-center">
+                <div class="inline-block mb-6 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-semibold">
+                    <span class="lang-ja">統合IT管理プラットフォーム</span>
+                    <span class="lang-en">Integrated IT Management Platform</span>
+                </div>
+                
+                <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 fade-in">
+                    <span class="lang-ja">SAMPLE PROGRAM</span>
+                    <span class="lang-en">SAMPLE PROGRAM</span>
+                    <br>
+                    <span class="lang-ja">ITポートフォリオ管理システム</span>
+                    <span class="lang-en">IT Portfolio Management System</span>
+                </h1>
+                
+                <p class="text-xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed fade-in stagger-1 lang-ja">
+                    プロジェクト、アプリケーション、コストを一元管理<br>
+                    戦略的なIT投資判断をサポートする可視化ダッシュボード
+                </p>
+                <p class="text-xl text-white/90 mb-10 max-w-3xl mx-auto leading-relaxed fade-in stagger-1 lang-en">
+                    Centralized management of projects, applications and costs.<br>
+                    Visualization dashboards supporting strategic IT investment decisions.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-4 fade-in stagger-2">
+                    <a href="#dashboards" class="px-8 py-4 bg-white text-indigo-600 rounded-full font-semibold text-base hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <span class="lang-ja">ダッシュボードを見る</span>
+                        <span class="lang-en">View Dashboards</span>
+                    </a>
+                    <a href="#features" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border-2 border-white rounded-full font-semibold text-base hover:bg-white/20 transition-all duration-300">
+                        <span class="lang-ja">機能について</span>
+                        <span class="lang-en">Learn More</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Wave Divider -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 0L60 10C120 20 240 40 360 46.7C480 53 600 47 720 43.3C840 40 960 40 1080 46.7C1200 53 1320 67 1380 73.3L1440 80V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0V0Z" fill="rgb(249, 250, 251)"/>
+            </svg>
+        </div>
+    </header>
+    
+    <!-- Stats Section
+    <section class="max-w-7xl mx-auto px-6 py-12 -mt-20 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center fade-in stagger-1">
+                <div class="text-4xl font-bold text-indigo-600 mb-2">5</div>
+                <div class="text-sm text-gray-600 font-medium lang-ja">可視化ビュー</div>
+                <div class="text-sm text-gray-600 font-medium lang-en">Visualization Views</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center fade-in stagger-2">
+                <div class="text-4xl font-bold text-purple-600 mb-2">24</div>
+                <div class="text-sm text-gray-600 font-medium lang-ja">管理プロジェクト数</div>
+                <div class="text-sm text-gray-600 font-medium lang-en">Managed Projects</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center fade-in stagger-3">
+                <div class="text-4xl font-bold text-blue-600 mb-2">¥12.5億</div>
+                <div class="text-sm text-gray-600 font-medium lang-ja">総IT予算</div>
+                <div class="text-sm text-gray-600 font-medium lang-en">Total IT Budget</div>
+            </div>
+            <div class="bg-white p-6 rounded-2xl shadow-lg text-center fade-in stagger-4">
+                <div class="text-4xl font-bold text-green-600 mb-2">145%</div>
+                <div class="text-sm text-gray-600 font-medium lang-ja">平均ROI</div>
+                <div class="text-sm text-gray-600 font-medium lang-en">Average ROI</div>
+            </div>
+        </div>
+    </section> -->
+    
+    <!-- Main Dashboards Section -->
+    <section id="dashboards" class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 lang-ja">ダッシュボード一覧</h2>
+            <h2 class="text-4xl font-bold text-gray-800 mb-4 lang-en">Dashboard Overview</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto lang-ja">
+                IT資産とプロジェクトを多角的に可視化。データドリブンな意思決定を実現します。
+            </p>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto lang-en">
+                Multifaceted visualization of IT assets and projects. Enable data-driven decision making.
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dashboard Card of IT Portfolio -->
+            <a href="html/it_portfolio_dashboard.html" class="block group">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover fade-in stagger-1">
+                    <div class="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors lang-ja">
+                            ITポートフォリオ管理ダッシュボード
+                        </h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-indigo-600 transition-colors lang-en">
+                            IT Portfolio Dashboard
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-4 lang-ja">
+                            プロジェクト全体の進捗、予算、リスク、リソース配置を一元管理。経営層向けの統合ビュー。
+                        </p>
+                        <p class="text-gray-600 text-sm mb-4 lang-en">
+                            Centralized management of overall project progress, budget, risks, and resource allocation. Executive-level integrated view.
+                        </p>
+                        <div class="flex items-center text-indigo-600 font-semibold text-sm">
+                            <span class="lang-ja">ダッシュボードを開く</span>
+                            <span class="lang-en">Open Dashboard</span>
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Dashboard Card of Project -->
+            <a href="html/project_view.html" class="block group">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover fade-in stagger-5">
+                    <div class="h-48 bg-gradient-to-br from-rose-500 to-pink-600 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-rose-600 transition-colors lang-ja">
+                            プロジェクト鳥瞰図
+                        </h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-rose-600 transition-colors lang-en">
+                            Project Overview
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-4 lang-ja">
+                            プロジェクトのタイムライン、依存関係、クリティカルパスを可視化。複数プロジェクトの同時進行を最適化。
+                        </p>
+                        <p class="text-gray-600 text-sm mb-4 lang-en">
+                            Visualization of project timelines, dependencies, and critical paths. Optimize concurrent project execution.
+                        </p>
+                        <div class="flex items-center text-rose-600 font-semibold text-sm">
+                            <span class="lang-ja">ダッシュボードを開く</span>
+                            <span class="lang-en">Open Dashboard</span>
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- Dashboard Card of Applications -->
+            <a href="html/application_layer_view.html" class="block group">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover fade-in stagger-3">
+                    <div class="h-48 bg-gradient-to-br from-green-500 to-emerald-600 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-white/10 backdrop-blur-sm flex items-center justify-center">
+                            <svg class="w-20 h-20 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1v-3z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors lang-ja">
+                            アプリケーション鳥瞰図
+                        </h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2 group-hover:text-green-600 transition-colors lang-en">
+                            Application Overview
+                        </h3>
+                        <p class="text-gray-600 text-sm mb-4 lang-ja">
+                            全社アプリケーションのライフサイクル、技術スタック、依存関係を可視化。モダナイゼーション計画に活用。
+                        </p>
+                        <p class="text-gray-600 text-sm mb-4 lang-en">
+                            Visualization of enterprise application lifecycle, technology stack, and dependencies. Useful for modernization planning.
+                        </p>
+                        <div class="flex items-center text-green-600 font-semibold text-sm">
+                            <span class="lang-ja">ダッシュボードを開く</span>
+                            <span class="lang-en">Open Dashboard</span>
+                            <svg class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="bg-white py-20">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 lang-ja">主な機能</h2>
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 lang-en">Key Features</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto lang-ja">
+                    IT資産の可視化を通じて戦略的意思決定を包括的にサポートします
+                </p>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto lang-en">
+                    Comprehensive support to strategic decision-making from IT perspective
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center p-6 fade-in stagger-1">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-ja">リアルタイム可視化</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-en">Real-time Visualization</h3>
+                    <p class="text-gray-600 lang-ja">
+                        プロジェクト、コスト、リソースの最新状況をリアルタイムで把握
+                    </p>
+                    <p class="text-gray-600 lang-en">
+                        Real-time tracking of latest project, cost, and resource status
+                    </p>
+                </div>
+                
+                <div class="text-center p-6 fade-in stagger-2">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-ja">インタラクティブ操作</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-en">Interactive Operations</h3>
+                    <p class="text-gray-600 lang-ja">
+                        クリックやフィルタリングで詳細情報にドリルダウン
+                    </p>
+                    <p class="text-gray-600 lang-en">
+                        Drill down into detailed information with clicks and filtering
+                    </p>
+                </div>
+                
+                <div class="text-center p-6 fade-in stagger-3">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-ja">多言語対応</h3>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2 lang-en">Multilingual Support</h3>
+                    <p class="text-gray-600 lang-ja">
+                        日本語・英語のシームレスな切り替えが可能
+                    </p>
+                    <p class="text-gray-600 lang-en">
+                        Seamless switching between Japanese and English
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4 lang-ja">ITポートフォリオ管理システム</h3>
+                    <h3 class="text-lg font-bold mb-4 lang-en">IT Portfolio Management System</h3>
+                    <p class="text-gray-400 text-sm lang-ja">
+                        統合的なIT管理で、戦略的な意思決定をサポートします。
+                    </p>
+                    <p class="text-gray-400 text-sm lang-en">
+                        Supporting strategic decision-making through integrated IT management.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 lang-ja">ダッシュボード</h4>
+                    <h4 class="font-semibold mb-4 lang-en">Dashboards</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="html/it_portfolio_dashboard.html" class="hover:text-white transition-colors lang-ja">ITポートフォリオ</a></li>
+                        <li><a href="html/it_portfolio_dashboard.html" class="hover:text-white transition-colors lang-en">IT Portfolio Management</a></li>
+                        <li><a href="html/project_view.html" class="hover:text-white transition-colors lang-ja">プロジェクトリスト</a></li>
+                        <li><a href="html/project_view.html" class="hover:text-white transition-colors lang-en">Project List</a></li>
+                        <li><a href="html/application_layer_view.html" class="hover:text-white transition-colors lang-ja">アプリケーション鳥瞰図</a></li>
+                        <li><a href="html/application_layer_view.html" class="hover:text-white transition-colors lang-en">Applications Overview</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 lang-ja">情報</h4>
+                    <h4 class="font-semibold mb-4 lang-en">Information</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors lang-ja">バージョン: 0.1.0</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors lang-en">Version: 0.1.0</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors lang-ja">更新日: 2025-11-16</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors lang-en">Updated: 2025-11-16</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">© 2025 H-Kom.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 text-center text-sm text-gray-400">
+                <p class="lang-ja">Powered by いろいろな生成LLM</p>
+                <p class="lang-en">Powered by Various GenerativeAI</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        function setLanguage(lang) {
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                // btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                btn.classList.remove('active', 'bg-gradient-to-br', 'from-kkc-orange', 'to-kkc-orange-light', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-500');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-500');
+            // event.target.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+            event.target.classList.add('active', 'bg-gradient-to-br', 'from-kkc-orange', 'to-kkc-orange-light', 'text-white');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-500');
+                    if (btn.textContent.trim() === 'English') {
+                        btn.classList.remove('bg-gray-100', 'text-gray-500');
+                        btn.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

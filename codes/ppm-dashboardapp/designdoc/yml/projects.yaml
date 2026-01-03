@@ -1,0 +1,160 @@
+table:
+  name: Projects
+  description: プロジェクト情報を管理するテーブル
+
+fields:
+  - name: id
+    type: string
+    description: プロジェクトの一意識別子
+    example: "crm-upgrade"
+    required: true
+    primary_key: true
+
+  - name: nameJA
+    type: string
+    description: プロジェクト名（日本語）
+    example: "CRMシステムアップグレード"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: プロジェクト名（英語）
+    example: "CRM System Upgrade"
+    required: true
+
+  - name: department
+    type: string
+    description: 所属部門ID
+    example: "it"
+    required: true
+    reference:
+      table: Departments
+      field: id
+
+  - name: status
+    type: string
+    description: ステータス識別子
+    example: "on-track"
+    required: true
+    enum:
+      - on-track
+      - delayed
+      - at-risk
+      - completed
+      - planning
+
+  - name: statusLabelJA
+    type: string
+    description: ステータスラベル（日本語）
+    example: "順調"
+    required: true
+
+  - name: statusLabelEN
+    type: string
+    description: ステータスラベル（英語）
+    example: "On Track"
+    required: true
+
+  - name: phase
+    type: string
+    description: フェーズ識別子
+    example: "implementation"
+    required: true
+    enum:
+      - planning
+      - design
+      - implementation
+      - completed
+
+  - name: phaseLabelJA
+    type: string
+    description: フェーズラベル（日本語）
+    example: "実装"
+    required: true
+
+  - name: phaseLabelEN
+    type: string
+    description: フェーズラベル（英語）
+    example: "Implementation"
+    required: true
+
+  - name: budgetJA
+    type: string
+    description: 予算（日本円表記）
+    example: "¥1.2B"
+    required: true
+
+  - name: budgetEN
+    type: string
+    description: 予算（米ドル表記）
+    example: "$8.0M"
+    required: true
+
+  - name: progress
+    type: number
+    description: 進捗率（パーセント）
+    example: 65
+    required: true
+    validation:
+      min: 0
+      max: 100
+
+  - name: durationJA
+    type: string
+    description: 期間（日本語表記）
+    example: "2025年1月 - 2025年12月"
+    required: true
+
+  - name: durationEN
+    type: string
+    description: 期間（英語表記）
+    example: "Jan 2025 - Dec 2025"
+    required: true
+
+  - name: goalJA
+    type: string
+    description: プロジェクト目標（日本語）
+    example: "顧客データの統合と分析機能の強化により、営業効率を30%向上"
+    required: true
+
+  - name: goalEN
+    type: string
+    description: プロジェクト目標（英語）
+    example: "Improve sales efficiency by 30% through integrated customer data and enhanced analytics"
+    required: true
+
+enums:
+  status:
+    description: ステータス値の種類
+    values:
+      on-track:
+        ja: 順調
+        en: On Track
+      delayed:
+        ja: 遅延
+        en: Delayed
+      at-risk:
+        ja: 要注意
+        en: At Risk
+      completed:
+        ja: 完了
+        en: Completed
+      planning:
+        ja: 計画中
+        en: Planning
+
+  phase:
+    description: フェーズ値の種類
+    values:
+      planning:
+        ja: 計画
+        en: Planning
+      design:
+        ja: 設計
+        en: Design
+      implementation:
+        ja: 実装
+        en: Implementation
+      completed:
+        ja: 完了
+        en: Completed

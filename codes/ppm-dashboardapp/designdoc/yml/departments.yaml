@@ -1,0 +1,58 @@
+table:
+  name: Departments
+  description: 部門マスタテーブル
+  type: master
+
+fields:
+  - name: id
+    type: string
+    description: 部門の一意識別子
+    example: "it"
+    required: true
+    primary_key: true
+    enum:
+      - all
+      - it
+      - sales
+      - hr
+      - finance
+      - manufacturing
+      - customer-service
+
+  - name: nameJA
+    type: string
+    description: 部門名（日本語）
+    example: "IT部門"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: 部門名（英語）
+    example: "IT Department"
+    required: true
+
+enums:
+  id:
+    description: 部門ID値の種類
+    values:
+      all:
+        ja: 全部門
+        en: All Departments
+      it:
+        ja: IT部門
+        en: IT Department
+      sales:
+        ja: 営業部門
+        en: Sales Department
+      hr:
+        ja: 人事部門
+        en: HR Department
+      finance:
+        ja: 財務部門
+        en: Finance Department
+      manufacturing:
+        ja: 製造部門
+        en: Manufacturing Department
+      customer-service:
+        ja: カスタマーサービス部門
+        en: Customer Service Department

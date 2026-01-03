@@ -1,0 +1,67 @@
+{
+  "resourceAllocation": [
+    {
+      "roleJA": "プロジェクトマネージャー",
+      "roleEN": "Project Manager",
+      "available": 8,
+      "utilization": 95,
+      "current": "overload",
+      "threeMonths": "overload",
+      "endOfTerm": "high"
+    },
+    {
+      "roleJA": "アーキテクト",
+      "roleEN": "Architect",
+      "available": 5,
+      "utilization": 88,
+      "current": "high",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "フロントエンド開発",
+      "roleEN": "Frontend Dev",
+      "available": 12,
+      "utilization": 82,
+      "current": "optimal",
+      "threeMonths": "optimal",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "バックエンド開発",
+      "roleEN": "Backend Dev",
+      "available": 15,
+      "utilization": 91,
+      "current": "high",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "インフラエンジニア",
+      "roleEN": "Infrastructure Eng",
+      "available": 8,
+      "utilization": 93,
+      "current": "overload",
+      "threeMonths": "high",
+      "endOfTerm": "optimal"
+    },
+    {
+      "roleJA": "QA/テスト",
+      "roleEN": "QA/Testing",
+      "available": 6,
+      "utilization": 75,
+      "current": "optimal",
+      "threeMonths": "optimal",
+      "endOfTerm": "available"
+    },
+    {
+      "roleJA": "データアナリスト",
+      "roleEN": "Data Analyst",
+      "available": 4,
+      "utilization": 68,
+      "current": "available",
+      "threeMonths": "optimal",
+      "endOfTerm": "optimal"
+    }
+  ]
+}

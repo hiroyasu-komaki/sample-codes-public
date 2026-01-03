@@ -1,0 +1,90 @@
+table:
+  name: ResourceAllocation
+  description: リソース配分情報を管理するテーブル
+
+fields:
+  - name: id
+    type: string
+    description: リソース役割の一意識別子
+    example: "project-manager"
+    required: true
+    primary_key: true
+
+  - name: roleJA
+    type: string
+    description: 役割名（日本語）
+    example: "プロジェクトマネージャー"
+    required: true
+
+  - name: roleEN
+    type: string
+    description: 役割名（英語）
+    example: "Project Manager"
+    required: true
+
+  - name: available
+    type: number
+    description: 利用可能人数
+    example: 8
+    required: true
+    validation:
+      min: 0
+
+  - name: utilization
+    type: number
+    description: 稼働率（パーセント）
+    example: 95
+    required: true
+    validation:
+      min: 0
+      max: 100
+
+  - name: current
+    type: string
+    description: 現在の状態
+    example: "overload"
+    required: true
+    enum:
+      - overload
+      - high
+      - optimal
+      - available
+
+  - name: threeMonths
+    type: string
+    description: 3ヶ月後の予測状態
+    example: "overload"
+    required: true
+    enum:
+      - overload
+      - high
+      - optimal
+      - available
+
+  - name: endOfTerm
+    type: string
+    description: 期末の予測状態
+    example: "high"
+    required: true
+    enum:
+      - overload
+      - high
+      - optimal
+      - available
+
+enums:
+  status:
+    description: 状態値の種類
+    values:
+      overload:
+        ja: 過負荷
+        en: Overload
+      high:
+        ja: 高稼働
+        en: High
+      optimal:
+        ja: 最適
+        en: Optimal
+      available:
+        ja: 余裕あり
+        en: Available

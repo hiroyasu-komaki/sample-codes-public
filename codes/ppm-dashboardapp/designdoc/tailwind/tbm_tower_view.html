@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITコスト鳥瞰図 / IT Cost Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .expanded .layer-content {
+            display: block;
+        }
+        
+        .layer-content {
+            display: none;
+        }
+        
+        .expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        .highlight-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50 p-5" data-lang="ja">
+    <div class="fixed top-5 right-5 z-[1000] bg-white py-2.5 px-4 rounded-full shadow-md flex gap-2.5">
+        <button class="lang-btn active px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-indigo-500 to-purple-600 text-white hover:opacity-90" onclick="setLanguage('ja')">
+            日本語
+        </button>
+        <button class="lang-btn px-4 py-2 border-none rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200" onclick="setLanguage('en')">
+            English
+        </button>
+    </div>
+    
+    <div class="max-w-[1800px] mx-auto">
+        <header class="bg-gradient-to-br from-indigo-500 to-purple-600 text-white p-8 rounded-2xl mb-8 shadow-md">
+            <h1 class="text-3xl font-bold mb-1 lang-ja">ITコスト鳥瞰図</h1>
+            <h1 class="text-3xl font-bold mb-1 lang-en">IT Cost Overview</h1>
+            <p class="opacity-90 text-sm lang-ja">TBMベースのコスト構造可視化 | 2025年度予算</p>
+            <p class="opacity-90 text-sm lang-en">TBM-based Cost Structure Visualization | FY2025 Budget</p>
+        </header>
+        
+        <div class="grid grid-cols-[300px_1fr] gap-5">
+            <aside class="bg-white p-6 rounded-2xl shadow-sm h-fit sticky top-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-ja">プロジェクト一覧</h2>
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200 lang-en">Project List</h2>
+                
+                <ul class="space-y-2">
+                    <li class="project-item py-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-4 border-transparent bg-gray-50 hover:bg-gray-100 hover:border-indigo-500 hover:translate-x-1" data-project="proj1" onclick="selectProject('proj1')">
+                        <div class="project-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">基幹システム刷新</span>
+                            <span class="lang-en">Core System Renewal</span>
+                        </div>
+                        <div class="project-status text-xs text-gray-500">¥450M</div>
+                    </li>
+                    <li class="project-item py-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-4 border-transparent bg-gray-50 hover:bg-gray-100 hover:border-indigo-500 hover:translate-x-1" data-project="proj2" onclick="selectProject('proj2')">
+                        <div class="project-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">クラウドマイグレーション</span>
+                            <span class="lang-en">Cloud Migration</span>
+                        </div>
+                        <div class="project-status text-xs text-gray-500">¥280M</div>
+                    </li>
+                    <li class="project-item py-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-4 border-transparent bg-gray-50 hover:bg-gray-100 hover:border-indigo-500 hover:translate-x-1" data-project="proj3" onclick="selectProject('proj3')">
+                        <div class="project-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">セキュリティ強化</span>
+                            <span class="lang-en">Security Enhancement</span>
+                        </div>
+                        <div class="project-status text-xs text-gray-500">¥180M</div>
+                    </li>
+                    <li class="project-item py-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-4 border-transparent bg-gray-50 hover:bg-gray-100 hover:border-indigo-500 hover:translate-x-1" data-project="proj4" onclick="selectProject('proj4')">
+                        <div class="project-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">ECサイトリニューアル</span>
+                            <span class="lang-en">E-Commerce Renewal</span>
+                        </div>
+                        <div class="project-status text-xs text-gray-500">¥95M</div>
+                    </li>
+                    <li class="project-item py-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-4 border-transparent bg-gray-50 hover:bg-gray-100 hover:border-indigo-500 hover:translate-x-1" data-project="proj5" onclick="selectProject('proj5')">
+                        <div class="project-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">AI活用推進</span>
+                            <span class="lang-en">AI Utilization</span>
+                        </div>
+                        <div class="project-status text-xs text-gray-500">¥45M</div>
+                    </li>
+                </ul>
+                
+                <button class="clear-button w-full py-2.5 mt-4 border border-gray-200 rounded-lg bg-white text-gray-500 text-xs cursor-pointer transition-all duration-300 hover:bg-gray-50 hover:border-indigo-500 hover:text-indigo-500" onclick="clearSelection()">
+                    <span class="lang-ja">選択をクリア</span>
+                    <span class="lang-en">Clear Selection</span>
+                </button>
+            </aside>
+            
+            <main class="bg-white p-8 rounded-2xl shadow-sm">
+                <div class="tower-header text-center mb-8">
+                    <h2 class="tower-title text-xl font-semibold text-gray-800 mb-2">
+                        <span class="lang-ja">ITコストタワー構造</span>
+                        <span class="lang-en">IT Cost Tower Structure</span>
+                        <span id="selectedProject" class="text-indigo-600"></span>
+                    </h2>
+                    <p class="tower-description text-xs text-gray-500 leading-relaxed lang-ja">
+                        各レイヤーをクリックして詳細を表示できます。左側のプロジェクト一覧から選択すると、関連するコスト要素がハイライトされます。
+                    </p>
+                    <p class="tower-description text-xs text-gray-500 leading-relaxed lang-en">
+                        Click each layer to view details. Select a project from the left sidebar to highlight related cost elements.
+                    </p>
+                </div>
+                
+                <div class="space-y-1">
+                    <!-- Solution Layer -->
+                    <div class="tower-layer mb-1 rounded-lg overflow-hidden">
+                        <div class="layer-header py-4 px-5 font-semibold text-sm text-center text-white cursor-pointer transition-all duration-300 flex justify-between items-center bg-gradient-to-r from-purple-600 to-indigo-600 hover:brightness-110">
+                            <span class="lang-ja">ソリューション</span>
+                            <span class="lang-en">Solution</span>
+                            <div class="flex items-center gap-4">
+                                <span class="font-bold">¥12.5億</span>
+                                <svg class="expand-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="layer-content bg-gradient-to-r from-purple-50 to-indigo-50 p-5">
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">基幹業務システム</span>
+                                        <span class="lang-en">Core Business Systems</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥4.2億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj3,proj4">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">顧客接点システム</span>
+                                        <span class="lang-en">Customer Interface</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥3.8億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj5">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">データ分析基盤</span>
+                                        <span class="lang-en">Data Analytics Platform</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥2.1億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj3">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">人事・財務システム</span>
+                                        <span class="lang-en">HR & Finance Systems</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥1.6億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-purple-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj4,proj5">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">コラボレーション</span>
+                                        <span class="lang-en">Collaboration</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥0.8億</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tower Layer -->
+                    <div class="tower-layer mb-1 rounded-lg overflow-hidden">
+                        <div class="layer-header py-4 px-5 font-semibold text-sm text-center text-white cursor-pointer transition-all duration-300 flex justify-between items-center bg-gradient-to-r from-blue-600 to-cyan-600 hover:brightness-110">
+                            <span class="lang-ja">タワー</span>
+                            <span class="lang-en">Tower</span>
+                            <div class="flex items-center gap-4">
+                                <span class="font-bold">¥8.3億</span>
+                                <svg class="expand-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="layer-content bg-gradient-to-r from-blue-50 to-cyan-50 p-5">
+                            <div class="grid grid-cols-4 gap-3">
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">アプリケーション</span>
+                                        <span class="lang-en">Application</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥3.2億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj2,proj3">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">インフラ</span>
+                                        <span class="lang-en">Infrastructure</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥2.8億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj3,proj4">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">セキュリティ</span>
+                                        <span class="lang-en">Security</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥1.5億</div>
+                                </div>
+                                <div class="category-item bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj5">
+                                    <div class="item-name text-sm font-medium text-gray-700 mb-2">
+                                        <span class="lang-ja">データ管理</span>
+                                        <span class="lang-en">Data Management</span>
+                                    </div>
+                                    <div class="item-cost text-lg font-bold text-gray-800">¥0.8億</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Cost Pool Layer -->
+                    <div class="tower-layer mb-1 rounded-lg overflow-hidden">
+                        <div class="layer-header py-4 px-5 font-semibold text-sm text-center text-white cursor-pointer transition-all duration-300 flex justify-between items-center bg-gradient-to-r from-green-600 to-emerald-600 hover:brightness-110">
+                            <span class="lang-ja">コストプール</span>
+                            <span class="lang-en">Cost Pool</span>
+                            <div class="flex items-center gap-4">
+                                <span class="font-bold">¥5.7億</span>
+                                <svg class="expand-icon w-4 h-4 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="layer-content bg-gradient-to-r from-green-50 to-emerald-50 p-5">
+                            <div class="mb-5">
+                                <div class="text-sm font-semibold text-gray-700 mb-3">
+                                    OpEx <span class="font-normal text-indigo-600">(運営費用)</span>
+                                </div>
+                                <div class="grid grid-cols-5 gap-3">
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3,proj4,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">内部人件費</span>
+                                            <span class="lang-en">Internal Labor</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥32,400万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">外部人件費</span>
+                                            <span class="lang-en">External Labor</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥28,700万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj2,proj3,proj4">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">外部サービス</span>
+                                            <span class="lang-en">External Services</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥24,300万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj3,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">ハードウェア</span>
+                                            <span class="lang-en">Hardware</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥21,500万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj4,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">ソフトウェア</span>
+                                            <span class="lang-en">Software</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥15,600万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj2,proj3">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">設備 / 電力</span>
+                                            <span class="lang-en">Facilities / Power</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥6,400万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3,proj4">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">電気通信</span>
+                                            <span class="lang-en">Telecom</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥4,700万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj3,proj4,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">その他</span>
+                                            <span class="lang-en">Other</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥3,200万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3,proj4,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">内部サービス</span>
+                                            <span class="lang-en">Internal Services</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥5,800万</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5">
+                                <div class="text-sm font-semibold text-gray-700 mb-3">
+                                    CapEx <span class="font-normal text-indigo-600">(資本支出)</span>
+                                </div>
+                                <div class="grid grid-cols-4 gap-3">
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">内部人件費</span>
+                                            <span class="lang-en">Internal Labor</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥8,500万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">外部人件費</span>
+                                            <span class="lang-en">External Labor</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥6,200万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj3,proj4">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">外部サービス</span>
+                                            <span class="lang-en">External Services</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥4,900万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj2,proj3">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">ハードウェア</span>
+                                            <span class="lang-en">Hardware</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥28,600万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj4,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">ソフトウェア</span>
+                                            <span class="lang-en">Software</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥12,300万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj2,proj3">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">設備 / 電力</span>
+                                            <span class="lang-en">Facilities / Power</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥15,800万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj1,proj3,proj4">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">電気通信</span>
+                                            <span class="lang-en">Telecom</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥3,400万</div>
+                                    </div>
+                                    <div class="category-item bg-white p-3 rounded-lg shadow-sm border-l-4 border-green-500 cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-105" data-projects="proj2,proj5">
+                                        <div class="item-name text-xs font-medium text-gray-700 mb-2">
+                                            <span class="lang-ja">その他</span>
+                                            <span class="lang-en">Other</span>
+                                        </div>
+                                        <div class="item-cost text-base font-bold text-gray-800">¥2,100万</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex justify-center gap-6 mt-8 pt-6 border-t-2 border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-gradient-to-r from-purple-600 to-indigo-600"></div>
+                        <span class="text-xs text-gray-600">
+                            <span class="lang-ja">ソリューション</span>
+                            <span class="lang-en">Solution</span>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-gradient-to-r from-blue-600 to-cyan-600"></div>
+                        <span class="text-xs text-gray-600">
+                            <span class="lang-ja">タワー / サブタワー</span>
+                            <span class="lang-en">Tower / Subtower</span>
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="w-6 h-6 rounded bg-gradient-to-r from-green-600 to-emerald-600"></div>
+                        <span class="text-xs text-gray-600">
+                            <span class="lang-ja">コストプール / サブプール</span>
+                            <span class="lang-en">Cost Pool / Subpool</span>
+                        </span>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-500');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-500');
+            event.target.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectProject(projectId) {
+            // Clear all highlights
+            document.querySelectorAll('.category-item').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all project selections
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-100', 'to-purple-100', 'border-indigo-500', 'font-semibold');
+                item.classList.add('bg-gray-50');
+            });
+            
+            if (projectId) {
+                // Highlight selected project
+                const selectedProjectItem = document.querySelector(`[data-project="${projectId}"]`);
+                if (selectedProjectItem) {
+                    selectedProjectItem.classList.remove('bg-gray-50');
+                    selectedProjectItem.classList.add('active', 'bg-gradient-to-br', 'from-indigo-100', 'to-purple-100', 'border-indigo-500', 'font-semibold');
+                }
+                
+                // Highlight related items
+                document.querySelectorAll('.category-item').forEach(card => {
+                    const projects = card.getAttribute('data-projects');
+                    if (projects && projects.includes(projectId)) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const projectName = selectedProjectItem ? selectedProjectItem.querySelector('.project-name') : null;
+                const selectedProjectSpan = document.getElementById('selectedProject');
+                if (projectName && selectedProjectSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedProject').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectProject(null);
+        }
+        
+        // Toggle layer expansion
+        document.querySelectorAll('.layer-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const layer = this.parentElement;
+                layer.classList.toggle('expanded');
+            });
+        });
+        
+        // Expand first layer by default
+        document.querySelector('.tower-layer').classList.add('expanded');
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-500');
+                    if (btn.textContent.trim() === 'English') {
+                        btn.classList.remove('bg-gray-100', 'text-gray-500');
+                        btn.classList.add('active', 'bg-gradient-to-br', 'from-indigo-500', 'to-purple-600', 'text-white');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データレイヤー鳥瞰図 / Data Layer Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lang-en { display: none; }
+        [data-lang="en"] .lang-ja { display: none; }
+        [data-lang="en"] .lang-en { display: block; }
+        [data-lang="en"] .lang-en { display: inline; }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 35px rgba(16, 185, 129, 0.6); }
+        }
+        @keyframes highlight-pulse {
+            0%, 100% { box-shadow: 0 0 15px rgba(251, 191, 36, 0.5); }
+            50% { box-shadow: 0 0 25px rgba(251, 191, 36, 0.8); }
+        }
+        .highlight-pulse { animation: pulse 2s infinite; }
+        
+        .data-card::before, .tower-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .data-card.highlighted::before, .tower-item.highlighted::before { opacity: 1; }
+    </style>
+</head>
+<body class="bg-gray-50 p-5">
+    <div class="fixed top-5 right-5 z-50 bg-white py-2.5 px-4 rounded-full shadow-lg flex gap-2.5">
+        <button class="lang-btn active px-4 py-2 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-purple-500 to-purple-700 text-white" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn px-4 py-2 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200" onclick="setLanguage('en')">English</button>
+    </div>
+    
+    <div class="max-w-7xl mx-auto">
+        <header class="bg-gradient-to-br from-purple-500 to-purple-700 text-white p-8 rounded-xl mb-8 shadow-md">
+            <h1 class="text-3xl mb-1">
+                <span class="lang-ja">データレイヤー鳥瞰図</span>
+                <span class="lang-en">Data Layer Overview</span>
+            </h1>
+            <p class="opacity-90 text-sm">
+                <span class="lang-ja">プロジェクトを選択すると、関連するデータベース・ストレージがハイライトされます</span>
+                <span class="lang-en">Select a project to highlight related databases and storage</span>
+            </p>
+        </header>
+        
+        <div class="grid grid-cols-[300px_1fr] gap-5">
+            <div class="bg-white p-6 rounded-xl shadow-sm h-fit sticky top-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200">
+                    <span class="lang-ja">主要プロジェクト</span>
+                    <span class="lang-en">Major Projects</span>
+                </h2>
+                <ul class="list-none" id="projectList">
+                    <li class="project-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-project="ecommerce">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">ECサイトリニューアル</span>
+                            <span class="lang-en">E-Commerce Site Renewal</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">進捗: 95% | 順調</span>
+                            <span class="lang-en">Progress: 95% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-project="coresystem">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">基幹システム刷新</span>
+                            <span class="lang-en">Core System Upgrade</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">進捗: 45% | 注意</span>
+                            <span class="lang-en">Progress: 45% | Caution</span>
+                        </div>
+                    </li>
+                    <li class="project-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-project="rpa">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">AI活用RPA導入</span>
+                            <span class="lang-en">AI-Powered RPA</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">進捗: 90% | 順調</span>
+                            <span class="lang-en">Progress: 90% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-project="cloud">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">クラウドマイグレーション</span>
+                            <span class="lang-en">Cloud Migration</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">進捗: 30% | 遅延</span>
+                            <span class="lang-en">Progress: 30% | Delayed</span>
+                        </div>
+                    </li>
+                    <li class="project-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-project="subscription">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">サブスクサービス開発</span>
+                            <span class="lang-en">Subscription Service</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">進捗: 60% | 順調</span>
+                            <span class="lang-en">Progress: 60% | On Track</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-sm min-h-[600px]">
+                <div class="flex justify-between items-center mb-8 pb-4 border-b-2 border-gray-200">
+                    <div class="text-xl font-semibold text-gray-800">
+                        <span class="lang-ja">全データリソース</span>
+                        <span class="lang-en">All Data Resources</span>
+                        <span id="selectedProject"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="flex gap-5 text-xs">
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-4 h-4 rounded bg-gray-200 border border-gray-300"></div>
+                                <span class="lang-ja">通常</span>
+                                <span class="lang-en">Default</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <div class="w-4 h-4 rounded bg-gradient-to-br from-emerald-400 to-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
+                                <span class="lang-ja">関連データ</span>
+                                <span class="lang-en">Related Data</span>
+                            </div>
+                        </div>
+                        <button class="px-5 py-2 bg-gray-100 border border-gray-300 rounded-md cursor-pointer text-sm text-gray-600 transition-all duration-300 hover:bg-gray-200 hover:border-gray-400" onclick="clearSelection()">
+                            <span class="lang-ja">クリア</span>
+                            <span class="lang-en">Clear</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md mb-6 text-sm text-blue-800">
+                    <span class="lang-ja">💡 左のリストからプロジェクトを選択すると、そのプロジェクトに関連するデータベース・ストレージが緑色でハイライト表示されます</span>
+                    <span class="lang-en">💡 Select a project from the left list to highlight related databases and storage in green</span>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 mb-8">
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+                            <span class="lang-ja">総データ基盤数</span>
+                            <span class="lang-en">Total Data Foundations</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">24</div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+                            <span class="lang-ja">トランザクションDB</span>
+                            <span class="lang-en">Transaction DB</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">8</div>
+                        <div class="text-xs text-gray-400 mt-1">
+                            <span class="lang-ja">業務処理用</span>
+                            <span class="lang-en">Operational</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+                            <span class="lang-ja">マスタDB</span>
+                            <span class="lang-en">Master DB</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">6</div>
+                        <div class="text-xs text-gray-400 mt-1">
+                            <span class="lang-ja">基準情報</span>
+                            <span class="lang-en">Reference Data</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+                            <span class="lang-ja">ログ/履歴DB</span>
+                            <span class="lang-en">Log/History DB</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">5</div>
+                        <div class="text-xs text-gray-400 mt-1">
+                            <span class="lang-ja">監査・分析用</span>
+                            <span class="lang-en">Audit & Analytics</span>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <div class="text-xs text-gray-500 mb-1 uppercase tracking-wide">
+                            <span class="lang-ja">分析基盤</span>
+                            <span class="lang-en">Analytics</span>
+                        </div>
+                        <div class="text-2xl font-bold text-gray-800">5</div>
+                        <div class="text-xs text-gray-400 mt-1">
+                            <span class="lang-ja">DWH・BI用</span>
+                            <span class="lang-en">DWH & BI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-Commerce Data Foundation Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">🛒</div>
+                        <span class="lang-ja">ECサイトデータ基盤</span>
+                        <span class="lang-en">E-Commerce Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" hover:shadow-lg hover:-translate-y-1 data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">💳</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">EC注文トランザクションDB</span>
+                                    <span class="lang-en">EC Order Transaction DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">1.2 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">注文・決済</span>
+                                <span class="lang-en">Orders & Payment</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">ACID準拠</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📦</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">EC商品マスタDB</span>
+                                    <span class="lang-en">EC Product Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">850万件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">商品情報</span>
+                                <span class="lang-en">Product Info</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">在庫</span>
+                                <span class="lang-en">Inventory</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">👤</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">EC顧客マスタDB</span>
+                                    <span class="lang-en">EC Customer Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">320万件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">顧客情報</span>
+                                <span class="lang-en">Customer Info</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">PII暗号化</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📊</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">EC行動ログDB</span>
+                                    <span class="lang-en">EC Behavior Log DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">680 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">閲覧履歴</span>
+                                <span class="lang-en">Browse History</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">クリックストリーム</span>
+                                <span class="lang-en">Clickstream</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">⚡</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ECセッションキャッシュ</span>
+                                    <span class="lang-en">EC Session Cache</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">キャッシュ</span>
+                                    <span class="lang-en">Cache</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Redis 7.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">メモリ</span>
+                                    <span class="lang-en">Memory</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">128 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">カート</span>
+                                <span class="lang-en">Cart</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">セッション</span>
+                                <span class="lang-en">Session</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Core System Data Foundation Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">🏢</div>
+                        <span class="lang-ja">基幹システムデータ基盤</span>
+                        <span class="lang-en">Core System Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">💼</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ERP会計トランザクションDB</span>
+                                    <span class="lang-en">ERP Accounting Transaction DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">2.8 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">会計仕訳</span>
+                                <span class="lang-en">GL Entries</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">RAC構成</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📦</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">在庫管理トランザクションDB</span>
+                                    <span class="lang-en">Inventory Transaction DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">950 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">入出庫</span>
+                                <span class="lang-en">Stock Movement</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">リアルタイム在庫</span>
+                                <span class="lang-en">Real-time</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🏭</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">製造・生産管理DB</span>
+                                    <span class="lang-en">Production Management DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">1.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">生産実績</span>
+                                <span class="lang-en">Production Data</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">MES連携</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📋</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ERP共通マスタDB</span>
+                                    <span class="lang-en">ERP Common Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">180万件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">取引先</span>
+                                <span class="lang-en">Partners</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">勘定科目</span>
+                                <span class="lang-en">Accounts</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">組織</span>
+                                <span class="lang-en">Org</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📊</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ERP操作ログDB</span>
+                                    <span class="lang-en">ERP Audit Log DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Elasticsearch 8.9</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">620 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">監査証跡</span>
+                                <span class="lang-en">Audit Trail</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">セキュリティ</span>
+                                <span class="lang-en">Security</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- RPA & AI Data Foundation Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">🤖</div>
+                        <span class="lang-ja">RPA・AIデータ基盤</span>
+                        <span class="lang-en">RPA & AI Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="rpa">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🔧</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">RPA実行履歴DB</span>
+                                    <span class="lang-en">RPA Execution History DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">履歴DB</span>
+                                    <span class="lang-en">History DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">420 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">実行ログ</span>
+                                <span class="lang-en">Execution Log</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">エラー追跡</span>
+                                <span class="lang-en">Error Tracking</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="rpa">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🧠</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">AIモデル学習データDB</span>
+                                    <span class="lang-en">AI Model Training Data DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">学習データDB</span>
+                                    <span class="lang-en">Training DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">S3 + DynamoDB</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">1.8 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">画像</span>
+                                <span class="lang-en">Images</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">アノテーション</span>
+                                <span class="lang-en">Annotations</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="rpa">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📊</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">AIモデルメタデータDB</span>
+                                    <span class="lang-en">AI Model Metadata DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">モデル数</span>
+                                    <span class="lang-en">Models</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">1,200件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">バージョン管理</span>
+                                <span class="lang-en">Versioning</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">MLOps</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="rpa">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📈</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">RPA業務効果測定DB</span>
+                                    <span class="lang-en">RPA Performance Metrics DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">分析DB</span>
+                                    <span class="lang-en">Analytics DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">BigQuery</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">280 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">効果測定</span>
+                                <span class="lang-en">ROI</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">時間削減</span>
+                                <span class="lang-en">Time Saved</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subscription Service Data Foundation Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">🔄</div>
+                        <span class="lang-ja">サブスクリプションサービスデータ基盤</span>
+                        <span class="lang-en">Subscription Service Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="subscription">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">💳</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">サブスク契約管理DB</span>
+                                    <span class="lang-en">Subscription Contract DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">契約数</span>
+                                    <span class="lang-en">Contracts</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">48万件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">契約情報</span>
+                                <span class="lang-en">Contracts</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">課金サイクル</span>
+                                <span class="lang-en">Billing Cycle</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="subscription">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">💰</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">サブスク決済履歴DB</span>
+                                    <span class="lang-en">Subscription Payment History DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">履歴DB</span>
+                                    <span class="lang-en">History DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">520 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">請求履歴</span>
+                                <span class="lang-en">Billing History</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">決済ログ</span>
+                                <span class="lang-en">Payment Log</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="subscription">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📋</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">サブスクプランマスタDB</span>
+                                    <span class="lang-en">Subscription Plan Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">プラン数</span>
+                                    <span class="lang-en">Plans</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">156件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">料金プラン</span>
+                                <span class="lang-en">Pricing Plans</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">機能セット</span>
+                                <span class="lang-en">Features</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="subscription">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📊</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">サブスク利用状況DB</span>
+                                    <span class="lang-en">Subscription Usage DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">InfluxDB 2.7</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">380 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">使用量</span>
+                                <span class="lang-en">Usage</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">時系列</span>
+                                <span class="lang-en">Time Series</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Common & Analytics Data Foundation Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">🌐</div>
+                        <span class="lang-ja">共通基盤・認証</span>
+                        <span class="lang-en">Common Infrastructure & Auth</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🔐</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">認証・認可マスタDB</span>
+                                    <span class="lang-en">Auth & Authorization Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">ユーザー数</span>
+                                    <span class="lang-en">Users</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">5.2万件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">全社共通</span>
+                                <span class="lang-en">Enterprise-wide</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">SSO</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">👥</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">人事・組織マスタDB</span>
+                                    <span class="lang-en">HR & Org Master DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">従業員数</span>
+                                    <span class="lang-en">Employees</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">12,000件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">全社共通</span>
+                                <span class="lang-en">Enterprise-wide</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">人事連携</span>
+                                <span class="lang-en">HR System</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📝</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">システムログ統合DB</span>
+                                    <span class="lang-en">System Log Aggregation DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Elasticsearch 8.9</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">2.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">全システム</span>
+                                <span class="lang-en">All Systems</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">ELKスタック</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📊</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">システムメトリクスDB</span>
+                                    <span class="lang-en">System Metrics DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">時系列DB</span>
+                                    <span class="lang-en">Time Series DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">InfluxDB 2.7</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">680 GB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">パフォーマンス</span>
+                                <span class="lang-en">Performance</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">監視</span>
+                                <span class="lang-en">Monitoring</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics & DWH Section -->
+                <div class="my-8 py-4 border-t-2 border-gray-200">
+                    <div class="text-base font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="w-6 h-6 flex items-center justify-center bg-gradient-to-br from-purple-500 to-purple-700 rounded-md text-white text-sm">📊</div>
+                        <span class="lang-ja">全社データ分析基盤</span>
+                        <span class="lang-en">Enterprise Analytics Platform</span>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-5 mt-5">
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="coresystem ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">❄️</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">全社統合データウェアハウス</span>
+                                    <span class="lang-en">Enterprise Data Warehouse</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">DWH</span>
+                                    <span class="lang-en">DWH</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Snowflake</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">12 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-blue-100 text-blue-700 font-medium">
+                                <span class="lang-ja">経営ダッシュボード</span>
+                                <span class="lang-en">Executive Dashboard</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">全社横断</span>
+                                <span class="lang-en">Cross-functional</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="ecommerce">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🔴</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">EC専用分析DB</span>
+                                    <span class="lang-en">E-Commerce Analytics DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">分析DB</span>
+                                    <span class="lang-en">Analytics DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">Redshift</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">5.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">購買分析</span>
+                                <span class="lang-en">Purchase Analysis</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">顧客分析</span>
+                                <span class="lang-en">Customer Analytics</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">📈</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">データレイク</span>
+                                    <span class="lang-en">Data Lake</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">生データ保管</span>
+                                    <span class="lang-en">Raw Data Storage</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">S3 + Glue</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">28 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">非構造化データ</span>
+                                <span class="lang-en">Unstructured</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">Parquet</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">🔀</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ETL処理メタデータDB</span>
+                                    <span class="lang-en">ETL Metadata DB</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">メタデータDB</span>
+                                    <span class="lang-en">Metadata DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">パイプライン数</span>
+                                    <span class="lang-en">Pipelines</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">280件</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">Airflow</span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">ジョブ管理</span>
+                                <span class="lang-en">Job Management</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card bg-gray-50 border-2 border-gray-200 rounded-xl p-5 transition-all duration-400 relative overflow-hidden" data-projects="cloud">
+                        <div class="flex items-start gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500 to-purple-700 flex items-center justify-center text-white text-2xl flex-shrink-0">💾</div>
+                            <div class="flex-1">
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">バックアップ・アーカイブストレージ</span>
+                                    <span class="lang-en">Backup & Archive Storage</span>
+                                </div>
+                                <div class="text-xs text-gray-500 uppercase tracking-wide">
+                                    <span class="lang-ja">バックアップ</span>
+                                    <span class="lang-en">Backup</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5 mb-3">
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">S3 Glacier</div>
+                            </div>
+                            <div class="detail-item bg-white p-2 px-2.5 rounded-md border border-gray-200">
+                                <div class="text-[10px] text-gray-400 mb-0.5">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="text-sm font-semibold text-gray-800">45 TB</div>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5 mt-3">
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">全システム</span>
+                                <span class="lang-en">All Systems</span>
+                            </span>
+                            <span class="data-tag text-[10px] py-1 px-2.5 rounded bg-gray-200 text-gray-600 font-medium">
+                                <span class="lang-ja">7年保管</span>
+                                <span class="lang-en">7 Year Retention</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectProject(projectId) {
+            // Clear all highlights
+            document.querySelectorAll('.data-card').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all project selections
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (projectId) {
+                // Highlight selected project
+                const selectedProjectItem = document.querySelector(`[data-project="${projectId}"]`);
+                if (selectedProjectItem) {
+                    selectedProjectItem.classList.add('active');
+                }
+                
+                // Highlight related data resources
+                document.querySelectorAll('.data-card').forEach(card => {
+                    const projects = card.getAttribute('data-projects');
+                    if (projects && projects.includes(projectId)) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const projectName = selectedProjectItem ? selectedProjectItem.querySelector('.project-name') : null;
+                const selectedProjectSpan = document.getElementById('selectedProject');
+                if (projectName && selectedProjectSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedProject').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectProject(null);
+        }
+        
+        // Add click handlers to project items
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'English') {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

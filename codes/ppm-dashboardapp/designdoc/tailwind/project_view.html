@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>プロジェクト鳥瞰図 / Project Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(251, 191, 36, 0.8);
+            }
+        }
+        
+        .highlight-pulse {
+            animation: highlight-pulse 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-5">
+    <!-- 言語切り替えボタン -->
+    <div class="fixed top-5 right-5 z-50 bg-white py-2.5 px-4 rounded-full shadow-lg flex gap-2.5">
+        <button onclick="setLanguage('ja')" class="lang-btn active px-4 py-2 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gradient-to-br from-purple-500 to-purple-700 text-white">
+            日本語
+        </button>
+        <button onclick="setLanguage('en')" class="lang-btn px-4 py-2 rounded-full cursor-pointer font-semibold text-xs transition-all duration-300 bg-gray-100 text-gray-500 hover:bg-gray-200">
+            English
+        </button>
+    </div>
+    
+    <div class="max-w-[1600px] mx-auto">
+        <!-- ヘッダー -->
+        <header class="bg-gradient-to-br from-purple-500 to-purple-700 text-white p-8 rounded-xl mb-8 shadow-md">
+            <h1 class="text-3xl mb-1">
+                <span class="lang-ja">プロジェクト鳥瞰図</span>
+                <span class="lang-en">Project Overview</span>
+            </h1>
+            <p class="opacity-90 text-sm">
+                <span class="lang-ja">全社プロジェクトの概要と進捗状況</span>
+                <span class="lang-en">Overview and progress of company-wide projects</span>
+            </p>
+        </header>
+        
+        <!-- メインレイアウト -->
+        <div class="grid grid-cols-[300px_1fr] gap-5">
+            <!-- サイドバー -->
+            <aside class="bg-white p-6 rounded-xl shadow-sm h-fit sticky top-5">
+                <h2 class="text-lg font-semibold text-gray-800 mb-5 pb-2.5 border-b-2 border-gray-200">
+                    <span class="lang-ja">部門一覧</span>
+                    <span class="lang-en">Departments</span>
+                </h2>
+                
+                <ul class="list-none">
+                    <li class="p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" onclick="clearSelection()">
+                        <div class="text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">すべて</span>
+                            <span class="lang-en">All</span>
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            <span class="lang-ja">全11プロジェクト</span>
+                            <span class="lang-en">11 Projects</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="it" onclick="selectDepartment('it')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">IT部門</span>
+                            <span class="lang-en">IT Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">4プロジェクト</span>
+                            <span class="lang-en">4 Projects</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="hr" onclick="selectDepartment('hr')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">人事部門</span>
+                            <span class="lang-en">HR Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">2プロジェクト</span>
+                            <span class="lang-en">2 Projects</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="sales" onclick="selectDepartment('sales')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">営業部門</span>
+                            <span class="lang-en">Sales Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="marketing" onclick="selectDepartment('marketing')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">マーケティング部門</span>
+                            <span class="lang-en">Marketing Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="finance" onclick="selectDepartment('finance')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">財務部門</span>
+                            <span class="lang-en">Finance Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="manufacturing" onclick="selectDepartment('manufacturing')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">製造部門</span>
+                            <span class="lang-en">Manufacturing Department</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                    
+                    <li class="department-item p-3 px-4 mb-2 rounded-lg cursor-pointer transition-all duration-300 border-l-[3px] border-transparent bg-gray-50 hover:bg-gray-100 hover:border-l-purple-500 hover:translate-x-1" data-department="customer-service" onclick="selectDepartment('customer-service')">
+                        <div class="department-name text-sm text-gray-800 mb-1">
+                            <span class="lang-ja">カスタマーサービス部門</span>
+                            <span class="lang-en">Customer Service</span>
+                        </div>
+                        <div class="department-count text-xs text-gray-500">
+                            <span class="lang-ja">1プロジェクト</span>
+                            <span class="lang-en">1 Project</span>
+                        </div>
+                    </li>
+                </ul>
+            </aside>
+            
+            <!-- コンテンツエリア -->
+            <main class="bg-white p-8 rounded-xl shadow-sm min-h-[600px]">
+                <div class="flex justify-between items-center mb-8 pb-4 border-b-2 border-gray-200">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        <span class="lang-ja">全プロジェクト</span>
+                        <span class="lang-en">All Projects</span>
+                        <span id="selectedDepartment"></span>
+                    </h2>
+                    
+                    <div class="flex gap-5 text-xs">
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-4 h-4 rounded bg-gray-200 border border-gray-300"></div>
+                            <span class="lang-ja">通常</span>
+                            <span class="lang-en">Normal</span>
+                        </div>
+                        <div class="flex items-center gap-1.5">
+                            <div class="w-4 h-4 rounded bg-gradient-to-br from-yellow-400 to-yellow-500 shadow-[0_0_15px_rgba(251,191,36,0.5)]"></div>
+                            <span class="lang-ja">ハイライト</span>
+                            <span class="lang-en">Highlighted</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- プロジェクトグリッド -->
+                <div class="grid grid-cols-[repeat(auto-fill,minmax(320px,1fr))] gap-5 mt-5">
+                    
+                    <!-- 基幹システム刷新 -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="it">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">基幹システム刷新</span>
+                                    <span class="lang-en">Core System Renewal</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
+                                <span class="lang-ja">進行中</span>
+                                <span class="lang-en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥8.5B</span>
+                                    <span class="lang-en">$56.7M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">62%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 62%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年4月 - 2026年3月</span>
+                                <span class="lang-en">Apr 2024 - Mar 2026</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">レガシーシステムからクラウドベースERPへの移行により業務効率40%向上</span>
+                                <span class="lang-en">Improve business efficiency by 40% through migration from legacy system to cloud-based ERP</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- セキュリティ強化 -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="it">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">セキュリティ強化プロジェクト</span>
+                                    <span class="lang-en">Security Enhancement</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">展開</span>
+                                    <span class="lang-en">Deployment</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥1.8B</span>
+                                    <span class="lang-en">$12.0M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">75%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 75%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年9月 - 2025年12月</span>
+                                <span class="lang-en">Sep 2024 - Dec 2025</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">ゼロトラストアーキテクチャ導入、セキュリティインシデント80%削減</span>
+                                <span class="lang-en">Implement zero-trust architecture, reduce security incidents by 80%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- AIアシスタント -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="it">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">AIアシスタント導入</span>
+                                    <span class="lang-en">AI Assistant Implementation</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
+                                <span class="lang-ja">進行中</span>
+                                <span class="lang-en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">
+                                    <span class="lang-ja">PoC</span>
+                                    <span class="lang-en">PoC</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥750M</span>
+                                    <span class="lang-en">$5.0M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">28%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 28%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年1月 - 2026年6月</span>
+                                <span class="lang-en">Jan 2025 - Jun 2026</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">社内業務の自動化推進、従業員の生産性25%向上</span>
+                                <span class="lang-en">Promote automation of internal operations, improve employee productivity by 25%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- データ分析基盤 -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="it">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">データ分析基盤構築</span>
+                                    <span class="lang-en">Data Analytics Platform</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-yellow-100 text-yellow-700">
+                                <span class="lang-ja">要注意</span>
+                                <span class="lang-en">At Risk</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-yellow-50 text-yellow-600">
+                                    <span class="lang-ja">設計</span>
+                                    <span class="lang-en">Design</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">IT部門</span>
+                                    <span class="lang-en">IT Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥3.2B</span>
+                                    <span class="lang-en">$21.3M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">42%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 42%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年11月 - 2026年9月</span>
+                                <span class="lang-en">Nov 2024 - Sep 2026</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">全社データ統合、リアルタイム分析によるデータドリブン経営の実現</span>
+                                <span class="lang-en">Integrate company-wide data, enable data-driven management through real-time analytics</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- タレントマネジメント -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="hr">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">タレントマネジメントシステム</span>
+                                    <span class="lang-en">Talent Management System</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
+                                <span class="lang-ja">進行中</span>
+                                <span class="lang-en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">人事部門</span>
+                                    <span class="lang-en">HR Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥950M</span>
+                                    <span class="lang-en">$6.3M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">58%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 58%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年8月 - 2025年12月</span>
+                                <span class="lang-en">Aug 2024 - Dec 2025</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">人材データの可視化、育成計画の最適化により離職率20%削減</span>
+                                <span class="lang-en">Reduce turnover by 20% through visualization of talent data and optimization of development plans</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ダイバーシティ推進 -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="hr">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ダイバーシティ推進プログラム</span>
+                                    <span class="lang-en">Diversity Program</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">展開</span>
+                                    <span class="lang-en">Deployment</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">人事部門</span>
+                                    <span class="lang-en">HR Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥420M</span>
+                                    <span class="lang-en">$2.8M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">72%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 72%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年4月 - 2026年3月</span>
+                                <span class="lang-en">Apr 2024 - Mar 2026</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">女性管理職比率30%達成、インクルーシブな職場環境の構築</span>
+                                <span class="lang-en">Achieve 30% female management ratio, build inclusive workplace environment</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CRM刷新 -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="sales">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">CRM刷新プロジェクト</span>
+                                    <span class="lang-en">CRM Renewal</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
+                                <span class="lang-ja">進行中</span>
+                                <span class="lang-en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">営業部門</span>
+                                    <span class="lang-en">Sales Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥1.5B</span>
+                                    <span class="lang-en">$10.0M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">68%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 68%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年6月 - 2025年11月</span>
+                                <span class="lang-en">Jun 2024 - Nov 2025</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">AI活用による営業効率50%向上、商談成約率25%向上</span>
+                                <span class="lang-en">Improve sales efficiency by 50% with AI, increase deal closure rate by 25%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ブランドリニューアル -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="marketing">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">ブランドリニューアル</span>
+                                    <span class="lang-en">Brand Renewal</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-red-100 text-red-700">
+                                <span class="lang-ja">遅延</span>
+                                <span class="lang-en">Delayed</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-yellow-50 text-yellow-600">
+                                    <span class="lang-ja">設計</span>
+                                    <span class="lang-en">Design</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">マーケティング部門</span>
+                                    <span class="lang-en">Marketing Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥850M</span>
+                                    <span class="lang-en">$5.7M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">35%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 35%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年5月 - 2026年3月</span>
+                                <span class="lang-en">May 2024 - Mar 2026</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">新コーポレートアイデンティティ確立、ブランド認知度40%向上</span>
+                                <span class="lang-en">Establish new corporate identity, improve brand awareness by 40%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 予算管理システム -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="finance">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">予算管理システム導入</span>
+                                    <span class="lang-en">Budget Management System</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                <span class="lang-ja">順調</span>
+                                <span class="lang-en">On Track</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-50 text-blue-600">
+                                    <span class="lang-ja">展開</span>
+                                    <span class="lang-en">Deployment</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">財務部門</span>
+                                    <span class="lang-en">Finance Department</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥650M</span>
+                                    <span class="lang-en">$4.3M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">82%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 82%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年7月 - 2025年12月</span>
+                                <span class="lang-en">Jul 2024 - Dec 2025</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">リアルタイム予算管理、意思決定スピード50%向上</span>
+                                <span class="lang-en">Real-time budget management, improve decision-making speed by 50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- スマートファクトリー -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="manufacturing">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">スマートファクトリー化</span>
+                                    <span class="lang-en">Smart Factory</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700">
+                                <span class="lang-ja">進行中</span>
+                                <span class="lang-en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-purple-50 text-purple-600">
+                                    <span class="lang-ja">PoC</span>
+                                    <span class="lang-en">PoC</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">製造部門</span>
+                                    <span class="lang-en">Manufacturing</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥2.1B</span>
+                                    <span class="lang-en">$14.0M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">38%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 38%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2025年7月 - 2027年3月</span>
+                                <span class="lang-en">Jul 2025 - Mar 2027</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">IoT/AI活用による生産効率30%向上、不良品率50%削減</span>
+                                <span class="lang-en">Improve production efficiency by 30% with IoT/AI, reduce defect rate by 50%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- カスタマーポータル -->
+                    <div class="project-card bg-white border-2 border-gray-200 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:-translate-y-1" data-department="customer-service">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <div class="text-base font-semibold text-gray-800 mb-1">
+                                    <span class="lang-ja">カスタマーポータル</span>
+                                    <span class="lang-en">Customer Portal</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-green-100 text-green-700">
+                                <span class="lang-ja">完了</span>
+                                <span class="lang-en">Completed</span>
+                            </span>
+                        </div>
+                        
+                        <div class="space-y-2.5 mb-4 text-xs">
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">フェーズ</span>
+                                    <span class="lang-en">Phase</span>
+                                </span>
+                                <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-green-50 text-green-600">
+                                    <span class="lang-ja">完了</span>
+                                    <span class="lang-en">Completed</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">主幹部門</span>
+                                    <span class="lang-en">Department</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">カスタマーサービス部門</span>
+                                    <span class="lang-en">Customer Service</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">予算</span>
+                                    <span class="lang-en">Budget</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">
+                                    <span class="lang-ja">¥380M</span>
+                                    <span class="lang-en">$2.5M</span>
+                                </span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-500">
+                                    <span class="lang-ja">進捗</span>
+                                    <span class="lang-en">Progress</span>
+                                </span>
+                                <span class="text-gray-800 font-medium">100%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                            <div class="h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all duration-500" style="width: 100%;"></div>
+                        </div>
+                        
+                        <div class="text-xs space-y-2 text-gray-600">
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">期間:</span>
+                                    <span class="lang-en">Duration:</span>
+                                </strong>
+                                <span class="lang-ja">2024年10月 - 2025年9月</span>
+                                <span class="lang-en">Oct 2024 - Sep 2025</span>
+                            </div>
+                            <div>
+                                <strong class="text-gray-800">
+                                    <span class="lang-ja">目標:</span>
+                                    <span class="lang-en">Goal:</span>
+                                </strong>
+                                <span class="lang-ja">セルフサービス化で問い合わせ対応60%削減、顧客満足度15%向上</span>
+                                <span class="lang-en">Reduce inquiry handling by 60% through self-service, improve satisfaction by 15%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-gradient-to-br', 'from-purple-500', 'to-purple-700', 'text-white');
+                btn.classList.add('bg-gray-100', 'text-gray-500');
+            });
+            event.target.classList.remove('bg-gray-100', 'text-gray-500');
+            event.target.classList.add('active', 'bg-gradient-to-br', 'from-purple-500', 'to-purple-700', 'text-white');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectDepartment(departmentId) {
+            // Clear all highlights
+            document.querySelectorAll('.project-card').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all department selections
+            document.querySelectorAll('.department-item').forEach(item => {
+                item.classList.remove('active', 'bg-gradient-to-br', 'from-purple-500/10', 'to-purple-700/10', 'border-l-purple-500', 'font-semibold');
+            });
+            
+            if (departmentId) {
+                // Highlight selected department
+                const selectedDeptItem = document.querySelector(`[data-department="${departmentId}"]`);
+                if (selectedDeptItem && selectedDeptItem.classList.contains('department-item')) {
+                    selectedDeptItem.classList.add('active', 'bg-gradient-to-br', 'from-purple-500/10', 'to-purple-700/10', 'border-l-purple-500', 'font-semibold');
+                }
+                
+                // Highlight related projects
+                document.querySelectorAll('.project-card').forEach(card => {
+                    const dept = card.getAttribute('data-department');
+                    if (dept === departmentId) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                        card.style.background = 'linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%)';
+                        card.style.borderColor = '#fbbf24';
+                    }
+                });
+                
+                // Update title
+                const deptName = selectedDeptItem ? selectedDeptItem.querySelector('.department-name') : null;
+                const selectedDeptSpan = document.getElementById('selectedDepartment');
+                if (deptName && selectedDeptSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedDeptSpan.textContent = ' - ' + deptName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedDeptSpan.textContent = ' - ' + deptName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedDepartment').textContent = '';
+                // Reset all project cards
+                document.querySelectorAll('.project-card').forEach(card => {
+                    card.style.background = '';
+                    card.style.borderColor = '';
+                });
+            }
+        }
+        
+        function clearSelection() {
+            selectDepartment(null);
+        }
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active', 'bg-gradient-to-br', 'from-purple-500', 'to-purple-700', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-500');
+                    if (btn.textContent.trim() === 'English') {
+                        btn.classList.remove('bg-gray-100', 'text-gray-500');
+                        btn.classList.add('active', 'bg-gradient-to-br', 'from-purple-500', 'to-purple-700', 'text-white');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

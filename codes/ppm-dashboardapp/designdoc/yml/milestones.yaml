@@ -1,0 +1,76 @@
+table:
+  name: Milestones
+  description: プロジェクトのマイルストーン情報を管理するテーブル
+  parent_table: Projects
+
+fields:
+  - name: id
+    type: string
+    description: マイルストーンの一意識別子
+    example: "milestone-001"
+    required: true
+    primary_key: true
+
+  - name: projectId
+    type: string
+    description: 関連プロジェクトID
+    example: "ecommerce"
+    required: true
+    foreign_key:
+      table: Projects
+      field: id
+
+  - name: date
+    type: string
+    description: 予定日（ISO形式）
+    example: "2025-11-15"
+    required: true
+    format: date
+
+  - name: titleJA
+    type: string
+    description: マイルストーンタイトル（日本語）
+    example: "ECサイトリニューアル本番移行"
+    required: true
+
+  - name: titleEN
+    type: string
+    description: マイルストーンタイトル（英語）
+    example: "E-Commerce Site Production Release"
+    required: true
+
+  - name: descriptionJA
+    type: string
+    description: マイルストーン説明（日本語）
+    example: "繁忙期前の重要リリース。準備完了済み。"
+    required: true
+
+  - name: descriptionEN
+    type: string
+    description: マイルストーン説明（英語）
+    example: "Critical release before busy season. Preparation complete."
+    required: true
+
+  - name: level
+    type: string
+    description: 重要度レベル
+    example: "low"
+    required: true
+    enum:
+      - high
+      - medium
+      - low
+
+enums:
+  level:
+    description: 重要度レベル値の種類
+    values:
+      high:
+        ja: 高
+        en: High
+      medium:
+        ja: 中
+        en: Medium
+      low:
+        ja: 低
+        en: Low

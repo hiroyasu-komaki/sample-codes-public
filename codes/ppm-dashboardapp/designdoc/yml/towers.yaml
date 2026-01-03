@@ -1,0 +1,30 @@
+table:
+  name: Towers
+  description: タワーマスタテーブル
+  type: master
+
+fields:
+  - name: id
+    type: string
+    description: タワーの一意識別子
+    example: "infrastructure"
+    required: true
+    primary_key: true
+
+  - name: nameJA
+    type: string
+    description: タワー名（日本語）
+    example: "インフラタワー"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: タワー名（英語）
+    example: "Infrastructure Tower"
+    required: true
+
+  - name: description
+    type: string
+    description: タワーの説明
+    example: "コンピュート、ストレージ、ネットワーク、データベースなどの基盤インフラ"
+    required: false

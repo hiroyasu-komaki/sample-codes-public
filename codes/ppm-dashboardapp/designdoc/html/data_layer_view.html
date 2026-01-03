@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データレイヤー鳥瞰図 / Data Layer Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .lang-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .project-list {
+            list-style: none;
+        }
+        
+        .project-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            background-color: #f9fafb;
+        }
+        
+        .project-item:hover {
+            background-color: #f3f4f6;
+            border-left-color: #667eea;
+            transform: translateX(3px);
+        }
+        
+        .project-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .project-name {
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .project-status {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .content-area {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            min-height: 600px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .content-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-box.default {
+            background-color: #e5e7eb;
+            border: 1px solid #d1d5db;
+        }
+        
+        .legend-box.highlighted {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+        }
+        
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .stat-subtext {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 3px;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .data-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .data-card.highlighted {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+            border-color: #34d399;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+            transform: scale(1.03);
+        }
+        
+        .data-card.highlighted::before {
+            opacity: 1;
+        }
+        
+        .data-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .data-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .data-card.highlighted .data-icon {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .data-info {
+            flex: 1;
+        }
+        
+        .data-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .data-type {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        
+        .detail-item {
+            background: white;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .data-card.highlighted .detail-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: #34d399;
+        }
+        
+        .detail-label {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-bottom: 2px;
+        }
+        
+        .detail-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .data-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 12px;
+        }
+        
+        .data-tag {
+            font-size: 10px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .data-card.highlighted .data-tag {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        .data-tag.primary {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .clear-btn {
+            padding: 8px 20px;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e5e7eb;
+            border-color: #9ca3af;
+        }
+        
+        .highlight-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 35px rgba(16, 185, 129, 0.6);
+            }
+        }
+        
+        .section-divider {
+            margin: 30px 0;
+            padding: 15px 0;
+            border-top: 2px solid #e5e7eb;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            color: white;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>
+                <span class="lang-ja">データレイヤー鳥瞰図</span>
+                <span class="lang-en">Data Layer Overview</span>
+            </h1>
+            <p>
+                <span class="lang-ja">プロジェクトを選択すると、関連するデータベース・ストレージがハイライトされます</span>
+                <span class="lang-en">Select a project to highlight related databases and storage</span>
+            </p>
+        </header>
+        
+        <div class="main-layout">
+            <div class="sidebar">
+                <h2>
+                    <span class="lang-ja">主要プロジェクト</span>
+                    <span class="lang-en">Major Projects</span>
+                </h2>
+                <ul class="project-list" id="projectList">
+                    <li class="project-item" data-project="ecommerce">
+                        <div class="project-name">
+                            <span class="lang-ja">ECサイトリニューアル</span>
+                            <span class="lang-en">E-Commerce Site Renewal</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 95% | 順調</span>
+                            <span class="lang-en">Progress: 95% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="coresystem">
+                        <div class="project-name">
+                            <span class="lang-ja">基幹システム刷新</span>
+                            <span class="lang-en">Core System Upgrade</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 45% | 注意</span>
+                            <span class="lang-en">Progress: 45% | Caution</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="rpa">
+                        <div class="project-name">
+                            <span class="lang-ja">AI活用RPA導入</span>
+                            <span class="lang-en">AI-Powered RPA</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 90% | 順調</span>
+                            <span class="lang-en">Progress: 90% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="cloud">
+                        <div class="project-name">
+                            <span class="lang-ja">クラウドマイグレーション</span>
+                            <span class="lang-en">Cloud Migration</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 30% | 遅延</span>
+                            <span class="lang-en">Progress: 30% | Delayed</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="subscription">
+                        <div class="project-name">
+                            <span class="lang-ja">サブスクサービス開発</span>
+                            <span class="lang-en">Subscription Service</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 60% | 順調</span>
+                            <span class="lang-en">Progress: 60% | On Track</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="content-area">
+                <div class="content-header">
+                    <div class="content-title">
+                        <span class="lang-ja">全データリソース</span>
+                        <span class="lang-en">All Data Resources</span>
+                        <span id="selectedProject"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-box default"></div>
+                                <span class="lang-ja">通常</span>
+                                <span class="lang-en">Default</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box highlighted"></div>
+                                <span class="lang-ja">関連データ</span>
+                                <span class="lang-en">Related Data</span>
+                            </div>
+                        </div>
+                        <button class="clear-btn" onclick="clearSelection()">
+                            <span class="lang-ja">クリア</span>
+                            <span class="lang-en">Clear</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <span class="lang-ja">💡 左のリストからプロジェクトを選択すると、そのプロジェクトに関連するデータベース・ストレージが緑色でハイライト表示されます</span>
+                    <span class="lang-en">💡 Select a project from the left list to highlight related databases and storage in green</span>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">総データ基盤数</span>
+                            <span class="lang-en">Total Data Foundations</span>
+                        </div>
+                        <div class="stat-value">24</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">トランザクションDB</span>
+                            <span class="lang-en">Transaction DB</span>
+                        </div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-subtext">
+                            <span class="lang-ja">業務処理用</span>
+                            <span class="lang-en">Operational</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">マスタDB</span>
+                            <span class="lang-en">Master DB</span>
+                        </div>
+                        <div class="stat-value">6</div>
+                        <div class="stat-subtext">
+                            <span class="lang-ja">基準情報</span>
+                            <span class="lang-en">Reference Data</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">ログ/履歴DB</span>
+                            <span class="lang-en">Log/History DB</span>
+                        </div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-subtext">
+                            <span class="lang-ja">監査・分析用</span>
+                            <span class="lang-en">Audit & Analytics</span>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">分析基盤</span>
+                            <span class="lang-en">Analytics</span>
+                        </div>
+                        <div class="stat-value">5</div>
+                        <div class="stat-subtext">
+                            <span class="lang-ja">DWH・BI用</span>
+                            <span class="lang-en">DWH & BI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- E-Commerce Data Foundation Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">🛒</div>
+                        <span class="lang-ja">ECサイトデータ基盤</span>
+                        <span class="lang-en">E-Commerce Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">💳</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">EC注文トランザクションDB</span>
+                                    <span class="lang-en">EC Order Transaction DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">1.2 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">注文・決済</span>
+                                <span class="lang-en">Orders & Payment</span>
+                            </span>
+                            <span class="data-tag">ACID準拠</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">📦</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">EC商品マスタDB</span>
+                                    <span class="lang-en">EC Product Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="detail-value">850万件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">商品情報</span>
+                                <span class="lang-en">Product Info</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">在庫</span>
+                                <span class="lang-en">Inventory</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">👤</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">EC顧客マスタDB</span>
+                                    <span class="lang-en">EC Customer Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="detail-value">320万件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">顧客情報</span>
+                                <span class="lang-en">Customer Info</span>
+                            </span>
+                            <span class="data-tag">PII暗号化</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">EC行動ログDB</span>
+                                    <span class="lang-en">EC Behavior Log DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">680 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">閲覧履歴</span>
+                                <span class="lang-en">Browse History</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">クリックストリーム</span>
+                                <span class="lang-en">Clickstream</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">⚡</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">ECセッションキャッシュ</span>
+                                    <span class="lang-en">EC Session Cache</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">キャッシュ</span>
+                                    <span class="lang-en">Cache</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Redis 7.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">メモリ</span>
+                                    <span class="lang-en">Memory</span>
+                                </div>
+                                <div class="detail-value">128 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">カート</span>
+                                <span class="lang-en">Cart</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">セッション</span>
+                                <span class="lang-en">Session</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Core System Data Foundation Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">🏢</div>
+                        <span class="lang-ja">基幹システムデータ基盤</span>
+                        <span class="lang-en">Core System Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="coresystem">
+                        <div class="data-header">
+                            <div class="data-icon">💼</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">ERP会計トランザクションDB</span>
+                                    <span class="lang-en">ERP Accounting Transaction DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">2.8 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">会計仕訳</span>
+                                <span class="lang-en">GL Entries</span>
+                            </span>
+                            <span class="data-tag">RAC構成</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="coresystem">
+                        <div class="data-header">
+                            <div class="data-icon">📦</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">在庫管理トランザクションDB</span>
+                                    <span class="lang-en">Inventory Transaction DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">950 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">入出庫</span>
+                                <span class="lang-en">Stock Movement</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">リアルタイム在庫</span>
+                                <span class="lang-en">Real-time</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="coresystem">
+                        <div class="data-header">
+                            <div class="data-icon">🏭</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">製造・生産管理DB</span>
+                                    <span class="lang-en">Production Management DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">1.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">生産実績</span>
+                                <span class="lang-en">Production Data</span>
+                            </span>
+                            <span class="data-tag">MES連携</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="coresystem">
+                        <div class="data-header">
+                            <div class="data-icon">📋</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">ERP共通マスタDB</span>
+                                    <span class="lang-en">ERP Common Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">レコード数</span>
+                                    <span class="lang-en">Records</span>
+                                </div>
+                                <div class="detail-value">180万件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">取引先</span>
+                                <span class="lang-en">Partners</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">勘定科目</span>
+                                <span class="lang-en">Accounts</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">組織</span>
+                                <span class="lang-en">Org</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="coresystem">
+                        <div class="data-header">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">ERP操作ログDB</span>
+                                    <span class="lang-en">ERP Audit Log DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Elasticsearch 8.9</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">620 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">監査証跡</span>
+                                <span class="lang-en">Audit Trail</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">セキュリティ</span>
+                                <span class="lang-en">Security</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- RPA & AI Data Foundation Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">🤖</div>
+                        <span class="lang-ja">RPA・AIデータ基盤</span>
+                        <span class="lang-en">RPA & AI Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="rpa">
+                        <div class="data-header">
+                            <div class="data-icon">🔧</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">RPA実行履歴DB</span>
+                                    <span class="lang-en">RPA Execution History DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">履歴DB</span>
+                                    <span class="lang-en">History DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">420 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">実行ログ</span>
+                                <span class="lang-en">Execution Log</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">エラー追跡</span>
+                                <span class="lang-en">Error Tracking</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="rpa">
+                        <div class="data-header">
+                            <div class="data-icon">🧠</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">AIモデル学習データDB</span>
+                                    <span class="lang-en">AI Model Training Data DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">学習データDB</span>
+                                    <span class="lang-en">Training DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">S3 + DynamoDB</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">1.8 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">画像</span>
+                                <span class="lang-en">Images</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">アノテーション</span>
+                                <span class="lang-en">Annotations</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="rpa">
+                        <div class="data-header">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">AIモデルメタデータDB</span>
+                                    <span class="lang-en">AI Model Metadata DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">モデル数</span>
+                                    <span class="lang-en">Models</span>
+                                </div>
+                                <div class="detail-value">1,200件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">バージョン管理</span>
+                                <span class="lang-en">Versioning</span>
+                            </span>
+                            <span class="data-tag">MLOps</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="rpa">
+                        <div class="data-header">
+                            <div class="data-icon">📈</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">RPA業務効果測定DB</span>
+                                    <span class="lang-en">RPA Performance Metrics DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">分析DB</span>
+                                    <span class="lang-en">Analytics DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">BigQuery</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">280 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">効果測定</span>
+                                <span class="lang-en">ROI</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">時間削減</span>
+                                <span class="lang-en">Time Saved</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Subscription Service Data Foundation Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">🔄</div>
+                        <span class="lang-ja">サブスクリプションサービスデータ基盤</span>
+                        <span class="lang-en">Subscription Service Data Foundation</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="subscription">
+                        <div class="data-header">
+                            <div class="data-icon">💳</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">サブスク契約管理DB</span>
+                                    <span class="lang-en">Subscription Contract DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">トランザクションDB</span>
+                                    <span class="lang-en">Transaction DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">契約数</span>
+                                    <span class="lang-en">Contracts</span>
+                                </div>
+                                <div class="detail-value">48万件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">契約情報</span>
+                                <span class="lang-en">Contracts</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">課金サイクル</span>
+                                <span class="lang-en">Billing Cycle</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="subscription">
+                        <div class="data-header">
+                            <div class="data-icon">💰</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">サブスク決済履歴DB</span>
+                                    <span class="lang-en">Subscription Payment History DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">履歴DB</span>
+                                    <span class="lang-en">History DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MongoDB 6.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">520 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">請求履歴</span>
+                                <span class="lang-en">Billing History</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">決済ログ</span>
+                                <span class="lang-en">Payment Log</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="subscription">
+                        <div class="data-header">
+                            <div class="data-icon">📋</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">サブスクプランマスタDB</span>
+                                    <span class="lang-en">Subscription Plan Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">プラン数</span>
+                                    <span class="lang-en">Plans</span>
+                                </div>
+                                <div class="detail-value">156件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">料金プラン</span>
+                                <span class="lang-en">Pricing Plans</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">機能セット</span>
+                                <span class="lang-en">Features</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="subscription">
+                        <div class="data-header">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">サブスク利用状況DB</span>
+                                    <span class="lang-en">Subscription Usage DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">InfluxDB 2.7</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">380 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">使用量</span>
+                                <span class="lang-en">Usage</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">時系列</span>
+                                <span class="lang-en">Time Series</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Common & Analytics Data Foundation Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">🌐</div>
+                        <span class="lang-ja">共通基盤・認証</span>
+                        <span class="lang-en">Common Infrastructure & Auth</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">🔐</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">認証・認可マスタDB</span>
+                                    <span class="lang-en">Auth & Authorization Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">MySQL 8.0</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">ユーザー数</span>
+                                    <span class="lang-en">Users</span>
+                                </div>
+                                <div class="detail-value">5.2万件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">全社共通</span>
+                                <span class="lang-en">Enterprise-wide</span>
+                            </span>
+                            <span class="data-tag">SSO</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">👥</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">人事・組織マスタDB</span>
+                                    <span class="lang-en">HR & Org Master DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">マスタDB</span>
+                                    <span class="lang-en">Master DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Oracle 19c</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">従業員数</span>
+                                    <span class="lang-en">Employees</span>
+                                </div>
+                                <div class="detail-value">12,000件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">全社共通</span>
+                                <span class="lang-en">Enterprise-wide</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">人事連携</span>
+                                <span class="lang-en">HR System</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">📝</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">システムログ統合DB</span>
+                                    <span class="lang-en">System Log Aggregation DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">ログDB</span>
+                                    <span class="lang-en">Log DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Elasticsearch 8.9</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">2.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">全システム</span>
+                                <span class="lang-en">All Systems</span>
+                            </span>
+                            <span class="data-tag">ELKスタック</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">📊</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">システムメトリクスDB</span>
+                                    <span class="lang-en">System Metrics DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">時系列DB</span>
+                                    <span class="lang-en">Time Series DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">InfluxDB 2.7</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">680 GB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">パフォーマンス</span>
+                                <span class="lang-en">Performance</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">監視</span>
+                                <span class="lang-en">Monitoring</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics & DWH Section -->
+                <div class="section-divider">
+                    <div class="section-title">
+                        <div class="section-icon">📊</div>
+                        <span class="lang-ja">全社データ分析基盤</span>
+                        <span class="lang-en">Enterprise Analytics Platform</span>
+                    </div>
+                </div>
+                
+                <div class="data-grid">
+                    <div class="data-card" data-projects="coresystem ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">❄️</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">全社統合データウェアハウス</span>
+                                    <span class="lang-en">Enterprise Data Warehouse</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">DWH</span>
+                                    <span class="lang-en">DWH</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Snowflake</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">12 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag primary">
+                                <span class="lang-ja">経営ダッシュボード</span>
+                                <span class="lang-en">Executive Dashboard</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">全社横断</span>
+                                <span class="lang-en">Cross-functional</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="ecommerce">
+                        <div class="data-header">
+                            <div class="data-icon">🔴</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">EC専用分析DB</span>
+                                    <span class="lang-en">E-Commerce Analytics DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">分析DB</span>
+                                    <span class="lang-en">Analytics DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">Redshift</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">5.4 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">購買分析</span>
+                                <span class="lang-en">Purchase Analysis</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">顧客分析</span>
+                                <span class="lang-en">Customer Analytics</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">📈</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">データレイク</span>
+                                    <span class="lang-en">Data Lake</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">生データ保管</span>
+                                    <span class="lang-en">Raw Data Storage</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">S3 + Glue</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">28 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">非構造化データ</span>
+                                <span class="lang-en">Unstructured</span>
+                            </span>
+                            <span class="data-tag">Parquet</span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="">
+                        <div class="data-header">
+                            <div class="data-icon">🔀</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">ETL処理メタデータDB</span>
+                                    <span class="lang-en">ETL Metadata DB</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">メタデータDB</span>
+                                    <span class="lang-en">Metadata DB</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">PostgreSQL 15</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">パイプライン数</span>
+                                    <span class="lang-en">Pipelines</span>
+                                </div>
+                                <div class="detail-value">280件</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">Airflow</span>
+                            <span class="data-tag">
+                                <span class="lang-ja">ジョブ管理</span>
+                                <span class="lang-en">Job Management</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="data-card" data-projects="cloud">
+                        <div class="data-header">
+                            <div class="data-icon">💾</div>
+                            <div class="data-info">
+                                <div class="data-name">
+                                    <span class="lang-ja">バックアップ・アーカイブストレージ</span>
+                                    <span class="lang-en">Backup & Archive Storage</span>
+                                </div>
+                                <div class="data-type">
+                                    <span class="lang-ja">バックアップ</span>
+                                    <span class="lang-en">Backup</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-details">
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">実装</span>
+                                    <span class="lang-en">Implementation</span>
+                                </div>
+                                <div class="detail-value">S3 Glacier</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">
+                                    <span class="lang-ja">容量</span>
+                                    <span class="lang-en">Size</span>
+                                </div>
+                                <div class="detail-value">45 TB</div>
+                            </div>
+                        </div>
+                        <div class="data-tags">
+                            <span class="data-tag">
+                                <span class="lang-ja">全システム</span>
+                                <span class="lang-en">All Systems</span>
+                            </span>
+                            <span class="data-tag">
+                                <span class="lang-ja">7年保管</span>
+                                <span class="lang-en">7 Year Retention</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectProject(projectId) {
+            // Clear all highlights
+            document.querySelectorAll('.data-card').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all project selections
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (projectId) {
+                // Highlight selected project
+                const selectedProjectItem = document.querySelector(`[data-project="${projectId}"]`);
+                if (selectedProjectItem) {
+                    selectedProjectItem.classList.add('active');
+                }
+                
+                // Highlight related data resources
+                document.querySelectorAll('.data-card').forEach(card => {
+                    const projects = card.getAttribute('data-projects');
+                    if (projects && projects.includes(projectId)) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const projectName = selectedProjectItem ? selectedProjectItem.querySelector('.project-name') : null;
+                const selectedProjectSpan = document.getElementById('selectedProject');
+                if (projectName && selectedProjectSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedProject').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectProject(null);
+        }
+        
+        // Add click handlers to project items
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'English') {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+table:
+  name: Applications
+  description: アプリケーション情報を管理するテーブル
+
+fields:
+  - name: id
+    type: string
+    description: アプリケーションの一意識別子
+    example: "ec-site"
+    required: true
+    primary_key: true
+
+  - name: nameJA
+    type: string
+    description: アプリケーション名（日本語）
+    example: "ECサイト"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: アプリケーション名（英語）
+    example: "E-Commerce Site"
+    required: true
+
+  - name: category
+    type: string
+    description: カテゴリ識別子
+    example: "frontend"
+    required: true
+    enum:
+      - frontend
+      - backend
+      - data
+
+  - name: categoryJA
+    type: string
+    description: カテゴリ名（日本語）
+    example: "フロントエンド"
+    required: true
+
+  - name: categoryEN
+    type: string
+    description: カテゴリ名（英語）
+    example: "Frontend"
+    required: true
+
+  - name: icon
+    type: string
+    description: アイコン（絵文字）
+    example: "🛒"
+    required: true
+
+  - name: eolStatus
+    type: string
+    description: EOL（サポート終了）ステータス
+    example: "warning"
+    required: true
+    enum:
+      - safe
+      - warning
+      - critical
+      - unknown
+
+  - name: eolDate
+    type: string
+    description: EOL日付（日本語表記）
+    example: "2027年3月"
+    required: true
+
+  - name: eolDateEN
+    type: string
+    description: EOL日付（英語表記）
+    example: "March 2027"
+    required: true
+
+  - name: tags
+    type: array
+    item_type: string
+    description: 技術スタックのタグ配列
+    example: ["React", "Next.js"]
+    required: true
+
+  - name: projects
+    type: array
+    item_type: string
+    description: 関連プロジェクトID配列
+    example: ["ecommerce"]
+    required: true
+    reference:
+      table: Projects
+      field: id
+
+enums:
+  category:
+    description: カテゴリ値の種類
+    values:
+      frontend:
+        ja: フロントエンド
+        en: Frontend
+      backend:
+        ja: バックエンド
+        en: Backend
+      data:
+        ja: データ基盤
+        en: Data
+
+  eolStatus:
+    description: EOLステータス値の種類
+    values:
+      safe:
+        ja: 安全
+        en: Safe
+      warning:
+        ja: 警告
+        en: Warning
+      critical:
+        ja: 危機的
+        en: Critical
+      unknown:
+        ja: 不明
+        en: Unknown

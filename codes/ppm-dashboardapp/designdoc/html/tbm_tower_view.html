@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITコスト鳥瞰図 / IT Cost Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .lang-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .project-list {
+            list-style: none;
+        }
+        
+        .project-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            background-color: #f9fafb;
+        }
+        
+        .project-item:hover {
+            background-color: #f3f4f6;
+            border-left-color: #667eea;
+            transform: translateX(3px);
+        }
+        
+        .project-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .project-name {
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .project-status {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .clear-button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            color: #6b7280;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .clear-button:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .tower-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        
+        .tower-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .tower-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        
+        .tower-description {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+        
+        .tower-layer {
+            margin-bottom: 3px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .layer-header {
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .layer-header:hover {
+            filter: brightness(1.1);
+        }
+        
+        .toggle-icon {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .tower-layer.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .layer-content {
+            display: none;
+            padding: 20px;
+            background: #f9fafb;
+        }
+        
+        .tower-layer.expanded .layer-content {
+            display: block;
+        }
+        
+        /* Layer Colors */
+        .layer-consumption {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+        }
+        
+        .layer-business {
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+        }
+        
+        .layer-solution {
+            background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+        }
+        
+        .layer-workspace {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+        }
+        
+        .layer-delivery {
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+        }
+        
+        .layer-platform {
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+        }
+        
+        .layer-infrastructure {
+            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+        }
+        
+        .layer-tower {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .layer-costpool {
+            background: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .category-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: #1f2937;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .category-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .category-item:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #667eea;
+        }
+        
+        .category-item.highlighted {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            border-color: #f59e0b;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            transform: scale(1.05);
+        }
+        
+        .category-item.highlighted .item-name {
+            color: white;
+        }
+        
+        .category-item.highlighted .item-tech {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .category-item.highlighted .item-cost {
+            color: white;
+            font-weight: 800;
+        }
+        
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.8);
+            }
+        }
+        
+        .category-item.highlight-pulse {
+            animation: highlight-pulse 2s ease-in-out infinite;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        
+        .item-cost {
+            font-size: 14px;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 4px;
+        }
+        
+        .item-tech {
+            font-size: 10px;
+            color: #9ca3af;
+            margin-top: 4px;
+        }
+        
+        .subcategory-list {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .subcategory-item {
+            font-size: 11px;
+            color: #6b7280;
+            padding: 3px 0;
+        }
+        
+        .subcategory-item:before {
+            content: "• ";
+            color: #667eea;
+        }
+        
+        .info-box {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #4b5563;
+        }
+        
+        .legend-color {
+            width: 30px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        @media (max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>
+                <span class="lang-ja">ITコスト鳥瞰図</span>
+                <span class="lang-en">IT Cost Overview</span>
+            </h1>
+            <p>
+                <span class="lang-ja">Technology Business Management (TBM) - コストの可視化と分析</span>
+                <span class="lang-en">Technology Business Management (TBM) - Cost Visibility and Analysis</span>
+            </p>
+        </header>
+        
+        <div class="main-layout">
+            <div class="sidebar">
+                <h2>
+                    <span class="lang-ja">主要プロジェクト</span>
+                    <span class="lang-en">Key Projects</span>
+                </h2>
+                <ul class="project-list">
+                    <li class="project-item" data-project="ecommerce">
+                        <div class="project-name">
+                            <span class="lang-ja">ECサイト刷新</span>
+                            <span class="lang-en">E-Commerce Renewal</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="coresystem">
+                        <div class="project-name">
+                            <span class="lang-ja">基幹システムアップグレード</span>
+                            <span class="lang-en">Core System Upgrade</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="rpa">
+                        <div class="project-name">
+                            <span class="lang-ja">AI活用RPA導入</span>
+                            <span class="lang-en">AI-Powered RPA</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="cloud">
+                        <div class="project-name">
+                            <span class="lang-ja">クラウドマイグレーション</span>
+                            <span class="lang-en">Cloud Migration</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="subscription">
+                        <div class="project-name">
+                            <span class="lang-ja">サブスクサービス開発</span>
+                            <span class="lang-en">Subscription Service</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="zerotrust">
+                        <div class="project-name">
+                            <span class="lang-ja">ゼロトラスト導入</span>
+                            <span class="lang-en">Zero Trust Implementation</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進行中</span>
+                            <span class="lang-en">In Progress</span>
+                        </div>
+                    </li>
+                </ul>
+                <button class="clear-button" onclick="clearSelection()">
+                    <span class="lang-ja">全体表示</span>
+                    <span class="lang-en">Show All</span>
+                </button>
+            </div>
+            
+            <div class="tower-container">
+            <div class="tower-header">
+                <h2 class="tower-title">
+                    <span class="lang-ja">ITコスト構造の全体像</span>
+                    <span class="lang-en">Complete IT Cost Structure</span>
+                    <span id="selectedProject"></span>
+                </h2>
+                <p class="tower-description">
+                    <span class="lang-ja">各レイヤーをクリックして詳細を表示します。プロジェクトを選択すると関連するアプリケーションとサービスがハイライトされます。</span>
+                    <span class="lang-en">Click each layer to view details. Select a project to highlight related applications and services.</span>
+                </p>
+            </div>
+            
+            <!-- Layer 1: ソリューション / Solution -->
+            <div class="tower-layer">
+                <div class="layer-header layer-solution">
+                    <span>
+                        <span class="lang-ja">ソリューション</span>
+                        <span class="lang-en">Solution</span>
+                    </span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="layer-content">
+                    <div class="category-section">
+                        <div class="section-title">
+                            <span class="lang-ja">アプリケーション</span>
+                            <span class="lang-en">Applications</span>
+                        </div>
+                        <div class="category-grid">
+                            <div class="category-item" data-projects="ecommerce">
+                                <div class="item-name">
+                                    <span class="lang-ja">ECサイト</span>
+                                    <span class="lang-en">E-Commerce Site</span>
+                                </div>
+                                <div class="item-tech">React / Node.js</div>
+                                <div class="item-cost">¥2,800万</div>
+                            </div>
+                            <div class="category-item" data-projects="coresystem">
+                                <div class="item-name">
+                                    <span class="lang-ja">管理画面</span>
+                                    <span class="lang-en">Admin Dashboard</span>
+                                </div>
+                                <div class="item-tech">Vue.js</div>
+                                <div class="item-cost">¥1,500万</div>
+                            </div>
+                            <div class="category-item" data-projects="ecommerce subscription">
+                                <div class="item-name">
+                                    <span class="lang-ja">モバイルアプリ</span>
+                                    <span class="lang-en">Mobile App</span>
+                                </div>
+                                <div class="item-tech">React Native</div>
+                                <div class="item-cost">¥3,200万</div>
+                            </div>
+                            <div class="category-item" data-projects="subscription">
+                                <div class="item-name">
+                                    <span class="lang-ja">顧客ポータル</span>
+                                    <span class="lang-en">Customer Portal</span>
+                                </div>
+                                <div class="item-tech">Angular</div>
+                                <div class="item-cost">¥1,800万</div>
+                            </div>
+                            <div class="category-item" data-projects="ecommerce coresystem">
+                                <div class="item-name">
+                                    <span class="lang-ja">API Gateway</span>
+                                    <span class="lang-en">API Gateway</span>
+                                </div>
+                                <div class="item-tech">Kong</div>
+                                <div class="item-cost">¥900万</div>
+                            </div>
+                            <div class="category-item" data-projects="zerotrust">
+                                <div class="item-name">
+                                    <span class="lang-ja">認証サービス</span>
+                                    <span class="lang-en">Auth Service</span>
+                                </div>
+                                <div class="item-tech">Keycloak</div>
+                                <div class="item-cost">¥600万</div>
+                            </div>
+                            <div class="category-item" data-projects="ecommerce">
+                                <div class="item-name">
+                                    <span class="lang-ja">決済システム</span>
+                                    <span class="lang-en">Payment System</span>
+                                </div>
+                                <div class="item-tech">Stripe API</div>
+                                <div class="item-cost">¥1,200万</div>
+                            </div>
+                            <div class="category-item" data-projects="coresystem">
+                                <div class="item-name">
+                                    <span class="lang-ja">在庫管理システム</span>
+                                    <span class="lang-en">Inventory Mgmt</span>
+                                </div>
+                                <div class="item-tech">SAP</div>
+                                <div class="item-cost">¥4,500万</div>
+                            </div>
+                            <div class="category-item" data-projects="coresystem">
+                                <div class="item-name">
+                                    <span class="lang-ja">CRMシステム</span>
+                                    <span class="lang-en">CRM System</span>
+                                </div>
+                                <div class="item-tech">Salesforce</div>
+                                <div class="item-cost">¥2,100万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">BIダッシュボード</span>
+                                    <span class="lang-en">BI Dashboard</span>
+                                </div>
+                                <div class="item-tech">Tableau</div>
+                                <div class="item-cost">¥1,600万</div>
+                            </div>
+                            <div class="category-item" data-projects="rpa">
+                                <div class="item-name">
+                                    <span class="lang-ja">RPA自動化</span>
+                                    <span class="lang-en">RPA Automation</span>
+                                </div>
+                                <div class="item-tech">UiPath</div>
+                                <div class="item-cost">¥1,900万</div>
+                            </div>
+                            <div class="category-item" data-projects="rpa">
+                                <div class="item-name">
+                                    <span class="lang-ja">AIチャットボット</span>
+                                    <span class="lang-en">AI Chatbot</span>
+                                </div>
+                                <div class="item-tech">ChatGPT API</div>
+                                <div class="item-cost">¥800万</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section" style="margin-top: 25px;">
+                        <div class="section-title">
+                            <span class="lang-ja">サービス</span>
+                            <span class="lang-en">Services</span>
+                        </div>
+                        <div class="category-grid">
+                            <div class="category-item" data-projects="ecommerce coresystem">
+                                <div class="item-name">PostgreSQL DB</div>
+                                <div class="item-tech">PostgreSQL 14</div>
+                                <div class="item-cost">¥1,200万</div>
+                            </div>
+                            <div class="category-item" data-projects="rpa subscription">
+                                <div class="item-name">MongoDB</div>
+                                <div class="item-tech">NoSQL</div>
+                                <div class="item-cost">¥900万</div>
+                            </div>
+                            <div class="category-item" data-projects="cloud">
+                                <div class="item-name">
+                                    <span class="lang-ja">S3ストレージ</span>
+                                    <span class="lang-en">S3 Storage</span>
+                                </div>
+                                <div class="item-tech">AWS S3</div>
+                                <div class="item-cost">¥2,800万</div>
+                            </div>
+                            <div class="category-item" data-projects="ecommerce">
+                                <div class="item-name">
+                                    <span class="lang-ja">Redisキャッシュ</span>
+                                    <span class="lang-en">Redis Cache</span>
+                                </div>
+                                <div class="item-tech">Redis 7</div>
+                                <div class="item-cost">¥600万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">データウェアハウス</span>
+                                    <span class="lang-en">Data Warehouse</span>
+                                </div>
+                                <div class="item-tech">Snowflake</div>
+                                <div class="item-cost">¥3,500万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">ETLパイプライン</span>
+                                    <span class="lang-en">ETL Pipeline</span>
+                                </div>
+                                <div class="item-tech">Airflow</div>
+                                <div class="item-cost">¥1,100万</div>
+                            </div>
+                            <div class="category-item" data-projects="ecommerce">
+                                <div class="item-name">
+                                    <span class="lang-ja">検索エンジン</span>
+                                    <span class="lang-en">Search Engine</span>
+                                </div>
+                                <div class="item-tech">Elasticsearch</div>
+                                <div class="item-cost">¥1,400万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">メッセージキュー</span>
+                                    <span class="lang-en">Message Queue</span>
+                                </div>
+                                <div class="item-tech">Kafka</div>
+                                <div class="item-cost">¥800万</div>
+                            </div>
+                            <div class="category-item" data-projects="rpa">
+                                <div class="item-name">
+                                    <span class="lang-ja">MLストレージ</span>
+                                    <span class="lang-en">ML Storage</span>
+                                </div>
+                                <div class="item-tech">MLflow</div>
+                                <div class="item-cost">¥700万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">データレイク</span>
+                                    <span class="lang-en">Data Lake</span>
+                                </div>
+                                <div class="item-tech">S3 + Glue (28TB)</div>
+                                <div class="item-cost">¥4,200万</div>
+                            </div>
+                            <div class="category-item" data-projects="cloud">
+                                <div class="item-name">
+                                    <span class="lang-ja">バックアップストレージ</span>
+                                    <span class="lang-en">Backup Storage</span>
+                                </div>
+                                <div class="item-tech">S3 Glacier (45TB)</div>
+                                <div class="item-cost">¥1,800万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">分析DB</span>
+                                    <span class="lang-en">Analytics DB</span>
+                                </div>
+                                <div class="item-tech">Redshift (8.5TB)</div>
+                                <div class="item-cost">¥2,600万</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section" style="margin-top: 25px;">
+                        <div class="section-title">
+                            <span class="lang-ja">プロダクト</span>
+                            <span class="lang-en">Products</span>
+                        </div>
+                        <div class="category-grid">
+                            <div class="category-item" data-projects="ecommerce">
+                                <div class="item-name">
+                                    <span class="lang-ja">ECプラットフォーム</span>
+                                    <span class="lang-en">E-Commerce Platform</span>
+                                </div>
+                                <div class="item-tech">
+                                    <span class="lang-ja">フロント + API + DB</span>
+                                    <span class="lang-en">Front + API + DB</span>
+                                </div>
+                                <div class="item-cost">¥8,500万</div>
+                            </div>
+                            <div class="category-item" data-projects="subscription">
+                                <div class="item-name">
+                                    <span class="lang-ja">サブスクサービス</span>
+                                    <span class="lang-en">Subscription Service</span>
+                                </div>
+                                <div class="item-tech">
+                                    <span class="lang-ja">会員管理 + 決済</span>
+                                    <span class="lang-en">Member Mgmt + Payment</span>
+                                </div>
+                                <div class="item-cost">¥5,100万</div>
+                            </div>
+                            <div class="category-item" data-projects="">
+                                <div class="item-name">
+                                    <span class="lang-ja">データ分析基盤</span>
+                                    <span class="lang-en">Data Analytics Platform</span>
+                                </div>
+                                <div class="item-tech">
+                                    <span class="lang-ja">DWH + ETL + BI</span>
+                                    <span class="lang-en">DWH + ETL + BI</span>
+                                </div>
+                                <div class="item-cost">¥7,200万</div>
+                            </div>
+                            <div class="category-item" data-projects="rpa">
+                                <div class="item-name">
+                                    <span class="lang-ja">AIソリューション</span>
+                                    <span class="lang-en">AI Solution</span>
+                                </div>
+                                <div class="item-tech">
+                                    <span class="lang-ja">ML + チャットボット</span>
+                                    <span class="lang-en">ML + Chatbot</span>
+                                </div>
+                                <div class="item-cost">¥3,400万</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Layer 2: タワー / サブタワー / Tower / Subtower -->
+            <div class="tower-layer">
+                <div class="layer-header layer-tower">
+                    <span>
+                        <span class="lang-ja">タワー / サブタワー</span>
+                        <span class="lang-en">Tower / Subtower</span>
+                    </span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="layer-content">
+                    <div class="category-grid">
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">デリバリー</span>
+                                <span class="lang-en">Delivery</span>
+                            </div>
+                            <div class="item-cost">¥12,400万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">プラットフォーム</span>
+                                <span class="lang-en">Platform</span>
+                            </div>
+                            <div class="item-cost">¥9,800万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">アウトプット</span>
+                                <span class="lang-en">Output</span>
+                            </div>
+                            <div class="item-cost">¥600万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">エンド ユーザー</span>
+                                <span class="lang-en">End User</span>
+                            </div>
+                            <div class="item-cost">¥7,200万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">アプリケーション</span>
+                                <span class="lang-en">Application</span>
+                            </div>
+                            <div class="item-cost">¥23,100万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">データ センター</span>
+                                <span class="lang-en">Data Center</span>
+                            </div>
+                            <div class="item-cost">¥8,500万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">コンピューティング</span>
+                                <span class="lang-en">Computing</span>
+                            </div>
+                            <div class="item-cost">¥15,600万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">ストレージ</span>
+                                <span class="lang-en">Storage</span>
+                            </div>
+                            <div class="item-cost">¥11,300万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">ネットワーク</span>
+                                <span class="lang-en">Network</span>
+                            </div>
+                            <div class="item-cost">¥6,700万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">セキュリティ / コンプライアンス</span>
+                                <span class="lang-en">Security / Compliance</span>
+                            </div>
+                            <div class="item-cost">¥5,900万</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="item-name">
+                                <span class="lang-ja">IT マネジメント</span>
+                                <span class="lang-en">IT Management</span>
+                            </div>
+                            <div class="item-cost">¥4,800万</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Layer 3: コスト プール / サブプール / Cost Pool / Subpool -->
+            <div class="tower-layer">
+                <div class="layer-header layer-costpool">
+                    <span>
+                        <span class="lang-ja">コスト プール / サブプール</span>
+                        <span class="lang-en">Cost Pool / Subpool</span>
+                    </span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="layer-content">
+                    <div class="category-section">
+                        <div class="section-title">OpEx <span style="font-weight: 400; color: #667eea;">(運用費)</span></div>
+                        <div class="category-grid">
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">内部人件費</span>
+                                    <span class="lang-en">Internal Labor</span>
+                                </div>
+                                <div class="item-cost">¥32,500万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">外部人件費</span>
+                                    <span class="lang-en">External Labor</span>
+                                </div>
+                                <div class="item-cost">¥18,200万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">外部サービス</span>
+                                    <span class="lang-en">External Services</span>
+                                </div>
+                                <div class="item-cost">¥24,800万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">ハードウェア</span>
+                                    <span class="lang-en">Hardware</span>
+                                </div>
+                                <div class="item-cost">¥8,900万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">ソフトウェア</span>
+                                    <span class="lang-en">Software</span>
+                                </div>
+                                <div class="item-cost">¥15,600万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">設備 / 電力</span>
+                                    <span class="lang-en">Facilities / Power</span>
+                                </div>
+                                <div class="item-cost">¥6,400万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">電気通信</span>
+                                    <span class="lang-en">Telecom</span>
+                                </div>
+                                <div class="item-cost">¥4,700万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">その他</span>
+                                    <span class="lang-en">Other</span>
+                                </div>
+                                <div class="item-cost">¥3,200万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">内部サービス</span>
+                                    <span class="lang-en">Internal Services</span>
+                                </div>
+                                <div class="item-cost">¥5,800万</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="category-section" style="margin-top: 20px;">
+                        <div class="section-title">CapEx <span style="font-weight: 400; color: #667eea;">(資本支出)</span></div>
+                        <div class="category-grid">
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">内部人件費</span>
+                                    <span class="lang-en">Internal Labor</span>
+                                </div>
+                                <div class="item-cost">¥8,500万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">外部人件費</span>
+                                    <span class="lang-en">External Labor</span>
+                                </div>
+                                <div class="item-cost">¥6,200万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">外部サービス</span>
+                                    <span class="lang-en">External Services</span>
+                                </div>
+                                <div class="item-cost">¥4,900万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">ハードウェア</span>
+                                    <span class="lang-en">Hardware</span>
+                                </div>
+                                <div class="item-cost">¥28,600万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">ソフトウェア</span>
+                                    <span class="lang-en">Software</span>
+                                </div>
+                                <div class="item-cost">¥12,300万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">設備 / 電力</span>
+                                    <span class="lang-en">Facilities / Power</span>
+                                </div>
+                                <div class="item-cost">¥15,800万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">電気通信</span>
+                                    <span class="lang-en">Telecom</span>
+                                </div>
+                                <div class="item-cost">¥3,400万</div>
+                            </div>
+                            <div class="category-item">
+                                <div class="item-name">
+                                    <span class="lang-ja">その他</span>
+                                    <span class="lang-en">Other</span>
+                                </div>
+                                <div class="item-cost">¥2,100万</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="legend-item">
+                    <div class="legend-color layer-solution"></div>
+                    <span><span class="lang-ja">ソリューション</span><span class="lang-en">Solution</span></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color layer-tower"></div>
+                    <span><span class="lang-ja">タワー / サブタワー</span><span class="lang-en">Tower / Subtower</span></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color layer-costpool"></div>
+                    <span><span class="lang-ja">コストプール / サブプール</span><span class="lang-en">Cost Pool / Subpool</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectProject(projectId) {
+            // Clear all highlights
+            document.querySelectorAll('.category-item').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all project selections
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (projectId) {
+                // Highlight selected project
+                const selectedProjectItem = document.querySelector(`[data-project="${projectId}"]`);
+                if (selectedProjectItem) {
+                    selectedProjectItem.classList.add('active');
+                }
+                
+                // Highlight related items
+                document.querySelectorAll('.category-item').forEach(card => {
+                    const projects = card.getAttribute('data-projects');
+                    if (projects && projects.includes(projectId)) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const projectName = selectedProjectItem ? selectedProjectItem.querySelector('.project-name') : null;
+                const selectedProjectSpan = document.getElementById('selectedProject');
+                if (projectName && selectedProjectSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedProject').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectProject(null);
+        }
+        
+        // Toggle layer expansion
+        document.querySelectorAll('.layer-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const layer = this.parentElement;
+                layer.classList.toggle('expanded');
+            });
+        });
+        
+        // Add click handlers to project items
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+        
+        // Expand first layer by default
+        document.querySelector('.tower-layer').classList.add('expanded');
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'English') {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

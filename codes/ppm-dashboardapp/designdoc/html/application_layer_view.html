@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アプリケーション鳥瞰図 / Application Layer Overview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+        
+        .lang-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            gap: 10px;
+        }
+        
+        .lang-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+        
+        .lang-btn:hover {
+            background-color: #e5e7eb;
+        }
+        
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .lang-en {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-ja {
+            display: none;
+        }
+        
+        [data-lang="en"] .lang-en {
+            display: block;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .project-list {
+            list-style: none;
+        }
+        
+        .project-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            background-color: #f9fafb;
+        }
+        
+        .project-item:hover {
+            background-color: #f3f4f6;
+            border-left-color: #667eea;
+            transform: translateX(3px);
+        }
+        
+        .project-item.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-left-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .project-name {
+            font-size: 14px;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        
+        .project-status {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .content-area {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            min-height: 600px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .content-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .legend-box {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .legend-box.default {
+            background-color: #e5e7eb;
+            border: 1px solid #d1d5db;
+        }
+        
+        .legend-box.highlighted {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+        }
+        
+        .eol-legend {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .eol-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .eol-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .eol-dot.critical {
+            background-color: #ef4444;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+        }
+        
+        .eol-dot.warning {
+            background-color: #fbbf24;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+        }
+        
+        .eol-dot.safe {
+            background-color: #10b981;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+        }
+        
+        .eol-dot.unknown {
+            background-color: #9ca3af;
+        }
+        
+        .eol-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .eol-badge.critical {
+            background-color: #ef4444;
+            animation: pulse-red 2s infinite;
+        }
+        
+        .eol-badge.warning {
+            background-color: #fbbf24;
+        }
+        
+        .eol-badge.safe {
+            background-color: #10b981;
+        }
+        
+        .eol-badge.unknown {
+            background-color: #9ca3af;
+        }
+        
+        @keyframes pulse-red {
+            0%, 100% {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .app-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        
+        .app-card.highlighted {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+            border-color: #fbbf24;
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            transform: scale(1.05);
+        }
+        
+        .app-card.highlighted::before {
+            opacity: 1;
+        }
+        
+        .app-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .app-card.highlighted .app-icon {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+        }
+        
+        .app-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+        
+        .app-category {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .app-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 10px;
+        }
+        
+        .app-tag {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            background-color: #e5e7eb;
+            color: #6b7280;
+        }
+        
+        .app-card.highlighted .app-tag {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 25px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .highlight-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
+            }
+        }
+        
+        .clear-btn {
+            padding: 8px 20px;
+            background-color: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: #6b7280;
+            transition: all 0.3s;
+        }
+        
+        .clear-btn:hover {
+            background-color: #e5e7eb;
+            border-color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="lang-toggle">
+        <button class="lang-btn active" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn" onclick="setLanguage('en')">English</button>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1>
+                <span class="lang-ja">アプリケーション鳥瞰図</span>
+                <span class="lang-en">Application Layer Overview</span>
+            </h1>
+            <p>
+                <span class="lang-ja">プロジェクトを選択すると、関連するアプリケーションがハイライトされます</span>
+                <span class="lang-en">Select a project to highlight related applications</span>
+            </p>
+        </header>
+        
+        <div class="main-layout">
+            <div class="sidebar">
+                <h2>
+                    <span class="lang-ja">主要プロジェクト</span>
+                    <span class="lang-en">Major Projects</span>
+                </h2>
+                <ul class="project-list" id="projectList">
+                    <li class="project-item" data-project="ecommerce">
+                        <div class="project-name">
+                            <span class="lang-ja">ECサイトリニューアル</span>
+                            <span class="lang-en">E-Commerce Site Renewal</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 95% | 順調</span>
+                            <span class="lang-en">Progress: 95% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="coresystem">
+                        <div class="project-name">
+                            <span class="lang-ja">基幹システム刷新</span>
+                            <span class="lang-en">Core System Upgrade</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 45% | 注意</span>
+                            <span class="lang-en">Progress: 45% | Caution</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="rpa">
+                        <div class="project-name">
+                            <span class="lang-ja">AI活用RPA導入</span>
+                            <span class="lang-en">AI-Powered RPA</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 90% | 順調</span>
+                            <span class="lang-en">Progress: 90% | On Track</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="cloud">
+                        <div class="project-name">
+                            <span class="lang-ja">クラウドマイグレーション</span>
+                            <span class="lang-en">Cloud Migration</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 30% | 遅延</span>
+                            <span class="lang-en">Progress: 30% | Delayed</span>
+                        </div>
+                    </li>
+                    <li class="project-item" data-project="subscription">
+                        <div class="project-name">
+                            <span class="lang-ja">サブスクサービス開発</span>
+                            <span class="lang-en">Subscription Service</span>
+                        </div>
+                        <div class="project-status">
+                            <span class="lang-ja">進捗: 60% | 順調</span>
+                            <span class="lang-en">Progress: 60% | On Track</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="content-area">
+                <div class="content-header">
+                    <div class="content-title">
+                        <span class="lang-ja">全アプリケーション</span>
+                        <span class="lang-en">All Applications</span>
+                        <span id="selectedProject"></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="legend">
+                            <div class="legend-item">
+                                <div class="legend-box default"></div>
+                                <span class="lang-ja">通常</span>
+                                <span class="lang-en">Default</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-box highlighted"></div>
+                                <span class="lang-ja">関連アプリ</span>
+                                <span class="lang-en">Related Apps</span>
+                            </div>
+                        </div>
+                        <button class="clear-btn" onclick="clearSelection()">
+                            <span class="lang-ja">クリア</span>
+                            <span class="lang-en">Clear</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <span class="lang-ja">💡 左のリストからプロジェクトを選択すると、そのプロジェクトに関連するアプリケーションが黄色でハイライト表示されます</span>
+                    <span class="lang-en">💡 Select a project from the left list to highlight related applications in yellow</span>
+                </div>
+                
+                <div class="eol-legend" style="background: #f9fafb; padding: 12px 20px; border-radius: 8px; margin-bottom: 20px;">
+                    <strong style="color: #1f2937; margin-right: 10px;">
+                        <span class="lang-ja">EOLステータス:</span>
+                        <span class="lang-en">EOL Status:</span>
+                    </strong>
+                    <div class="eol-legend-item">
+                        <div class="eol-dot critical"></div>
+                        <span class="lang-ja">今年中にEOL</span>
+                        <span class="lang-en">EOL This Year</span>
+                    </div>
+                    <div class="eol-legend-item">
+                        <div class="eol-dot warning"></div>
+                        <span class="lang-ja">2年以内にEOL</span>
+                        <span class="lang-en">EOL Within 2 Years</span>
+                    </div>
+                    <div class="eol-legend-item">
+                        <div class="eol-dot safe"></div>
+                        <span class="lang-ja">2年以降</span>
+                        <span class="lang-en">EOL After 2 Years</span>
+                    </div>
+                    <div class="eol-legend-item">
+                        <div class="eol-dot unknown"></div>
+                        <span class="lang-ja">EOL不明</span>
+                        <span class="lang-en">EOL Unknown</span>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">総アプリ数</span>
+                            <span class="lang-en">Total Apps</span>
+                        </div>
+                        <div class="stat-value">28</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="stat-value">8</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="stat-value">12</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="stat-value">8</div>
+                    </div>
+                </div>
+                
+                <div class="app-grid" id="appGrid">
+                    <!-- Frontend Applications -->
+                    <div class="app-card" data-projects="ecommerce">
+                        <div class="eol-badge warning" title="EOL: 2027年3月 / March 2027"></div>
+                        <div class="app-icon">🛒</div>
+                        <div class="app-name">
+                            <span class="lang-ja">ECサイト</span>
+                            <span class="lang-en">E-Commerce Site</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">React</span>
+                            <span class="app-tag">Next.js</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="ecommerce">
+                        <div class="eol-badge safe" title="EOL: 2028年6月 / June 2028"></div>
+                        <div class="app-icon">📱</div>
+                        <div class="app-name">
+                            <span class="lang-ja">モバイルアプリ</span>
+                            <span class="lang-en">Mobile App</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">React Native</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="coresystem">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">💼</div>
+                        <div class="app-name">
+                            <span class="lang-ja">ERP管理画面</span>
+                            <span class="lang-en">ERP Dashboard</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Angular</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="rpa">
+                        <div class="eol-badge critical" title="EOL: 2025年10月 / October 2025"></div>
+                        <div class="app-icon">🤖</div>
+                        <div class="app-name">
+                            <span class="lang-ja">RPA管理画面</span>
+                            <span class="lang-en">RPA Console</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Vue.js</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="subscription">
+                        <div class="eol-badge warning" title="EOL: 2026年8月 / August 2026"></div>
+                        <div class="app-icon">🔄</div>
+                        <div class="app-name">
+                            <span class="lang-ja">サブスク管理ポータル</span>
+                            <span class="lang-en">Subscription Portal</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">React</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge safe" title="EOL: 2029年4月 / April 2029"></div>
+                        <div class="app-icon">📊</div>
+                        <div class="app-name">
+                            <span class="lang-ja">BIダッシュボード</span>
+                            <span class="lang-en">BI Dashboard</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Tableau</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">👥</div>
+                        <div class="app-name">
+                            <span class="lang-ja">社内ポータル</span>
+                            <span class="lang-en">Intranet Portal</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">SharePoint</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge warning" title="EOL: 2027年4月 / April 2027"></div>
+                        <div class="app-icon">📧</div>
+                        <div class="app-name">
+                            <span class="lang-ja">メール配信UI</span>
+                            <span class="lang-en">Email Manager UI</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">フロントエンド</span>
+                            <span class="lang-en">Frontend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Vue.js</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Backend Applications -->
+                    <div class="app-card" data-projects="ecommerce">
+                        <div class="eol-badge warning" title="EOL: 2027年1月 / January 2027"></div>
+                        <div class="app-icon">⚙️</div>
+                        <div class="app-name">
+                            <span class="lang-ja">EC API</span>
+                            <span class="lang-en">E-Commerce API</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Node.js</span>
+                            <span class="app-tag">Express</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="ecommerce subscription">
+                        <div class="eol-badge safe" title="EOL: 2030年5月 / May 2030"></div>
+                        <div class="app-icon">💳</div>
+                        <div class="app-name">
+                            <span class="lang-ja">決済サービス</span>
+                            <span class="lang-en">Payment Service</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Java</span>
+                            <span class="app-tag">Spring</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="coresystem">
+                        <div class="eol-badge critical" title="EOL: 2025年11月 / November 2025"></div>
+                        <div class="app-icon">🏢</div>
+                        <div class="app-name">
+                            <span class="lang-ja">ERPコア</span>
+                            <span class="lang-en">ERP Core</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">SAP</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="coresystem">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">📦</div>
+                        <div class="app-name">
+                            <span class="lang-ja">在庫管理</span>
+                            <span class="lang-en">Inventory System</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Python</span>
+                            <span class="app-tag">Django</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="rpa">
+                        <div class="eol-badge critical" title="EOL: 2025年9月 / September 2025"></div>
+                        <div class="app-icon">🔧</div>
+                        <div class="app-name">
+                            <span class="lang-ja">RPAエンジン</span>
+                            <span class="lang-en">RPA Engine</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">UiPath</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="rpa">
+                        <div class="eol-badge safe" title="EOL: 2028年7月 / July 2028"></div>
+                        <div class="app-icon">🧠</div>
+                        <div class="app-name">
+                            <span class="lang-ja">AIモデルAPI</span>
+                            <span class="lang-en">AI Model API</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Python</span>
+                            <span class="app-tag">FastAPI</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="subscription">
+                        <div class="eol-badge warning" title="EOL: 2026年6月 / June 2026"></div>
+                        <div class="app-icon">🔄</div>
+                        <div class="app-name">
+                            <span class="lang-ja">サブスク管理API</span>
+                            <span class="lang-en">Subscription API</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Go</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge safe" title="EOL: 2029年2月 / February 2029"></div>
+                        <div class="app-icon">📨</div>
+                        <div class="app-name">
+                            <span class="lang-ja">通知サービス</span>
+                            <span class="lang-en">Notification Service</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Node.js</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge warning" title="EOL: 2026年12月 / December 2026"></div>
+                        <div class="app-icon">🔐</div>
+                        <div class="app-name">
+                            <span class="lang-ja">認証サービス</span>
+                            <span class="lang-en">Auth Service</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">OAuth2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">📝</div>
+                        <div class="app-name">
+                            <span class="lang-ja">ログ集約</span>
+                            <span class="lang-en">Log Aggregator</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">ELK</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="cloud">
+                        <div class="eol-badge safe" title="EOL: 2028年10月 / October 2028"></div>
+                        <div class="app-icon">☁️</div>
+                        <div class="app-name">
+                            <span class="lang-ja">クラウドゲートウェイ</span>
+                            <span class="lang-en">Cloud Gateway</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Kong</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge warning" title="EOL: 2027年6月 / June 2027"></div>
+                        <div class="app-icon">🔍</div>
+                        <div class="app-name">
+                            <span class="lang-ja">検索エンジン</span>
+                            <span class="lang-en">Search Engine</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">バックエンド</span>
+                            <span class="lang-en">Backend</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Elasticsearch</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Data Platform Applications -->
+                    <div class="app-card" data-projects="ecommerce coresystem">
+                        <div class="eol-badge safe" title="EOL: 2028年11月 / November 2028"></div>
+                        <div class="app-icon">🗄️</div>
+                        <div class="app-name">
+                            <span class="lang-ja">PostgreSQL DB</span>
+                            <span class="lang-en">PostgreSQL DB</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">PostgreSQL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="rpa subscription">
+                        <div class="eol-badge warning" title="EOL: 2027年2月 / February 2027"></div>
+                        <div class="app-icon">📊</div>
+                        <div class="app-name">
+                            <span class="lang-ja">MongoDB</span>
+                            <span class="lang-en">MongoDB</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">NoSQL</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="cloud">
+                        <div class="eol-badge safe" title="EOL: 2032年 / 2032"></div>
+                        <div class="app-icon">💾</div>
+                        <div class="app-name">
+                            <span class="lang-ja">S3ストレージ</span>
+                            <span class="lang-en">S3 Storage</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">AWS S3</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="ecommerce">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">⚡</div>
+                        <div class="app-name">
+                            <span class="lang-ja">Redisキャッシュ</span>
+                            <span class="lang-en">Redis Cache</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Redis</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge safe" title="EOL: 2029年9月 / September 2029"></div>
+                        <div class="app-icon">📈</div>
+                        <div class="app-name">
+                            <span class="lang-ja">データウェアハウス</span>
+                            <span class="lang-en">Data Warehouse</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Snowflake</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge warning" title="EOL: 2026年10月 / October 2026"></div>
+                        <div class="app-icon">🔀</div>
+                        <div class="app-name">
+                            <span class="lang-ja">ETLパイプライン</span>
+                            <span class="lang-en">ETL Pipeline</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Airflow</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="rpa">
+                        <div class="eol-badge unknown" title="EOL: 不明 / Unknown"></div>
+                        <div class="app-icon">🤖</div>
+                        <div class="app-name">
+                            <span class="lang-ja">MLストレージ</span>
+                            <span class="lang-en">ML Storage</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">MLflow</span>
+                        </div>
+                    </div>
+                    
+                    <div class="app-card" data-projects="">
+                        <div class="eol-badge safe" title="EOL: 2030年3月 / March 2030"></div>
+                        <div class="app-icon">📡</div>
+                        <div class="app-name">
+                            <span class="lang-ja">メッセージキュー</span>
+                            <span class="lang-en">Message Queue</span>
+                        </div>
+                        <div class="app-category">
+                            <span class="lang-ja">データ基盤</span>
+                            <span class="lang-en">Data Platform</span>
+                        </div>
+                        <div class="app-tags">
+                            <span class="app-tag">Kafka</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentLanguage = 'ja';
+        
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            document.body.setAttribute('data-lang', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Store preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+        
+        function selectProject(projectId) {
+            // Clear all highlights
+            document.querySelectorAll('.app-card').forEach(card => {
+                card.classList.remove('highlighted', 'highlight-pulse');
+            });
+            
+            // Clear all project selections
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (projectId) {
+                // Highlight selected project
+                const selectedProjectItem = document.querySelector(`[data-project="${projectId}"]`);
+                if (selectedProjectItem) {
+                    selectedProjectItem.classList.add('active');
+                }
+                
+                // Highlight related apps
+                document.querySelectorAll('.app-card').forEach(card => {
+                    const projects = card.getAttribute('data-projects');
+                    if (projects && projects.includes(projectId)) {
+                        card.classList.add('highlighted', 'highlight-pulse');
+                    }
+                });
+                
+                // Update title
+                const projectName = selectedProjectItem ? selectedProjectItem.querySelector('.project-name') : null;
+                const selectedProjectSpan = document.getElementById('selectedProject');
+                if (projectName && selectedProjectSpan) {
+                    if (currentLanguage === 'ja') {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-ja').textContent;
+                    } else {
+                        selectedProjectSpan.textContent = ' - ' + projectName.querySelector('.lang-en').textContent;
+                    }
+                }
+            } else {
+                document.getElementById('selectedProject').textContent = '';
+            }
+        }
+        
+        function clearSelection() {
+            selectProject(null);
+        }
+        
+        // Add click handlers to project items
+        document.querySelectorAll('.project-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                selectProject(projectId);
+            });
+        });
+        
+        // Load saved preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('preferredLanguage') || 'ja';
+            currentLanguage = savedLang;
+            if (savedLang === 'en') {
+                document.body.setAttribute('data-lang', 'en');
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (btn.textContent === 'English') {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

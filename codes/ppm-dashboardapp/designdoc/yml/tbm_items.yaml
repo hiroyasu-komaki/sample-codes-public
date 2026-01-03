@@ -1,0 +1,169 @@
+table:
+  name: TBMItems
+  description: TBM（Technology Business Management）アイテム情報を管理するテーブル
+
+fields:
+  - name: id
+    type: string
+    description: アイテムの一意識別子
+    example: "ec-site-001"
+    required: true
+    primary_key: true
+
+  - name: nameJA
+    type: string
+    description: アイテム名（日本語）
+    example: "ECサイト"
+    required: true
+
+  - name: nameEN
+    type: string
+    description: アイテム名（英語）
+    example: "E-Commerce Site"
+    required: true
+
+  - name: layer
+    type: string
+    description: レイヤー区分
+    example: "solution"
+    required: true
+    enum:
+      - solution
+      - tower
+      - costpool
+
+  - name: layerJA
+    type: string
+    description: レイヤー名（日本語）
+    example: "ソリューション"
+    required: true
+
+  - name: layerEN
+    type: string
+    description: レイヤー名（英語）
+    example: "Solution"
+    required: true
+
+  - name: category
+    type: string
+    description: カテゴリー
+    example: "application"
+    required: true
+
+  - name: categoryJA
+    type: string
+    description: カテゴリー名（日本語）
+    example: "アプリケーション"
+    required: true
+
+  - name: categoryEN
+    type: string
+    description: カテゴリー名（英語）
+    example: "Applications"
+    required: true
+
+  - name: technology
+    type: string
+    description: 使用技術
+    example: "React + Next.js"
+    required: true
+
+  - name: cost
+    type: string
+    description: コスト
+    example: "¥2,400万"
+    required: true
+
+  - name: projects
+    type: array
+    item_type: string
+    description: 関連プロジェクトID配列
+    example: ["ecommerce"]
+    required: true
+    reference:
+      table: Projects
+      field: id
+
+  - name: tower
+    type: string
+    description: タワー区分
+    example: "infrastructure"
+    required: false
+    reference:
+      table: Towers
+      field: id
+
+  - name: towerJA
+    type: string
+    description: タワー名（日本語）
+    example: "インフラタワー"
+    required: false
+
+  - name: towerEN
+    type: string
+    description: タワー名（英語）
+    example: "Infrastructure Tower"
+    required: false
+
+  - name: costPool
+    type: string
+    description: コストプール区分
+    example: "opex"
+    required: false
+
+  - name: costPoolJA
+    type: string
+    description: コストプール名（日本語）
+    example: "OpEx (運用支出)"
+    required: false
+
+  - name: costPoolEN
+    type: string
+    description: コストプール名（英語）
+    example: "OpEx (Operating Expenses)"
+    required: false
+
+  - name: costType
+    type: string
+    description: コストタイプ
+    example: "internal-labor"
+    required: false
+    reference:
+      table: CostTypes
+      field: id
+
+  - name: costTypeJA
+    type: string
+    description: コストタイプ名（日本語）
+    example: "内部人件費"
+    required: false
+
+  - name: costTypeEN
+    type: string
+    description: コストタイプ名（英語）
+    example: "Internal Labor"
+    required: false
+
+enums:
+  layer:
+    description: レイヤー値の種類
+    values:
+      solution:
+        ja: ソリューション
+        en: Solution
+      tower:
+        ja: タワー / サブタワー
+        en: Tower / Sub Tower
+      costpool:
+        ja: コストプール / サブプール
+        en: Cost Pool / Sub Pool
+
+  category_solution:
+    description: カテゴリー値の種類（Solutionレイヤー）
+    values:
+      application:
+        ja: アプリケーション
+        en: Applications
+      service:
+        ja: サービス
+        en: Services
