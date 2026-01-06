@@ -1,0 +1,145 @@
+# プロジェクトCSV変換設定（統合版）
+# inフォルダのCSVを読み込み、ヘッダ変換・新規項目追加・レイアウト変更を実行
+
+# 入力CSVファイルのヘッダ情報（元のCSV）
+input_headers:
+  - id
+  - nameJA
+  - nameEN
+  - department
+  - status
+  - statusLabelJA
+  - statusLabelEN
+  - phase
+  - phaseLabelJA
+  - phaseLabelEN
+  - budgetJA
+  - budgetEN
+  - progress
+  - durationJA
+  - durationEN
+  - goalJA
+  - goalEN
+
+# 出力CSVファイルのヘッダ情報（最終形式）
+output_headers:
+  - プロジェクトID
+  - プロジェクト名（日本語）
+  - Project Name (English)
+  - tags
+  - projects
+  - 担当部門
+  - ステータスコード
+  - ステータス表示名（日本語）
+  - Status Label (English)
+  - eolStatus
+  - eolDate
+  - eolDateEN
+  - プロジェクトフェーズ
+  - フェーズ表示名（日本語）
+  - Phase Label (English)
+  - 予算（円）
+  - Budget (USD)
+  - 進捗率（%）
+  - プロジェクト期間（日本語）
+  - Project Duration (English)
+  - プロジェクト目標（日本語）
+  - Project Goal (English)
+
+# ヘッダのマッピング情報
+header_mapping:
+  # 既存フィールド（ヘッダ名変換）
+  - input: id
+    output: プロジェクトID
+    description: プロジェクトの一意識別子
+  
+  - input: nameJA
+    output: プロジェクト名（日本語）
+    description: プロジェクト名の日本語表記
+  
+  - input: nameEN
+    output: Project Name (English)
+    description: プロジェクト名の英語表記
+  
+  # 新規追加フィールド
+  - input: null
+    output: tags
+    description: プロジェクトタグ（新規追加）
+    default_value: "[]"
+  
+  - input: null
+    output: projects
+    description: 関連プロジェクト（新規追加）
+    default_value: "[]"
+  
+  - input: department
+    output: 担当部門
+    description: プロジェクトを担当する部門
+  
+  - input: status
+    output: ステータスコード
+    description: プロジェクトの状態を示すコード
+  
+  - input: statusLabelJA
+    output: ステータス表示名（日本語）
+    description: ステータスの日本語ラベル
+  
+  - input: statusLabelEN
+    output: Status Label (English)
+    description: ステータスの英語ラベル
+  
+  # 新規追加フィールド（EOL関連）
+  - input: null
+    output: eolStatus
+    description: End of Life ステータス（新規追加）
+    default_value: ""
+  
+  - input: null
+    output: eolDate
+    description: End of Life 日付（新規追加）
+    default_value: ""
+  
+  - input: null
+    output: eolDateEN
+    description: End of Life Date (English)（新規追加）
+    default_value: ""
+  
+  - input: phase
+    output: プロジェクトフェーズ
+    description: プロジェクトの現在のフェーズコード
+  
+  - input: phaseLabelJA
+    output: フェーズ表示名（日本語）
+    description: フェーズの日本語ラベル
+  
+  - input: phaseLabelEN
+    output: Phase Label (English)
+    description: フェーズの英語ラベル
+  
+  - input: budgetJA
+    output: 予算（円）
+    description: プロジェクト予算の日本円表記
+  
+  - input: budgetEN
+    output: Budget (USD)
+    description: プロジェクト予算の米ドル表記
+  
+  - input: progress
+    output: 進捗率（%）
+    description: プロジェクトの進捗率（0-100）
+  
+  - input: durationJA
+    output: プロジェクト期間（日本語）
+    description: プロジェクト期間の日本語表記
+  
+  - input: durationEN
+    output: Project Duration (English)
+    description: プロジェクト期間の英語表記
+  
+  - input: goalJA
+    output: プロジェクト目標（日本語）
+    description: プロジェクトの目標・ゴールの日本語説明
+  
+  - input: goalEN
+    output: Project Goal (English)
+    description: プロジェクトの目標・ゴールの英語説明

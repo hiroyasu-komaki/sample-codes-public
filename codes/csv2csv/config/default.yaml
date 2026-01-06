@@ -1,0 +1,15 @@
+# デフォルトのヘッダ変換設定
+# 専用の設定ファイルが見つからない場合に使用されます
+
+header_mapping:
+  id: ID
+  name: 名前
+  nameJA: 名前（日本語）
+  nameEN: Name (English)
+  description: 説明
+  status: ステータス
+  created_at: 作成日時
+  updated_at: 更新日時
+  category: カテゴリ
+  type: タイプ
+  priority: 優先度
