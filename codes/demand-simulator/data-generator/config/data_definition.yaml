@@ -1,0 +1,87 @@
+# サンプルデータ定義ファイル
+# このファイルでデータ項目と生成設定を定義します
+
+# データ項目の定義
+fields:
+  - 案件ID
+  - 案件名
+  - 活動開始月
+  - 活動終了月
+  - 初期投資金額
+  - 運用費
+  - システム利用開始時期
+
+# 出力設定
+output:
+  file: sample_data.csv  # 出力ファイル名（csvフォルダ内に出力されます）
+  records: 100           # 生成するレコード数
+
+# データ生成の設定
+settings:
+  # 案件ID形式の設定
+  project_id_format:
+    prefix: PRJ          # IDのプレフィックス
+    digits: 4            # 桁数（ゼロパディング）
+  
+  # 案件名生成の設定
+  project_naming:
+    prefixes:
+      - 次世代
+      - 新規
+      - 既存
+      - 統合
+      - クラウド
+      - AI活用
+      - DX推進
+    systems:
+      - 販売管理システム
+      - 在庫管理システム
+      - 顧客管理システム
+      - 会計システム
+      - 人事システム
+      - ECサイト
+      - 基幹システム
+    actions:
+      - 構築
+      - 刷新
+      - 移行
+      - 導入
+      - 開発
+  
+  # 初期投資金額の範囲（単位：千円）
+  initial_investment:
+    min: 10000           # 最小値：1000万円
+    max: 100000          # 最大値：5億円
+  
+  # 運用費の割合（初期投資金額に対する比率）
+  operation_cost_ratio:
+    min: 0.05            # 最小：5%
+    max: 0.20            # 最大：20%
+  
+  # システム利用開始時期の範囲
+  start_date:
+    from_days_ago: 365   # 過去1年前から
+    to_days_ahead: 730   # 未来2年後まで
+  
+  # 活動期間の設定
+  activity_period:
+    start_from_days_ago: 730    # 活動開始：過去2年前から
+    start_to_days_ahead: 365    # 活動開始：未来1年後まで
+    duration_min_months: 3      # 活動期間の最小月数
+    duration_max_months: 24     # 活動期間の最大月数
+  
+  # 日付フォーマット
+  date_format: "%Y/%m/%d"
+  
+  # 月フォーマット
+  month_format: "%Y/%m"
+  
+  # 金額の丸め設定
+  rounding:
+    thresholds:
+      - max: 1000        # 1000未満
+        unit: 50         # 50単位で丸める
+      - max: 10000       # 10000未満
+        unit: 100        # 100単位で丸める
+      - max: .inf        # それ以上
+        unit: 1000       # 1000単位で丸める
