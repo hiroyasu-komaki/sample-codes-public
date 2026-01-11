@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキル分布ヒートマップ</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn:not(.active) {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .heatmap-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+        }
+        
+        .heatmap {
+            display: grid;
+            gap: 2px;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            min-width: 800px;
+        }
+        
+        .cell {
+            background: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 6px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .cell:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+        
+        .cell.header {
+            background: #2d3748;
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: default;
+        }
+        
+        .cell.header:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .cell.row-header {
+            background: #4a5568;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: default;
+            text-align: left;
+            padding-left: 12px;
+        }
+        
+        .cell.row-header:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .cell-value {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+        
+        .cell-label {
+            font-size: 10px;
+            color: rgba(0,0,0,0.6);
+            font-weight: 500;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 12px;
+        }
+        
+        .legend-label {
+            font-size: 13px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        
+        .legend-gradient {
+            width: 300px;
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(to right, 
+                #fff5f5, #fed7d7, #fc8181, #f56565, #e53e3e, #c53030, #9b2c2c);
+        }
+        
+        .legend-values {
+            display: flex;
+            justify-content: space-between;
+            width: 300px;
+            font-size: 11px;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 スキル分布ヒートマップ</h1>
+        <p class="subtitle">プロジェクト規模・作業タイプ別のケイパビリティ分析</p>
+        
+        <div class="controls">
+            <button class="btn active" onclick="showView('all')">全体表示</button>
+            <button class="btn" onclick="showView('large')">大規模</button>
+            <button class="btn" onclick="showView('medium')">中規模</button>
+            <button class="btn" onclick="showView('small')">小規模</button>
+            <button class="btn" onclick="showView('extra_small')">極小規模</button>
+        </div>
+        
+        <div class="heatmap-container">
+            <div id="heatmap" class="heatmap"></div>
+        </div>
+        
+        <div class="legend">
+            <span class="legend-label">低</span>
+            <div>
+                <div class="legend-gradient"></div>
+                <div class="legend-values">
+                    <span>5%</span>
+                    <span>20%</span>
+                    <span>35%</span>
+                    <span>50%</span>
+                    <span>70%</span>
+                </div>
+            </div>
+            <span class="legend-label">高</span>
+        </div>
+        
+        <div id="stats" class="stats"></div>
+    </div>
+
+    <script>
+        const data = {
+            "large_新規開発": {"ビジネスケイパビリティ": 0.35, "デリバリケイパビリティ": 0.20, "テクニカルケイパビリティ": 0.30, "リーダーシップケイパビリティ": 0.15},
+            "large_導入": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.40, "リーダーシップケイパビリティ": 0.15},
+            "large_刷新": {"ビジネスケイパビリティ": 0.25, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.35, "リーダーシップケイパビリティ": 0.15},
+            "large_移行": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.40, "テクニカルケイパビリティ": 0.30, "リーダーシップケイパビリティ": 0.15},
+            "large_その他": {"ビジネスケイパビリティ": 0.25, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.35, "リーダーシップケイパビリティ": 0.15},
+            
+            "medium_新規開発": {"ビジネスケイパビリティ": 0.35, "デリバリケイパビリティ": 0.20, "テクニカルケイパビリティ": 0.35, "リーダーシップケイパビリティ": 0.10},
+            "medium_導入": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.25, "テクニカルケイパビリティ": 0.45, "リーダーシップケイパビリティ": 0.10},
+            "medium_刷新": {"ビジネスケイパビリティ": 0.25, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.40, "リーダーシップケイパビリティ": 0.10},
+            "medium_移行": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.40, "テクニカルケイパビリティ": 0.35, "リーダーシップケイパビリティ": 0.10},
+            "medium_その他": {"ビジネスケイパビリティ": 0.25, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.40, "リーダーシップケイパビリティ": 0.10},
+            
+            "small_新規開発": {"ビジネスケイパビリティ": 0.30, "デリバリケイパビリティ": 0.15, "テクニカルケイパビリティ": 0.50, "リーダーシップケイパビリティ": 0.05},
+            "small_導入": {"ビジネスケイパビリティ": 0.15, "デリバリケイパビリティ": 0.20, "テクニカルケイパビリティ": 0.60, "リーダーシップケイパビリティ": 0.05},
+            "small_刷新": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.25, "テクニカルケイパビリティ": 0.50, "リーダーシップケイパビリティ": 0.05},
+            "small_移行": {"ビジネスケイパビリティ": 0.15, "デリバリケイパビリティ": 0.35, "テクニカルケイパビリティ": 0.45, "リーダーシップケイパビリティ": 0.05},
+            "small_その他": {"ビジネスケイパビリティ": 0.20, "デリバリケイパビリティ": 0.25, "テクニカルケイパビリティ": 0.50, "リーダーシップケイパビリティ": 0.05},
+            
+            "extra_small_新規開発": {"ビジネスケイパビリティ": 0.25, "デリバリケイパビリティ": 0.10, "テクニカルケイパビリティ": 0.60, "リーダーシップケイパビリティ": 0.05},
+            "extra_small_導入": {"ビジネスケイパビリティ": 0.10, "デリバリケイパビリティ": 0.15, "テクニカルケイパビリティ": 0.70, "リーダーシップケイパビリティ": 0.05},
+            "extra_small_刷新": {"ビジネスケイパビリティ": 0.15, "デリバリケイパビリティ": 0.20, "テクニカルケイパビリティ": 0.60, "リーダーシップケイパビリティ": 0.05},
+            "extra_small_移行": {"ビジネスケイパビリティ": 0.10, "デリバリケイパビリティ": 0.30, "テクニカルケイパビリティ": 0.55, "リーダーシップケイパビリティ": 0.05},
+            "extra_small_その他": {"ビジネスケイパビリティ": 0.15, "デリバリケイパビリティ": 0.20, "テクニカルケイパビリティ": 0.60, "リーダーシップケイパビリティ": 0.05}
+        };
+
+        const capabilities = ["ビジネスケイパビリティ", "デリバリケイパビリティ", "テクニカルケイパビリティ", "リーダーシップケイパビリティ"];
+        
+        function getColor(value) {
+            const colors = [
+                { threshold: 0.05, color: '#fff5f5' },
+                { threshold: 0.10, color: '#fed7d7' },
+                { threshold: 0.15, color: '#feb2b2' },
+                { threshold: 0.20, color: '#fc8181' },
+                { threshold: 0.25, color: '#f56565' },
+                { threshold: 0.30, color: '#e53e3e' },
+                { threshold: 0.40, color: '#c53030' },
+                { threshold: 0.50, color: '#9b2c2c' },
+                { threshold: 1.00, color: '#742a2a' }
+            ];
+            
+            for (let i = 0; i < colors.length; i++) {
+                if (value <= colors[i].threshold) {
+                    return colors[i].color;
+                }
+            }
+            return colors[colors.length - 1].color;
+        }
+        
+        function getTextColor(bgColor) {
+            const rgb = parseInt(bgColor.slice(1), 16);
+            const r = (rgb >> 16) & 0xff;
+            const g = (rgb >>  8) & 0xff;
+            const b = (rgb >>  0) & 0xff;
+            const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+            return luma > 128 ? '#2d3748' : '#ffffff';
+        }
+        
+        function renderHeatmap(filter = 'all') {
+            const heatmap = document.getElementById('heatmap');
+            const filteredData = filter === 'all' 
+                ? Object.entries(data)
+                : Object.entries(data).filter(([key]) => key.startsWith(filter));
+            
+            const cols = capabilities.length + 1;
+            heatmap.style.gridTemplateColumns = `200px repeat(${capabilities.length}, 1fr)`;
+            
+            let html = '<div class="cell header"></div>';
+            capabilities.forEach(cap => {
+                html += `<div class="cell header">${cap}</div>`;
+            });
+            
+            filteredData.forEach(([key, values]) => {
+                const label = key.replace(/^(large|medium|small|extra_small)_/, '');
+                const size = key.split('_')[0];
+                const sizeLabel = {
+                    'large': '大規模',
+                    'medium': '中規模',
+                    'small': '小規模',
+                    'extra_small': '極小規模'
+                }[size] || '';
+                
+                html += `<div class="cell row-header">${sizeLabel} - ${label}</div>`;
+                
+                capabilities.forEach(cap => {
+                    const value = values[cap];
+                    const bgColor = getColor(value);
+                    const textColor = getTextColor(bgColor);
+                    html += `
+                        <div class="cell" style="background-color: ${bgColor}; color: ${textColor};" 
+                             title="${key} - ${cap}: ${(value * 100).toFixed(0)}%">
+                            <div class="cell-value">${(value * 100).toFixed(0)}%</div>
+                        </div>
+                    `;
+                });
+            });
+            
+            heatmap.innerHTML = html;
+            updateStats(filteredData);
+        }
+        
+        function updateStats(filteredData) {
+            const stats = document.getElementById('stats');
+            const capStats = {};
+            
+            capabilities.forEach(cap => {
+                const values = filteredData.map(([_, vals]) => vals[cap]);
+                const avg = values.reduce((a, b) => a + b, 0) / values.length;
+                const max = Math.max(...values);
+                const min = Math.min(...values);
+                capStats[cap] = { avg, max, min };
+            });
+            
+            let html = '';
+            Object.entries(capStats).forEach(([cap, stats]) => {
+                html += `
+                    <div class="stat-card">
+                        <div class="stat-value">${(stats.avg * 100).toFixed(0)}%</div>
+                        <div class="stat-label">${cap.replace('ケイパビリティ', '')}<br>平均値</div>
+                    </div>
+                `;
+            });
+            
+            stats.innerHTML = html;
+        }
+        
+        function showView(filter) {
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderHeatmap(filter);
+        }
+        
+        renderHeatmap();
+    </script>
+</body>
+</html>
