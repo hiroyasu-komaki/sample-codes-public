@@ -1,0 +1,51 @@
+# サンプルデータ定義ファイル（供給データ - 社員情報）
+# このファイルでデータ項目と生成設定を定義します
+
+# データ項目の定義
+fields:
+  - 社員ID
+  - 稼働開始月
+  - 稼働終了月
+  - ビジネスケイパビリティ
+  - デリバリケイパビリティ
+  - テクニカルケイパビリティ
+  - リーダーシップケイパビリティ
+
+# 出力設定
+output:
+  file: supply_data.csv  # 出力ファイル名（csvフォルダ内に出力されます）
+  records: 20            # 生成するレコード数
+
+# データ生成の設定
+settings:
+  # 社員ID形式の設定
+  employee_id_format:
+    prefix: EMP          # IDのプレフィックス
+    digits: 5            # 桁数（ゼロパディング）
+  
+  # 稼働開始月の範囲設定
+  work_start_period:
+    from_days_ago: 1825  # 過去5年前から（既存社員）
+    to_days_ahead: 365   # 未来1年後まで（入社予定者）
+  
+  # 稼働終了月の設定
+  work_end_period:
+    # 既存社員の一部のみ退職年月を設定
+    probability: 0.2     # 20%の確率で稼働終了月を設定
+    min_months_after_start: 6   # 稼働開始から最低6ヶ月後
+    max_months_after_start: 60  # 稼働開始から最大60ヶ月後
+  
+  # ケイパビリティの設定（0.00〜1.00の範囲）
+  capability:
+    min: 0.00            # 最小値
+    max: 1.00            # 最大値
+    decimal_places: 2    # 小数点以下の桁数
+    
+    # ケイパビリティの相関設定（オプション）
+    # 実際の社員データではスキル間に相関があることが多い
+    correlation:
+      enabled: true      # 相関を考慮するか
+      base_variance: 0.3 # 基準値からの変動幅
+  
+  # 月フォーマット
+  month_format: "%Y/%m"

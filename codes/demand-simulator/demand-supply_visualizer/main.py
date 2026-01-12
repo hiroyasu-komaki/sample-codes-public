@@ -7,6 +7,7 @@
     - capability_demand_charts.png (ケイパビリティ全体の推移)
     - capability_by_tech_stacked.png (技術領域別・積み上げ)
     - capability_by_tech_lines.png (技術領域別・折れ線)
+    - supply_demand_balance.png (需給バランス)
 """
 
 import os
@@ -14,14 +15,33 @@ import sys
 import subprocess
 from pathlib import Path
 
-def check_csv_file():
-    """CSVファイルの存在を確認"""
-    csv_file = Path('csv/sample_data.csv')
-    if not csv_file.exists():
-        print("エラー: sample_data.csv が見つかりません。")
-        print("同じディレクトリに sample_data.csv を配置してください。")
-        return False
-    return True
+def find_csv_files():
+    """csv/ディレクトリ内のCSVファイルを検出"""
+    csv_dir = Path('csv')
+    
+    if not csv_dir.exists():
+        print("エラー: csv/ ディレクトリが見つかりません。")
+        print("csv/ ディレクトリを作成し、CSVファイルを配置してください。")
+        return None, None
+    
+    # demand_data.csv と supply_data.csv を検索
+    demand_file = csv_dir / 'demand_data.csv'
+    supply_file = csv_dir / 'supply_data.csv'
+    
+    if not demand_file.exists():
+        print("エラー: demand_data.csv が見つかりません。")
+        print("csv/ ディレクトリに demand_data.csv を配置してください。")
+        return None, None
+    
+    if not supply_file.exists():
+        print("警告: supply_data.csv が見つかりません。")
+        print("需給バランス分析はスキップされます。")
+        print(f"使用するCSVファイル: {demand_file}")
+        return demand_file, None
+    
+    print(f"需要データ: {demand_file}")
+    print(f"供給データ: {supply_file}")
+    return demand_file, supply_file
 
 def create_output_directory():
     """出力ディレクトリを作成"""
@@ -30,15 +50,21 @@ def create_output_directory():
     print(f"出力ディレクトリ: {output_dir.absolute()}")
     return output_dir
 
-def run_visualization(script_name):
+def run_visualization(script_name, demand_file, supply_file=None):
     """可視化スクリプトを実行"""
     print(f"\n{'='*60}")
     print(f"実行中: {script_name}")
     print(f"{'='*60}")
     
     try:
+        # 需給バランス分析の場合は2つのファイルを引数に渡す
+        if script_name == 'visualize_supply_demand.py' and supply_file:
+            cmd_args = [sys.executable, script_name, str(demand_file), str(supply_file)]
+        else:
+            cmd_args = [sys.executable, script_name, str(demand_file)]
+        
         result = subprocess.run(
-            [sys.executable, script_name],
+            cmd_args,
             capture_output=True,
             text=True,
             check=True
@@ -69,8 +95,9 @@ def main():
     print("プロジェクトポートフォリオ分析 - ケイパビリティ可視化")
     print("="*60)
     
-    # CSVファイルの確認
-    if not check_csv_file():
+    # CSVファイルの検出
+    demand_file, supply_file = find_csv_files()
+    if demand_file is None:
         sys.exit(1)
     
     # 出力ディレクトリの作成
@@ -82,10 +109,14 @@ def main():
         'visualize_by_tech.py'
     ]
     
+    # 供給データがある場合は需給バランス分析も実行
+    if supply_file:
+        scripts.append('visualize_supply_demand.py')
+    
     # 各スクリプトを実行
     success_count = 0
     for script in scripts:
-        if run_visualization(script):
+        if run_visualization(script, demand_file, supply_file):
             success_count += 1
     
     # 結果サマリー

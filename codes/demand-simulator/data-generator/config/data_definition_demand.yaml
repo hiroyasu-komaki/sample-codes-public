@@ -13,7 +13,7 @@ fields:
 
 # 出力設定
 output:
-  file: sample_data.csv  # 出力ファイル名（csvフォルダ内に出力されます）
+  file: demand_data.csv  # 出力ファイル名（csvフォルダ内に出力されます）
   records: 100           # 生成するレコード数
 
 # データ生成の設定

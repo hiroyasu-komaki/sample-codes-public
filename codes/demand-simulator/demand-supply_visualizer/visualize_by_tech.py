@@ -3,13 +3,29 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime
 import numpy as np
+import sys
+from pathlib import Path
 
 # 日本語フォント設定
 plt.rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meiryo', 'Noto Sans CJK JP', 'DejaVu Sans']
 plt.rcParams['axes.unicode_minus'] = False
 
+# コマンドライン引数からCSVファイルパスを取得
+if len(sys.argv) > 1:
+    csv_file_path = sys.argv[1]
+else:
+    # 引数がない場合は csv/ ディレクトリ内の最初の.csvファイルを使用
+    csv_dir = Path('csv')
+    csv_files = list(csv_dir.glob('*.csv'))
+    if not csv_files:
+        print("エラー: CSVファイルが見つかりません")
+        sys.exit(1)
+    csv_file_path = str(csv_files[0])
+
+print(f"読み込むCSVファイル: {csv_file_path}")
+
 # CSVファイルを読み込み
-df = pd.read_csv('csv/sample_data.csv')
+df = pd.read_csv(csv_file_path)
 
 # 活動開始月と終了月を日付型に変換
 df['活動開始月'] = pd.to_datetime(df['活動開始月'])

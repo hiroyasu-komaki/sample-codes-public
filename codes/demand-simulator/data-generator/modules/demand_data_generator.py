@@ -12,10 +12,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 
-class SampleDataGenerator:
+class DemandDataGenerator:
     """サンプルデータ生成クラス"""
     
-    def __init__(self, config_file='config/data_definition.yaml'):
+    def __init__(self, config_file='config/data_definition_demand.yaml'):
         """
         初期化
         
