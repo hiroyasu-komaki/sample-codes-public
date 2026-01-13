@@ -32,6 +32,7 @@ CSVフォルダ内のプロジェクトポートフォリオを読み込み、
 from pathlib import Path
 import sys
 from modules.demand_calculator import DemandCalculator
+from modules.data_validator import DataValidator
 
 
 def select_step():
@@ -103,13 +104,30 @@ def main():
     
     # 計算オブジェクトの作成
     calculator = DemandCalculator()
+    validator = DataValidator()
     
     # ========================================================================
-    # ステップ1: 分類処理（中間ファイル生成）
+    # 設定ファイルのバリデーション（全ステップの前に実行）
+    # ========================================================================
+    print("\n" + "=" * 80)
+    print("設定ファイルの検証")
+    print("=" * 80)
+    
+    config_valid = validator.validate_config_file()
+    if not config_valid:
+        print("\n" + "=" * 80)
+        print("❌ 設定ファイルのバリデーションに失敗しました")
+        print("=" * 80)
+        print("\nconfig/calc_assumptions.yaml のエラーを修正してから再実行してください。")
+        print("処理を中断します。")
+        sys.exit(1)
+    
+    # ========================================================================
+    # データバリデーション（全ステップの前に実行）
     # ========================================================================
     if step in ['1', 'all']:
         print("\n" + "=" * 80)
-        print("ステップ1: プロジェクト分類処理を開始します")
+        print("データバリデーション: 入力データの品質チェック")
         print("=" * 80)
         
         # CSVファイルの検索
@@ -119,7 +137,54 @@ def main():
             print(f"\nエラー: '{csv_folder}' フォルダにCSVファイルが見つかりません。")
             sys.exit(1)
         
-        print(f"\n見つかったCSVファイル: {len(csv_files)}件")
+        print(f"\n検証対象CSVファイル: {len(csv_files)}件")
+        for csv_file in csv_files:
+            print(f"  - {csv_file.name}")
+        
+        # 全てのCSVファイルをバリデーション
+        all_valid = True
+        for csv_file in csv_files:
+            is_valid, _ = validator.validate_csv_file(csv_file)
+            if not is_valid:
+                all_valid = False
+        
+        # バリデーション失敗時は処理を中断
+        if not all_valid:
+            print("\n" + "=" * 80)
+            print("❌ データバリデーションに失敗しました")
+            print("=" * 80)
+            print("\nエラーを修正してから再実行してください。")
+            print("処理を中断します。")
+            sys.exit(1)
+        
+        print("\n" + "=" * 80)
+        print("✅ データバリデーション完了: すべてのファイルが検証を通過しました")
+        print("=" * 80)
+        
+        # ユーザーに確認を求める（警告がある場合）
+        if any(len(validator.warnings) > 0 for csv_file in csv_files 
+               for validator in [DataValidator()] if validator.validate_csv_file(csv_file)[0]):
+            print("\n⚠️  警告が検出されました。このまま処理を続行しますか？")
+            print("  Enter: 続行")
+            print("  Ctrl+C: 中断")
+            try:
+                input("\n続行するにはEnterキーを押してください...")
+            except KeyboardInterrupt:
+                print("\n\n処理を中断しました。")
+                sys.exit(0)
+    
+    # ========================================================================
+    # ステップ1: 分類処理（中間ファイル生成）
+    # ========================================================================
+    if step in ['1', 'all']:
+        print("\n" + "=" * 80)
+        print("ステップ1: プロジェクト分類処理を開始します")
+        print("=" * 80)
+        
+        # CSVファイルの検索（バリデーション済み）
+        csv_files = list(csv_folder.glob('*.csv'))
+        
+        print(f"\n処理対象CSVファイル: {len(csv_files)}件")
         for csv_file in csv_files:
             print(f"  - {csv_file.name}")
         
