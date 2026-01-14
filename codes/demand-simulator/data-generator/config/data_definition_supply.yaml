@@ -6,6 +6,7 @@ fields:
   - 社員ID
   - 稼働開始月
   - 稼働終了月
+  - 稼働期間FTE
   - ビジネスケイパビリティ
   - デリバリケイパビリティ
   - テクニカルケイパビリティ
@@ -46,6 +47,14 @@ settings:
     correlation:
       enabled: true      # 相関を考慮するか
       base_variance: 0.3 # 基準値からの変動幅
+  
+  # 稼働期間FTEの設定
+  fte:
+    min: 0.2             # 最小値
+    max: 0.8             # 最大値
+    mean: 0.5            # 平均値（正規分布の中心）
+    std_dev: 0.15        # 標準偏差
+    decimal_places: 2    # 小数点以下の桁数
   
   # 月フォーマット
   month_format: "%Y/%m"

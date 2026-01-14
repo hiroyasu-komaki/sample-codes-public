@@ -129,6 +129,29 @@ class SupplyDataGenerator:
         # 指定された小数点以下の桁数に丸める
         return round(value, decimal_places)
     
+    def _generate_fte_value(self):
+        """
+        稼働期間FTE値を正規分布で生成（0.2〜0.8の範囲）
+        
+        Returns:
+            float: FTE値（小数点第2位まで）
+        """
+        fte_config = self.settings.get('fte', {})
+        min_val = fte_config.get('min', 0.2)
+        max_val = fte_config.get('max', 0.8)
+        mean = fte_config.get('mean', 0.5)
+        std_dev = fte_config.get('std_dev', 0.15)
+        decimal_places = fte_config.get('decimal_places', 2)
+        
+        # 正規分布に従って値を生成
+        value = random.gauss(mean, std_dev)
+        
+        # 指定された範囲に収める
+        value = max(min_val, min(max_val, value))
+        
+        # 指定された小数点以下の桁数に丸める
+        return round(value, decimal_places)
+    
     def _generate_correlated_capabilities(self):
         """
         相関を考慮したケイパビリティ値を生成
@@ -198,10 +221,14 @@ class SupplyDataGenerator:
             # 相関を考慮したケイパビリティ値を生成
             capabilities = self._generate_correlated_capabilities()
             
+            # 稼働期間FTE値を生成
+            fte_value = self._generate_fte_value()
+            
             record = {
                 '社員ID': self._generate_employee_id(i),
                 '稼働開始月': work_start_month.strftime(month_format),
                 '稼働終了月': work_end_month if work_end_month else '',
+                '稼働期間FTE': fte_value,
                 'ビジネスケイパビリティ': capabilities['ビジネスケイパビリティ'],
                 'デリバリケイパビリティ': capabilities['デリバリケイパビリティ'],
                 'テクニカルケイパビリティ': capabilities['テクニカルケイパビリティ'],

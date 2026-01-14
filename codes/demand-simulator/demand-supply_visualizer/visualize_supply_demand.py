@@ -72,51 +72,45 @@ supply_df['稼働終了月'] = pd.to_datetime(supply_df['稼働終了月'])
 max_date = pd.Timestamp('2030-12-01')
 supply_df['稼働終了月'] = supply_df['稼働終了月'].fillna(max_date)
 
-# ★★★ FTE正規化: 各社員のケイパビリティ合計を1.0にする ★★★
+# ★★★ FTE考慮型: 稼働期間FTEを考慮した実効供給能力を計算 ★★★
 print("\n" + "="*60)
-print("FTE正規化処理")
+print("FTE考慮型の供給能力計算")
 print("="*60)
 
-supply_df['ケイパビリティ合計'] = (
-    supply_df['ビジネスケイパビリティ'] + 
-    supply_df['デリバリケイパビリティ'] + 
-    supply_df['テクニカルケイパビリティ'] + 
-    supply_df['リーダーシップケイパビリティ']
+print(f"稼働期間FTEの範囲: 最小={supply_df['稼働期間FTE'].min():.2f}, "
+      f"最大={supply_df['稼働期間FTE'].max():.2f}, "
+      f"平均={supply_df['稼働期間FTE'].mean():.2f}")
+
+# 実効供給能力 = ケイパビリティ × 稼働期間FTE
+# （例：Business=5, FTE=0.5 → 月次供給=2.5）
+supply_df['Business_effective'] = supply_df['ビジネスケイパビリティ'] * supply_df['稼働期間FTE']
+supply_df['Delivery_effective'] = supply_df['デリバリケイパビリティ'] * supply_df['稼働期間FTE']
+supply_df['Technical_effective'] = supply_df['テクニカルケイパビリティ'] * supply_df['稼働期間FTE']
+supply_df['Leadership_effective'] = supply_df['リーダーシップケイパビリティ'] * supply_df['稼働期間FTE']
+
+# 実効供給能力の合計を確認
+supply_df['実効供給合計'] = (
+    supply_df['Business_effective'] + 
+    supply_df['Delivery_effective'] + 
+    supply_df['Technical_effective'] + 
+    supply_df['Leadership_effective']
 )
 
-print(f"正規化前のケイパビリティ合計: 最小={supply_df['ケイパビリティ合計'].min():.2f}, "
-      f"最大={supply_df['ケイパビリティ合計'].max():.2f}, "
-      f"平均={supply_df['ケイパビリティ合計'].mean():.2f}")
-
-# 正規化（各社員のケイパビリティを合計で割る）
-supply_df['Business_normalized'] = supply_df['ビジネスケイパビリティ'] / supply_df['ケイパビリティ合計']
-supply_df['Delivery_normalized'] = supply_df['デリバリケイパビリティ'] / supply_df['ケイパビリティ合計']
-supply_df['Technical_normalized'] = supply_df['テクニカルケイパビリティ'] / supply_df['ケイパビリティ合計']
-supply_df['Leadership_normalized'] = supply_df['リーダーシップケイパビリティ'] / supply_df['ケイパビリティ合計']
-
-# 正規化後の合計を確認
-supply_df['正規化後合計'] = (
-    supply_df['Business_normalized'] + 
-    supply_df['Delivery_normalized'] + 
-    supply_df['Technical_normalized'] + 
-    supply_df['Leadership_normalized']
-)
-
-print(f"正規化後のケイパビリティ合計: 最小={supply_df['正規化後合計'].min():.2f}, "
-      f"最大={supply_df['正規化後合計'].max():.2f}, "
-      f"平均={supply_df['正規化後合計'].mean():.2f}")
+print(f"実効供給能力の合計: 最小={supply_df['実効供給合計'].min():.2f}, "
+      f"最大={supply_df['実効供給合計'].max():.2f}, "
+      f"平均={supply_df['実効供給合計'].mean():.2f}")
 print("="*60 + "\n")
 
 def calculate_monthly_supply(row):
-    """月次供給を計算（FTE正規化版）"""
+    """月次供給を計算（FTE考慮版）"""
     start_date = row['稼働開始月']
     end_date = row['稼働終了月']
     
-    # 正規化されたケイパビリティを使用（合計=1.0 FTE）
-    business = row['Business_normalized']
-    delivery = row['Delivery_normalized']
-    technical = row['Technical_normalized']
-    leadership = row['Leadership_normalized']
+    # FTEを考慮した実効供給能力を使用
+    business = row['Business_effective']
+    delivery = row['Delivery_effective']
+    technical = row['Technical_effective']
+    leadership = row['Leadership_effective']
     
     month_list = pd.date_range(start=start_date, end=end_date, freq='MS')
     
@@ -171,7 +165,7 @@ balance = supply_complete - demand_complete
 
 # ========== グラフ作成 ==========
 fig, axes = plt.subplots(2, 2, figsize=(18, 14))
-fig.suptitle('Supply-Demand Balance by Capability (FTE-Normalized)', fontsize=18, fontweight='bold', y=0.995)
+fig.suptitle('Supply-Demand Balance by Capability (FTE-Adjusted)', fontsize=18, fontweight='bold', y=0.995)
 
 colors_demand = '#E94B3C'  # 赤（需要）
 colors_supply = '#4A90E2'  # 青（供給）
@@ -185,7 +179,7 @@ for idx, capability in enumerate(capabilities):
            label='Demand', linewidth=2.5, marker='o', markersize=4, 
            color=colors_demand, alpha=0.8)
     ax.plot(supply_complete.index, supply_complete[capability], 
-           label='Supply (FTE-Normalized)', linewidth=2.5, marker='s', markersize=4, 
+           label='Supply (FTE-Adjusted)', linewidth=2.5, marker='s', markersize=4, 
            color=colors_supply, alpha=0.8)
     
     # バランスを面グラフで表示（供給不足は赤、供給過剰は青）
@@ -241,7 +235,7 @@ plt.savefig('png/supply_demand_balance.png', dpi=300, bbox_inches='tight')
 print("需給バランスグラフを作成しました: png/supply_demand_balance.png")
 
 # ========== 統計情報の出力 ==========
-print("\n=== 需給バランス統計情報（FTE正規化版） ===")
+print("\n=== 需給バランス統計情報（FTE考慮版） ===")
 for capability in capabilities:
     print(f"\n【{capability} Capability】")
     
@@ -257,7 +251,7 @@ for capability in capabilities:
     balanced_months = (balance[capability] == 0).sum()
     
     print(f"  平均需要: {avg_demand:.2f} 人月")
-    print(f"  平均供給: {avg_supply:.2f} 人月 (FTE正規化済み)")
+    print(f"  平均供給: {avg_supply:.2f} 人月 (FTE考慮済み)")
     print(f"  平均バランス: {avg_balance:.2f} 人月")
     print(f"  最大不足: {max_shortage:.2f} 人月" + 
           (f" ({balance[capability].idxmin().strftime('%Y年%m月')})" if max_shortage < 0 else ""))
@@ -274,15 +268,17 @@ total_avg_balance = balance.sum(axis=1).mean()
 
 print(f"全ケイパビリティ合計:")
 print(f"  平均総需要: {total_avg_demand:.2f} 人月")
-print(f"  平均総供給: {total_avg_supply:.2f} 人月 (FTE正規化済み)")
+print(f"  平均総供給: {total_avg_supply:.2f} 人月 (FTE考慮済み)")
 print(f"  平均総バランス: {total_avg_balance:.2f} 人月")
 
 # 供給側の実際の人数（FTE）を表示
-print(f"\n=== 供給側の人数（FTE換算） ===")
+print(f"\n=== 供給側の人数（FTE考慮） ===")
 target_month = pd.Timestamp('2025-06-01')
 active_at_target = supply_df[
     (supply_df['稼働開始月'] <= target_month) & 
     (supply_df['稼働終了月'] >= target_month)
 ]
-print(f"2025年6月の稼働社員数: {len(active_at_target)}人 (各1.0 FTE)")
-print(f"  総供給能力: {len(active_at_target):.2f} FTE")
+total_fte = active_at_target['稼働期間FTE'].sum()
+print(f"2025年6月の稼働社員数: {len(active_at_target)}人")
+print(f"  総FTE: {total_fte:.2f}")
+print(f"  平均FTE: {total_fte/len(active_at_target):.2f}" if len(active_at_target) > 0 else "")
