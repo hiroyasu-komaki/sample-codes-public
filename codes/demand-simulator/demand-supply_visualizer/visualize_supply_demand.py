@@ -72,6 +72,21 @@ supply_df['稼働終了月'] = pd.to_datetime(supply_df['稼働終了月'])
 max_date = pd.Timestamp('2030-12-01')
 supply_df['稼働終了月'] = supply_df['稼働終了月'].fillna(max_date)
 
+# ★★★ ケイパビリティのNaN値を0で埋める ★★★
+capability_columns = ['ビジネスケイパビリティ', 'デリバリケイパビリティ', 
+                     'テクニカルケイパビリティ', 'リーダーシップケイパビリティ']
+for col in capability_columns:
+    if supply_df[col].isna().any():
+        nan_count = supply_df[col].isna().sum()
+        print(f"警告: {col}に{nan_count}件の空白があります。0で補完します。")
+        supply_df[col] = supply_df[col].fillna(0)
+
+# 稼働期間FTEのNaN値も0で埋める（または警告を出す）
+if supply_df['稼働期間FTE'].isna().any():
+    nan_count = supply_df['稼働期間FTE'].isna().sum()
+    print(f"警告: 稼働期間FTEに{nan_count}件の空白があります。0で補完します。")
+    supply_df['稼働期間FTE'] = supply_df['稼働期間FTE'].fillna(0)
+
 # ★★★ 2ステップ正規化: ケイパビリティを正規化してからFTEを乗算 ★★★
 print("\n" + "="*60)
 print("2ステップ正規化処理（正規化 → FTE乗算）")
@@ -89,6 +104,17 @@ print(f"ステップ1: ケイパビリティ合計の範囲")
 print(f"  最小={supply_df['ケイパビリティ合計'].min():.2f}, "
       f"最大={supply_df['ケイパビリティ合計'].max():.2f}, "
       f"平均={supply_df['ケイパビリティ合計'].mean():.2f}")
+
+# ★★★ ケイパビリティ合計がゼロの行を検出して除外 ★★★
+zero_capability_mask = supply_df['ケイパビリティ合計'] == 0
+if zero_capability_mask.any():
+    zero_count = zero_capability_mask.sum()
+    print(f"\n警告: {zero_count}件の社員がすべてのケイパビリティが0です。")
+    print("これらの社員は供給計算から除外されます。")
+    if '社員ID' in supply_df.columns:
+        print(f"対象社員ID: {supply_df[zero_capability_mask]['社員ID'].tolist()}")
+    supply_df = supply_df[~zero_capability_mask].copy()
+    print(f"残り社員数: {len(supply_df)}人\n")
 
 # 正規化（各ケイパビリティを合計で割る → 合計=1.0）
 supply_df['Business_normalized'] = supply_df['ビジネスケイパビリティ'] / supply_df['ケイパビリティ合計']
