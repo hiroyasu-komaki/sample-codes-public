@@ -72,23 +72,54 @@ supply_df['稼働終了月'] = pd.to_datetime(supply_df['稼働終了月'])
 max_date = pd.Timestamp('2030-12-01')
 supply_df['稼働終了月'] = supply_df['稼働終了月'].fillna(max_date)
 
-# ★★★ FTE考慮型: 稼働期間FTEを考慮した実効供給能力を計算 ★★★
+# ★★★ 2ステップ正規化: ケイパビリティを正規化してからFTEを乗算 ★★★
 print("\n" + "="*60)
-print("FTE考慮型の供給能力計算")
+print("2ステップ正規化処理（正規化 → FTE乗算）")
 print("="*60)
 
-print(f"稼働期間FTEの範囲: 最小={supply_df['稼働期間FTE'].min():.2f}, "
+# ステップ1: ケイパビリティ合計で正規化（スキル比率を算出）
+supply_df['ケイパビリティ合計'] = (
+    supply_df['ビジネスケイパビリティ'] + 
+    supply_df['デリバリケイパビリティ'] + 
+    supply_df['テクニカルケイパビリティ'] + 
+    supply_df['リーダーシップケイパビリティ']
+)
+
+print(f"ステップ1: ケイパビリティ合計の範囲")
+print(f"  最小={supply_df['ケイパビリティ合計'].min():.2f}, "
+      f"最大={supply_df['ケイパビリティ合計'].max():.2f}, "
+      f"平均={supply_df['ケイパビリティ合計'].mean():.2f}")
+
+# 正規化（各ケイパビリティを合計で割る → 合計=1.0）
+supply_df['Business_normalized'] = supply_df['ビジネスケイパビリティ'] / supply_df['ケイパビリティ合計']
+supply_df['Delivery_normalized'] = supply_df['デリバリケイパビリティ'] / supply_df['ケイパビリティ合計']
+supply_df['Technical_normalized'] = supply_df['テクニカルケイパビリティ'] / supply_df['ケイパビリティ合計']
+supply_df['Leadership_normalized'] = supply_df['リーダーシップケイパビリティ'] / supply_df['ケイパビリティ合計']
+
+# 正規化後の合計を確認
+supply_df['正規化後合計'] = (
+    supply_df['Business_normalized'] + 
+    supply_df['Delivery_normalized'] + 
+    supply_df['Technical_normalized'] + 
+    supply_df['Leadership_normalized']
+)
+print(f"  正規化後の合計: 最小={supply_df['正規化後合計'].min():.2f}, "
+      f"最大={supply_df['正規化後合計'].max():.2f} (全員1.0になるはず)")
+
+# ステップ2: 正規化後の値に稼働期間FTEを乗算（実効供給能力）
+print(f"\nステップ2: 稼働期間FTEの範囲")
+print(f"  最小={supply_df['稼働期間FTE'].min():.2f}, "
       f"最大={supply_df['稼働期間FTE'].max():.2f}, "
       f"平均={supply_df['稼働期間FTE'].mean():.2f}")
 
-# 実効供給能力 = ケイパビリティ × 稼働期間FTE
-# （例：Business=5, FTE=0.5 → 月次供給=2.5）
-supply_df['Business_effective'] = supply_df['ビジネスケイパビリティ'] * supply_df['稼働期間FTE']
-supply_df['Delivery_effective'] = supply_df['デリバリケイパビリティ'] * supply_df['稼働期間FTE']
-supply_df['Technical_effective'] = supply_df['テクニカルケイパビリティ'] * supply_df['稼働期間FTE']
-supply_df['Leadership_effective'] = supply_df['リーダーシップケイパビリティ'] * supply_df['稼働期間FTE']
+# 実効供給能力 = 正規化後ケイパビリティ × 稼働期間FTE
+# （例：Business_normalized=0.625, FTE=0.5 → Business_effective=0.3125）
+supply_df['Business_effective'] = supply_df['Business_normalized'] * supply_df['稼働期間FTE']
+supply_df['Delivery_effective'] = supply_df['Delivery_normalized'] * supply_df['稼働期間FTE']
+supply_df['Technical_effective'] = supply_df['Technical_normalized'] * supply_df['稼働期間FTE']
+supply_df['Leadership_effective'] = supply_df['Leadership_normalized'] * supply_df['稼働期間FTE']
 
-# 実効供給能力の合計を確認
+# 実効供給能力の合計を確認（= 稼働期間FTE）
 supply_df['実効供給合計'] = (
     supply_df['Business_effective'] + 
     supply_df['Delivery_effective'] + 
@@ -96,9 +127,10 @@ supply_df['実効供給合計'] = (
     supply_df['Leadership_effective']
 )
 
-print(f"実効供給能力の合計: 最小={supply_df['実効供給合計'].min():.2f}, "
+print(f"  実効供給合計: 最小={supply_df['実効供給合計'].min():.2f}, "
       f"最大={supply_df['実効供給合計'].max():.2f}, "
       f"平均={supply_df['実効供給合計'].mean():.2f}")
+print(f"  (実効供給合計 = 各社員の稼働期間FTE)")
 print("="*60 + "\n")
 
 def calculate_monthly_supply(row):
