@@ -24,7 +24,14 @@ print(f"需要データ: {demand_csv_path}")
 print(f"供給データ: {supply_csv_path}")
 
 # ========== 需要データの読み込みと集計 ==========
-demand_df = pd.read_csv(demand_csv_path)
+try:
+    demand_df = pd.read_csv(demand_csv_path, encoding='utf-8-sig')
+    print(f"✓ 需要データの読み込み成功")
+    print(f"データ行数: {len(demand_df)}行")
+except Exception as e:
+    print(f"✗ 需要データの読み込みエラー: {e}")
+    sys.exit(1)
+
 demand_df['活動開始月'] = pd.to_datetime(demand_df['活動開始月'])
 demand_df['活動終了月'] = pd.to_datetime(demand_df['活動終了月'])
 
@@ -64,7 +71,25 @@ for idx, row in demand_df.iterrows():
         monthly_demand[month]['Leadership'] += leadership
 
 # ========== 供給データの読み込みと集計（FTE正規化版） ==========
-supply_df = pd.read_csv(supply_csv_path)
+try:
+    supply_df = pd.read_csv(supply_csv_path, encoding='utf-8-sig')
+    print(f"✓ 供給データの読み込み成功")
+    print(f"供給データのカラム: {supply_df.columns.tolist()}")
+    print(f"データ行数: {len(supply_df)}行")
+except Exception as e:
+    print(f"✗ 供給データの読み込みエラー: {e}")
+    sys.exit(1)
+
+# カラム名の確認
+required_columns = ['稼働開始月', '稼働終了月']
+missing_columns = [col for col in required_columns if col not in supply_df.columns]
+if missing_columns:
+    print(f"\n警告: 以下のカラムが見つかりません: {missing_columns}")
+    print("実際のカラム名:")
+    for i, col in enumerate(supply_df.columns):
+        print(f"  [{i}] '{col}'")
+    sys.exit(1)
+
 supply_df['稼働開始月'] = pd.to_datetime(supply_df['稼働開始月'])
 supply_df['稼働終了月'] = pd.to_datetime(supply_df['稼働終了月'])
 
@@ -81,11 +106,22 @@ for col in capability_columns:
         print(f"警告: {col}に{nan_count}件の空白があります。0で補完します。")
         supply_df[col] = supply_df[col].fillna(0)
 
-# 稼働期間FTEのNaN値も0で埋める（または警告を出す）
-if supply_df['稼働期間FTE'].isna().any():
-    nan_count = supply_df['稼働期間FTE'].isna().sum()
-    print(f"警告: 稼働期間FTEに{nan_count}件の空白があります。0で補完します。")
-    supply_df['稼働期間FTE'] = supply_df['稼働期間FTE'].fillna(0)
+# 稼働期間FTEカラムの存在チェック
+if '稼働期間FTE' not in supply_df.columns:
+    print("警告: '稼働期間FTE'カラムが見つかりません。")
+    # 稼働期間月数から自動計算を試みる
+    if '稼働期間月数' in supply_df.columns:
+        print("  → '稼働期間月数'から稼働期間FTEを計算します（月数/12）")
+        supply_df['稼働期間FTE'] = supply_df['稼働期間月数'] / 12
+    else:
+        print("  → デフォルト値1.0（フルタイム）を使用します。")
+        supply_df['稼働期間FTE'] = 1.0
+else:
+    # 稼働期間FTEのNaN値を1.0で埋める
+    if supply_df['稼働期間FTE'].isna().any():
+        nan_count = supply_df['稼働期間FTE'].isna().sum()
+        print(f"警告: 稼働期間FTEに{nan_count}件の空白があります。1.0（フルタイム）で補完します。")
+        supply_df['稼働期間FTE'] = supply_df['稼働期間FTE'].fillna(1.0)
 
 # ★★★ 2ステップ正規化: ケイパビリティを正規化してからFTEを乗算 ★★★
 print("\n" + "="*60)
@@ -290,7 +326,147 @@ import os
 os.makedirs('png', exist_ok=True)
 
 plt.savefig('png/supply_demand_balance.png', dpi=300, bbox_inches='tight')
-print("需給バランスグラフを作成しました: png/supply_demand_balance.png")
+print("需給バランスグラフ（4分割）を作成しました: png/supply_demand_balance.png")
+
+# ========== 全体合計グラフを2段構成で作成 ==========
+fig2, (ax_total1, ax_total2) = plt.subplots(2, 1, figsize=(16, 12))
+fig2.suptitle('Total Supply-Demand Balance (All Capabilities Combined, FTE-Adjusted)', 
+             fontsize=18, fontweight='bold', y=0.995)
+
+# 全ケイパビリティの合計を計算
+total_demand = demand_complete.sum(axis=1)
+total_supply = supply_complete.sum(axis=1)
+total_balance = balance.sum(axis=1)
+
+# ========== 上段：合計の需給バランス ==========
+# 需要、供給、バランスのプロット
+ax_total1.plot(total_demand.index, total_demand, 
+       label='Total Demand', linewidth=3, marker='o', markersize=5, 
+       color=colors_demand, alpha=0.8)
+ax_total1.plot(total_supply.index, total_supply, 
+       label='Total Supply (FTE-Adjusted)', linewidth=3, marker='s', markersize=5, 
+       color=colors_supply, alpha=0.8)
+
+# バランスを面グラフで表示（供給不足は赤、供給過剰は青）
+positive_balance_total = total_balance.clip(lower=0)
+negative_balance_total = total_balance.clip(upper=0)
+
+ax_total1.fill_between(total_balance.index, 0, positive_balance_total, 
+                color=colors_supply, alpha=0.2, label='Supply Surplus')
+ax_total1.fill_between(total_balance.index, 0, negative_balance_total, 
+                color=colors_demand, alpha=0.2, label='Supply Shortage')
+
+# ゼロライン
+ax_total1.axhline(y=0, color='gray', linestyle='--', linewidth=1.5, alpha=0.5)
+
+ax_total1.set_title('Total Balance Overview', fontsize=16, fontweight='bold', pad=20)
+ax_total1.set_xlabel('Month', fontsize=12, fontweight='bold')
+ax_total1.set_ylabel('Total Resource (Person-Months)', fontsize=12, fontweight='bold')
+ax_total1.legend(loc='upper left', fontsize=11, framealpha=0.9)
+ax_total1.grid(True, alpha=0.3, linestyle='--')
+ax_total1.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+ax_total1.xaxis.set_major_locator(mdates.MonthLocator(interval=3))
+plt.setp(ax_total1.xaxis.get_majorticklabels(), rotation=45, ha='right')
+
+# 統計情報を表示
+max_shortage_total = negative_balance_total.min()
+max_surplus_total = positive_balance_total.max()
+
+if max_shortage_total < 0:
+    max_shortage_date_total = negative_balance_total.idxmin()
+    shortage_text_total = f'Max Shortage: {abs(max_shortage_total):.2f} ({max_shortage_date_total.strftime("%Y-%m")})'
+else:
+    shortage_text_total = 'Max Shortage: None'
+
+if max_surplus_total > 0:
+    max_surplus_date_total = positive_balance_total.idxmax()
+    surplus_text_total = f'Max Surplus: {max_surplus_total:.2f} ({max_surplus_date_total.strftime("%Y-%m")})'
+else:
+    surplus_text_total = 'Max Surplus: None'
+
+# 平均値も追加
+avg_demand_total = total_demand.mean()
+avg_supply_total = total_supply.mean()
+avg_balance_total = total_balance.mean()
+
+# テキストボックスに統計情報を表示
+textstr_total = (f'{shortage_text_total}\n{surplus_text_total}\n\n'
+                f'Avg Demand: {avg_demand_total:.2f}\n'
+                f'Avg Supply: {avg_supply_total:.2f}\n'
+                f'Avg Balance: {avg_balance_total:.2f}')
+ax_total1.text(0.02, 0.98, textstr_total,
+        transform=ax_total1.transAxes, fontsize=10, verticalalignment='top',
+        bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.8))
+
+# ========== 下段：需要と供給の累計比較（時系列の積み上げ） ==========
+# 需要と供給の累計を計算
+total_demand_cumulative = total_demand.cumsum()
+total_supply_cumulative = total_supply.cumsum()
+total_balance_cumulative = total_balance.cumsum()
+
+# 累計の需要と供給をプロット
+ax_total2.plot(total_demand_cumulative.index, total_demand_cumulative, 
+              label='Cumulative Demand', linewidth=3, linestyle='-', 
+              color=colors_demand, alpha=0.8, marker='o', markersize=5)
+ax_total2.plot(total_supply_cumulative.index, total_supply_cumulative, 
+              label='Cumulative Supply (FTE-Adjusted)', linewidth=3, linestyle='-', 
+              color=colors_supply, alpha=0.8, marker='s', markersize=5)
+
+# 累計バランスを面グラフで表示
+positive_balance_cumulative = total_balance_cumulative.clip(lower=0)
+negative_balance_cumulative = total_balance_cumulative.clip(upper=0)
+
+ax_total2.fill_between(total_balance_cumulative.index, 0, positive_balance_cumulative, 
+                      color=colors_supply, alpha=0.2, label='Cumulative Surplus')
+ax_total2.fill_between(total_balance_cumulative.index, 0, negative_balance_cumulative, 
+                      color=colors_demand, alpha=0.2, label='Cumulative Shortage')
+
+# ゼロライン
+ax_total2.axhline(y=0, color='gray', linestyle='--', linewidth=1.5, alpha=0.5)
+
+ax_total2.set_title('Cumulative Balance (Time Series)', 
+                   fontsize=16, fontweight='bold', pad=20)
+ax_total2.set_xlabel('Month', fontsize=12, fontweight='bold')
+ax_total2.set_ylabel('Cumulative Resource (Person-Months)', fontsize=12, fontweight='bold')
+ax_total2.legend(loc='upper left', fontsize=11, framealpha=0.9)
+ax_total2.grid(True, alpha=0.3, linestyle='--')
+ax_total2.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+ax_total2.xaxis.set_major_locator(mdates.MonthLocator(interval=3))
+plt.setp(ax_total2.xaxis.get_majorticklabels(), rotation=45, ha='right')
+
+# 累計の統計情報を表示
+final_demand_cumulative = total_demand_cumulative.iloc[-1]
+final_supply_cumulative = total_supply_cumulative.iloc[-1]
+final_balance_cumulative = total_balance_cumulative.iloc[-1]
+
+max_balance_cumulative = total_balance_cumulative.max()
+min_balance_cumulative = total_balance_cumulative.min()
+
+if max_balance_cumulative > 0:
+    max_balance_date = total_balance_cumulative.idxmax()
+    max_text = f'Max Cumulative Surplus: {max_balance_cumulative:.2f} ({max_balance_date.strftime("%Y-%m")})'
+else:
+    max_text = 'Max Cumulative Surplus: None'
+
+if min_balance_cumulative < 0:
+    min_balance_date = total_balance_cumulative.idxmin()
+    min_text = f'Max Cumulative Shortage: {abs(min_balance_cumulative):.2f} ({min_balance_date.strftime("%Y-%m")})'
+else:
+    min_text = 'Max Cumulative Shortage: None'
+
+# テキストボックスに累計統計情報を表示
+textstr_cumulative = (f'Final Cumulative Values:\n'
+                     f'  Demand: {final_demand_cumulative:.2f}\n'
+                     f'  Supply: {final_supply_cumulative:.2f}\n'
+                     f'  Balance: {final_balance_cumulative:+.2f}\n\n'
+                     f'{max_text}\n{min_text}')
+ax_total2.text(0.02, 0.98, textstr_cumulative,
+              transform=ax_total2.transAxes, fontsize=10, verticalalignment='top',
+              bbox=dict(boxstyle='round', facecolor='lightyellow', alpha=0.8))
+
+plt.tight_layout()
+plt.savefig('png/supply_demand_balance_total.png', dpi=300, bbox_inches='tight')
+print("需給バランスグラフ（合計・2段構成）を作成しました: png/supply_demand_balance_total.png")
 
 # ========== 統計情報の出力 ==========
 print("\n=== 需給バランス統計情報（FTE考慮版） ===")

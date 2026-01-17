@@ -8,6 +8,7 @@ import pandas as pd
 from pathlib import Path
 from typing import List, Dict, Tuple
 import re
+import json
 
 
 class ValidationError:
@@ -87,10 +88,46 @@ class DataValidator:
         }
     }
     
-    def __init__(self):
-        """初期化"""
+    def __init__(self, keywords_path: str = 'config/keywords.json'):
+        """
+        初期化
+        
+        Args:
+            keywords_path: JSONキーワードファイルのパス（必須）
+        """
         self.errors: List[ValidationError] = []
         self.warnings: List[ValidationError] = []
+        
+        # JSONキーワードファイルを読み込み
+        with open(keywords_path, 'r', encoding='utf-8') as f:
+            keywords_data = json.load(f)
+        
+        self.tech_keywords = keywords_data['tech_area_keywords']
+        self.project_keywords = keywords_data['project_type_keywords']
+        
+        # バリデーション用のキーワードリストを構築
+        self._build_validation_keywords()
+    
+    def _build_validation_keywords(self):
+        """
+        JSONから読み込んだキーワードをバリデーション用に変換
+        """
+        # 全てのキーワードを1つのリストに統合
+        all_keywords = []
+        
+        # 技術領域キーワード
+        for area, keywords in self.tech_keywords.items():
+            all_keywords.extend([kw for kw in keywords if kw != 'default'])
+        
+        # プロジェクト種別キーワード
+        for ptype, keywords in self.project_keywords.items():
+            all_keywords.extend([kw for kw in keywords if kw != 'default'])
+        
+        # 重複を除去し、共通キーワードとして保存
+        self.validation_keywords = list(set(all_keywords))
+        
+        # 常に含めるべき一般的なキーワードを追加
+        self.validation_keywords.extend(['システム', 'プロジェクト'])
     
     def validate_config_file(self, config_path: Path = None) -> bool:
         """
@@ -233,170 +270,102 @@ class DataValidator:
         
         # CSV読み込み
         try:
-            df = pd.read_csv(file_path)
+            df = pd.read_csv(file_path, encoding='utf-8-sig')
         except UnicodeDecodeError:
-            # Shift-JISで再試行
             try:
-                df = pd.read_csv(file_path, encoding='shift_jis')
-                self.warnings.append(ValidationError(
-                    'WARNING', 'エンコーディング', 
-                    "ファイルがShift-JISでエンコードされています。UTF-8を推奨します。"
-                ))
+                df = pd.read_csv(file_path, encoding='shift-jis')
             except Exception as e:
                 self.errors.append(ValidationError(
-                    'ERROR', 'ファイル', f"CSVファイルの読み込みに失敗: {str(e)}"
+                    'ERROR', 'ファイル', f"ファイルの読み込みに失敗しました: {str(e)}"
                 ))
                 self._print_results()
                 return False, None
         except Exception as e:
             self.errors.append(ValidationError(
-                'ERROR', 'ファイル', f"CSVファイルの読み込みに失敗: {str(e)}"
+                'ERROR', 'ファイル', f"ファイルの読み込みに失敗しました: {str(e)}"
             ))
             self._print_results()
             return False, None
         
-        # 基本構造チェック
+        # 空のデータフレームチェック
+        if len(df) == 0:
+            self.errors.append(ValidationError(
+                'ERROR', 'データ', "データ行が存在しません"
+            ))
+            self._print_results()
+            return False, None
+        
+        # 各種バリデーション実行
         self._validate_structure(df)
-        
-        # 列名チェック
-        self._validate_columns(df)
-        
-        # データ内容チェック
-        if len(self.errors) == 0:  # 構造的なエラーがない場合のみ
-            self._validate_data_content(df)
+        self._validate_required_columns(df)
+        self._validate_numeric_columns(df)
+        self._validate_date_columns(df)
+        self._validate_text_columns(df)
+        self._validate_logical_consistency(df)
+        self._validate_data_quality(df)
         
         # 結果表示
         self._print_results()
         
-        # エラーがあるかどうかを返す
-        has_errors = len(self.errors) > 0
-        return not has_errors, df
-    
-    def validate_multiple_files(self, file_paths: List[Path]) -> bool:
-        """
-        複数のCSVファイルをバリデーション
-        
-        Args:
-            file_paths: CSVファイルパスのリスト
-            
-        Returns:
-            全てのファイルが検証を通過した場合 True
-        """
-        all_valid = True
-        
-        for file_path in file_paths:
-            is_valid, _ = self.validate_csv_file(file_path)
-            if not is_valid:
-                all_valid = False
-        
-        return all_valid
+        # エラーがなければ成功
+        return len(self.errors) == 0, df
     
     def _validate_structure(self, df: pd.DataFrame):
-        """基本構造をチェック"""
-        
-        # 空のデータフレームチェック
-        if len(df) == 0:
-            self.errors.append(ValidationError(
-                'ERROR', '構造', "データが1件も含まれていません"
-            ))
-            return
+        """データ構造をチェック"""
         
         # 列数チェック
         if len(df.columns) < len(self.REQUIRED_COLUMNS):
             self.errors.append(ValidationError(
                 'ERROR', '構造', 
-                f"列数が不足しています（最低{len(self.REQUIRED_COLUMNS)}列必要）"
+                f"列数が不足しています (必須: {len(self.REQUIRED_COLUMNS)}列, 実際: {len(df.columns)}列)"
             ))
         
-        # 重複列名チェック
-        if len(df.columns) != len(set(df.columns)):
-            duplicate_cols = [col for col in df.columns if list(df.columns).count(col) > 1]
+        # 列名の重複チェック
+        duplicated_columns = df.columns[df.columns.duplicated()].tolist()
+        if duplicated_columns:
             self.errors.append(ValidationError(
-                'ERROR', '構造', f"重複する列名があります: {set(duplicate_cols)}"
+                'ERROR', '構造', 
+                f"列名が重複しています: {duplicated_columns}"
             ))
         
-        # 完全に空の行チェック
-        empty_rows = df[df.isna().all(axis=1)]
-        if len(empty_rows) > 0:
-            for idx in empty_rows.index:
-                self.warnings.append(ValidationError(
-                    'WARNING', '構造', "完全に空の行があります", row_index=idx
-                ))
+        # 空白列名チェック
+        blank_columns = [col for col in df.columns if str(col).strip() == '']
+        if blank_columns:
+            self.warnings.append(ValidationError(
+                'WARNING', '構造', 
+                f"空白の列名が{len(blank_columns)}個あります"
+            ))
     
-    def _validate_columns(self, df: pd.DataFrame):
-        """列名をチェック"""
+    def _validate_required_columns(self, df: pd.DataFrame):
+        """必須列の存在チェック"""
         
-        # 必須列の存在チェック
-        missing_required = [col for col in self.REQUIRED_COLUMNS if col not in df.columns]
-        if missing_required:
-            for col in missing_required:
-                self.errors.append(ValidationError(
-                    'ERROR', '必須列', f"必須列が見つかりません: {col}"
-                ))
+        missing_columns = [col for col in self.REQUIRED_COLUMNS if col not in df.columns]
         
-        # 推奨列の存在チェック
+        if missing_columns:
+            self.errors.append(ValidationError(
+                'ERROR', '必須項目', 
+                f"必須列が不足しています: {', '.join(missing_columns)}"
+            ))
+        
+        # 推奨列チェック
         missing_recommended = [col for col in self.RECOMMENDED_COLUMNS if col not in df.columns]
         if missing_recommended:
-            for col in missing_recommended:
-                self.warnings.append(ValidationError(
-                    'WARNING', '推奨列', 
-                    f"推奨列が見つかりません: {col}（デフォルト値が使用されます）"
-                ))
+            self.warnings.append(ValidationError(
+                'WARNING', '推奨項目', 
+                f"推奨列が不足しています: {', '.join(missing_recommended)}"
+            ))
         
-        # 列名の空白チェック
-        for col in df.columns:
-            if col != col.strip():
-                self.warnings.append(ValidationError(
-                    'WARNING', 'フォーマット', 
-                    f"列名に余分な空白があります: '{col}'", column=col
-                ))
-    
-    def _validate_data_content(self, df: pd.DataFrame):
-        """データ内容をチェック"""
-        
-        # 必須列の欠損値チェック
-        self._validate_required_values(df)
-        
-        # 数値列のチェック
-        self._validate_numeric_columns(df)
-        
-        # 日付列のチェック
-        self._validate_date_columns(df)
-        
-        # テキスト列のチェック
-        self._validate_text_columns(df)
-        
-        # 論理整合性チェック
-        self._validate_logical_consistency(df)
-        
-        # データ品質の統計情報
-        self._validate_data_quality(df)
-    
-    def _validate_required_values(self, df: pd.DataFrame):
-        """必須項目の値チェック"""
-        
+        # 必須列の空欄チェック
         for col in self.REQUIRED_COLUMNS:
-            if col not in df.columns:
-                continue
-            
-            # 欠損値チェック
-            null_rows = df[df[col].isna()]
-            if len(null_rows) > 0:
-                for idx in null_rows.index:
+            if col in df.columns:
+                null_count = df[col].isna().sum()
+                if null_count > 0:
+                    null_indices = df[df[col].isna()].index.tolist()
                     self.errors.append(ValidationError(
                         'ERROR', '必須項目', 
-                        f"必須項目が空です", row_index=idx, column=col
+                        f"必須列に空欄が{null_count}件あります (行: {[i+2 for i in null_indices[:5]]}{'...' if null_count > 5 else ''})",
+                        column=col
                     ))
-            
-            # 空文字列チェック（テキスト列の場合）
-            if df[col].dtype == 'object':
-                empty_rows = df[df[col].astype(str).str.strip() == '']
-                if len(empty_rows) > 0:
-                    for idx in empty_rows.index:
-                        self.errors.append(ValidationError(
-                            'ERROR', '必須項目', 
-                            "必須項目が空文字です", row_index=idx, column=col
-                        ))
     
     def _validate_numeric_columns(self, df: pd.DataFrame):
         """数値列をチェック"""
@@ -405,7 +374,6 @@ class DataValidator:
             if col not in df.columns:
                 continue
             
-            # 数値型への変換試行
             for idx, value in df[col].items():
                 if pd.isna(value):
                     continue
@@ -416,7 +384,7 @@ class DataValidator:
                 except (ValueError, TypeError):
                     self.errors.append(ValidationError(
                         'ERROR', 'データ型', 
-                        f"数値に変換できません: '{value}'", 
+                        f"数値に変換できません: '{value}'",
                         row_index=idx, column=col
                     ))
                     continue
@@ -425,14 +393,14 @@ class DataValidator:
                 if numeric_value < rules['min']:
                     self.errors.append(ValidationError(
                         'ERROR', '値範囲', 
-                        f"値が小さすぎます: {numeric_value} (最小: {rules['min']})",
+                        f"値が最小値未満です: {numeric_value} < {rules['min']}",
                         row_index=idx, column=col
                     ))
                 
                 if numeric_value > rules['max']:
                     self.warnings.append(ValidationError(
                         'WARNING', '値範囲', 
-                        f"値が異常に大きいです: {numeric_value:,.0f} (上限目安: {rules['max']:,.0f})",
+                        f"値が最大値を超えています: {numeric_value:,.0f} > {rules['max']:,.0f}",
                         row_index=idx, column=col
                     ))
                 
@@ -594,12 +562,16 @@ class DataValidator:
 
     
     def _validate_data_quality(self, df: pd.DataFrame):
-        """データ品質の統計情報をチェック"""
+        """
+        データ品質の統計情報をチェック
+        
+        JSONファイルから読み込んだキーワードを使用して案件名の品質をチェック
+        """
         
         # 案件名にキーワードがない行をチェック
         if '案件名' in df.columns:
-            keywords = ['開発', '構築', '導入', '刷新', 'リプレース', '移行', 
-                       'AI', 'クラウド', 'DX', 'システム']
+            # JSONから読み込んだバリデーション用キーワードを使用
+            keywords = self.validation_keywords
             
             rows_without_keywords = []
             for idx, value in df['案件名'].items():

@@ -4,10 +4,11 @@
 
 出力:
     png/ ディレクトリに以下のグラフが生成されます:
-    - capability_demand_charts.png (ケイパビリティ全体の推移)
-    - capability_by_tech_stacked.png (技術領域別・積み上げ)
-    - capability_by_tech_lines.png (技術領域別・折れ線)
-    - supply_demand_balance.png (需給バランス)
+    - capability_demand_charts.png (ケイパビリティ需要の推移)
+    - capability_supply_charts.png (ケイパビリティ供給の推移・FTE考慮)
+    - capability_by_tech_charts.png (技術領域別・2段グラフ)
+    - supply_demand_balance.png (需給バランス・4分割)
+    - supply_demand_balance_total.png (需給バランス・全体合計)
 """
 
 import os
@@ -58,8 +59,11 @@ def run_visualization(script_name, demand_file, supply_file=None):
     
     try:
         # 需給バランス分析の場合は2つのファイルを引数に渡す
-        if script_name == 'visualize_supply_demand.py' and supply_file:
+        if script_name == 'modules/visualize_supply_demand.py' and supply_file:
             cmd_args = [sys.executable, script_name, str(demand_file), str(supply_file)]
+        # 供給分析の場合はsupply_fileを引数に渡す
+        elif script_name == 'modules/visualize_supply.py' and supply_file:
+            cmd_args = [sys.executable, script_name, str(supply_file)]
         else:
             cmd_args = [sys.executable, script_name, str(demand_file)]
         
@@ -83,7 +87,12 @@ def run_visualization(script_name, demand_file, supply_file=None):
         
     except subprocess.CalledProcessError as e:
         print(f"✗ エラー: {script_name} の実行に失敗しました")
-        print(f"エラーメッセージ: {e.stderr}")
+        if e.stdout:
+            print(f"標準出力:\n{e.stdout}")
+        if e.stderr:
+            print(f"エラーメッセージ:\n{e.stderr}")
+        else:
+            print("エラーメッセージ: (なし)")
         return False
     except FileNotFoundError:
         print(f"✗ エラー: {script_name} が見つかりません")
@@ -103,15 +112,16 @@ def main():
     # 出力ディレクトリの作成
     output_dir = create_output_directory()
     
-    # スクリプトのリスト
+    # スクリプトのリスト（modulesサブフォルダ内）
     scripts = [
-        'visualize_capability.py',
-        'visualize_by_tech.py'
+        'modules/visualize_capability.py',
+        'modules/visualize_by_tech.py'
     ]
     
-    # 供給データがある場合は需給バランス分析も実行
+    # 供給データがある場合は供給分析と需給バランス分析も実行
     if supply_file:
-        scripts.append('visualize_supply_demand.py')
+        scripts.append('modules/visualize_supply.py')
+        scripts.append('modules/visualize_supply_demand.py')
     
     # 各スクリプトを実行
     success_count = 0

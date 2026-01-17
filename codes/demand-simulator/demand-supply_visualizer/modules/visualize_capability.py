@@ -24,8 +24,8 @@ else:
 
 print(f"読み込むCSVファイル: {csv_file_path}")
 
-# CSVファイルを読み込み
-df = pd.read_csv(csv_file_path)
+# CSVファイルを読み込み（BOM対応）
+df = pd.read_csv(csv_file_path, encoding='utf-8-sig')
 
 # 活動開始月と終了月を日付型に変換
 df['活動開始月'] = pd.to_datetime(df['活動開始月'])
